@@ -1,8 +1,8 @@
 //
 //  Pinewood_DerbyApp.swift
-//  Shared
+//  Pinewood Derby
 //
-//  Created by Rand Dow on 1/31/21.
+//  Created by Rand Dow on 2/1/21.
 //
 
 import SwiftUI

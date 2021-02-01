@@ -1,13 +1,13 @@
 //
-//  Tests_macOS.swift
-//  Tests macOS
+//  Pinewood_DerbyUITests.swift
+//  Pinewood DerbyUITests
 //
-//  Created by Rand Dow on 1/31/21.
+//  Created by Rand Dow on 2/1/21.
 //
 
 import XCTest
 
-class Tests_macOS: XCTestCase {
+class Pinewood_DerbyUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
