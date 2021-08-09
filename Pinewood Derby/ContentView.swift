@@ -2,19 +2,15 @@
 //  ContentView.swift
 //  Pinewood Derby
 //
-//  Created by Rand Dow on 2/1/21.
+//  Created by Rand Dow on 8/9/21.
 //
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Pinewood Derby").padding()
-        Text("Grand Prix").padding()
-        
-        Text("Race Roster").padding()
-        Text("Heats").padding()
-        Text("Scores").padding()
+        Text("Hello, world!")
+            .padding()
     }
 }
 
