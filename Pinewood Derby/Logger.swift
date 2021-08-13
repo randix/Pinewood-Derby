@@ -8,10 +8,10 @@
 
 import Foundation
 
-var logger: Logger?
+var logger: Logger = Logger()
 
 public func log(_ msg: String) -> Void {
-    logger?.log(msg)
+    logger.log(msg)
 }
 
 class Logger {
@@ -22,7 +22,7 @@ class Logger {
     
     init() {
         docs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let path = docs.getCString(<#T##buffer: &[CChar]##[CChar]#>, maxLength: <#T##Int#>, encoding: <#T##String.Encoding#>)
+        print("path: \(docs)")
     }
     
     func log(_ msg: String) {

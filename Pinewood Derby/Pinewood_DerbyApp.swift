@@ -11,8 +11,8 @@ import SwiftUI
 struct Pinewood_DerbyApp: App {
     
     init() {
-        print("init BTManager")
-        let m = BTManager()
+        log("Pinewood_DerbyApp.init")
+        BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
     }
     
     var body: some Scene {
