@@ -20,6 +20,8 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private var btPoweredOn = false
     private var services: [CBUUID] = []
     
+    private var prevRace: Int = -1
+    
     static let shared = BTManager()
     private override init() {
         super.init()
@@ -32,7 +34,9 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         
         btAdvertise = advertise
         services = []
-        services.append(CBUUID(string: "FEAA"))
+        //services.append(CBUUID(string: "FEAA"))
+        services.append(CBUUID(string: "1101"))
+        //services.append(CBUUID(string: "0111"))
         
         if centralManager == nil {
             centralManager = CBCentralManager(delegate: self, queue: nil)
@@ -72,26 +76,34 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     internal func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        let pName = peripheral.name != nil ? peripheral.name! : "unknown"
-        log("---------------\(pName)")
-        let lName = advertisementData["kCBAdvDataLocalName"] != nil ? (advertisementData["kCBAdvDataLocalName"] as? String)! : "unknown"
-        log("--scan response: \(lName)")
-        for i in advertisementData.keys {
-            switch i {
-            //            case "kCBAdvDataServiceUUIDs":
-            //            case "kCBAdvDataManufacturerData":
-            //            case "kCBAdvDataIsConnectable":
-            //            case "kCBAdvDataLocalName":
-            //            case "kCBAdvDataRxSecondaryPHY":
-            //            case "kCBAdvDataRxPrimaryPHY":
-            //            case "kCBAdvDataTimestamp":
-            default:
-                log(" --\(i): \(String(describing: advertisementData[i]))")
-            }
-        }
-
-//        let mfgData = advertisementData["kCBAdvDataManufacturerData"] != nil ? (advertisementData["kCBAdvDataManufacturerData"] as? Data)! : Data()
+//        for i in advertisementData.keys {
+//            switch i {
+//            default:
+//                log(" --\(i): \(String(describing: advertisementData[i]))")
+//            }
+//        }
         
-        //if mfgData.count > 4 && mfgData.hexEncodedString().starts(with: "f401") {
+        let x = advertisementData["kCBAdvDataServiceData"]! as! Dictionary<CBUUID, Data>
+        //print("\(x[CBUUID(string: "1101")])")
+        let data = [UInt8](x[CBUUID(string: "1101")]!)
+//        for d in data {
+//            print(d)
+//        }
+        let race = (Int(data[0]) << 8) + Int(data[1])
+        var idx = 2
+        let t1 = (UInt(data[idx]) << 16) + (UInt(data[idx+1]) << 8) + UInt(data[idx+2])
+        idx = 5
+        let t2 = (UInt(data[idx]) << 16) + (UInt(data[idx+1]) << 8) + UInt(data[idx+2])
+        idx = 8
+        let t3 = (UInt(data[idx]) << 16) + (UInt(data[idx+1]) << 8) + UInt(data[idx+2])
+        idx = 11
+        let t4 = (UInt(data[idx]) << 16) + (UInt(data[idx+1]) << 8) + UInt(data[idx+2])
+        if race == prevRace {
+            return
+        } else {
+            prevRace = race
+        }
+        print(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
+        
     }
 }

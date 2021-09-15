@@ -1,0 +1,14 @@
+02 01 06        1 flags
+03 03 aa fe     3 complete list of 16 bit services
+14 16 aa fe 10 00 02 63 69 72 63 75 69 75 64 69 67 65 73 74 07 00 00 00  16 - service and data
+            -----------------------------------------------------------
+
+20 bytes available using this scheme...
+
+2 bytes for frame number
+3 bytes per number (3x4=12)
+
+need 14 bytes.
+
+page 406 
+18 Appendix C (Normative): EIR and AD Formats
