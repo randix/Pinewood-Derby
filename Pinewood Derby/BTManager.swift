@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 
 
-typealias BTAdvertise = (_ uuid: UUID, _ name: String, _ scanResponse: String, _ manufacturerData: Data, _  rssi: Int) -> Void
+typealias BTAdvertise = (_ race: Int, _ t1: Double, _ t2: Double, _ t3: Double, _  t4: Double) -> Void
 
 class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
  
@@ -84,7 +84,6 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 //        }
         
         let x = advertisementData["kCBAdvDataServiceData"]! as! Dictionary<CBUUID, Data>
-        //print("\(x[CBUUID(string: "1101")])")
         let data = [UInt8](x[CBUUID(string: "1101")]!)
 //        for d in data {
 //            print(d)
@@ -104,6 +103,7 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             prevRace = race
         }
         print(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
-        
+        btAdvertise?(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
+
     }
 }
