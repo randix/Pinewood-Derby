@@ -1,9 +1,7 @@
 //
 //  Logger.swift
-//  SFFToolkit
 //
 //  Created by Rand Dow on 11/8/19.
-//  Copyright © 2019 Onity. All rights reserved.
 //
 
 import Foundation

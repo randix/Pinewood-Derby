@@ -7,11 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4D76C9926F8C3A90069CC0E /* Persist.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76C9826F8C3A90069CC0E /* Persist.swift */; };
+		A4254AEE26FB68580033F079 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4254AED26FB68580033F079 /* ShareView.swift */; };
+		A4D76C9926F8C3A90069CC0E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76C9826F8C3A90069CC0E /* Settings.swift */; };
 		A4D76C9B26F961230069CC0E /* Derby.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76C9A26F961230069CC0E /* Derby.swift */; };
 		A4D76C9D26F98A070069CC0E /* Heats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76C9C26F98A070069CC0E /* Heats.swift */; };
+		A4D76C9F26F9955D0069CC0E /* DerbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76C9E26F9955D0069CC0E /* DerbyView.swift */; };
+		A4D76CA126F9957A0069CC0E /* HeatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76CA026F9957A0069CC0E /* HeatsView.swift */; };
+		A4D76CA326F9958D0069CC0E /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76CA226F9958D0069CC0E /* InfoView.swift */; };
+		A4D76CA526F995AB0069CC0E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76CA426F995AB0069CC0E /* SettingsView.swift */; };
+		A4EA230026FADB3F009D6444 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EA22FF26FADB3F009D6444 /* ContentView.swift */; };
+		A4EA230226FAE926009D6444 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EA230126FAE926009D6444 /* LazyView.swift */; };
 		A4EBAB2426C1619C00F8E304 /* Pinewood_DerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBAB2326C1619C00F8E304 /* Pinewood_DerbyApp.swift */; };
-		A4EBAB2626C1619C00F8E304 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBAB2526C1619C00F8E304 /* ContentView.swift */; };
 		A4EBAB2826C1619E00F8E304 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4EBAB2726C1619E00F8E304 /* Assets.xcassets */; };
 		A4EBAB2B26C1619E00F8E304 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4EBAB2A26C1619E00F8E304 /* Preview Assets.xcassets */; };
 		A4EBAB6B26C162A600F8E304 /* BTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBAB6A26C162A600F8E304 /* BTManager.swift */; };
@@ -20,12 +26,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A4D76C9826F8C3A90069CC0E /* Persist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persist.swift; sourceTree = "<group>"; };
+		A4254AED26FB68580033F079 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		A4D76C9826F8C3A90069CC0E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		A4D76C9A26F961230069CC0E /* Derby.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Derby.swift; sourceTree = "<group>"; };
 		A4D76C9C26F98A070069CC0E /* Heats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heats.swift; sourceTree = "<group>"; };
+		A4D76C9E26F9955D0069CC0E /* DerbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerbyView.swift; sourceTree = "<group>"; };
+		A4D76CA026F9957A0069CC0E /* HeatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsView.swift; sourceTree = "<group>"; };
+		A4D76CA226F9958D0069CC0E /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
+		A4D76CA426F995AB0069CC0E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A4EA22FF26FADB3F009D6444 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A4EA230126FAE926009D6444 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		A4EBAB2026C1619C00F8E304 /* Pinewood Derby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pinewood Derby.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4EBAB2326C1619C00F8E304 /* Pinewood_DerbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pinewood_DerbyApp.swift; sourceTree = "<group>"; };
-		A4EBAB2526C1619C00F8E304 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A4EBAB2726C1619E00F8E304 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A4EBAB2A26C1619E00F8E304 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A4EBAB2C26C1619E00F8E304 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,18 +77,24 @@
 		A4EBAB2226C1619C00F8E304 /* Pinewood Derby */ = {
 			isa = PBXGroup;
 			children = (
-				A4EBAB6F26C6B1BE00F8E304 /* Logger.swift */,
 				A4EBAB2326C1619C00F8E304 /* Pinewood_DerbyApp.swift */,
-				A4D76C9826F8C3A90069CC0E /* Persist.swift */,
+				A4EBAB6F26C6B1BE00F8E304 /* Logger.swift */,
+				A4EA22FF26FADB3F009D6444 /* ContentView.swift */,
+				A4D76C9E26F9955D0069CC0E /* DerbyView.swift */,
 				A4D76C9A26F961230069CC0E /* Derby.swift */,
+				A4EA230126FAE926009D6444 /* LazyView.swift */,
+				A4D76CA026F9957A0069CC0E /* HeatsView.swift */,
 				A4D76C9C26F98A070069CC0E /* Heats.swift */,
+				A4D76CA426F995AB0069CC0E /* SettingsView.swift */,
+				A4D76C9826F8C3A90069CC0E /* Settings.swift */,
+				A4D76CA226F9958D0069CC0E /* InfoView.swift */,
 				A4EBAB6A26C162A600F8E304 /* BTManager.swift */,
 				A4EBAB7126C6C27300F8E304 /* Advertisement.swift */,
-				A4EBAB2526C1619C00F8E304 /* ContentView.swift */,
 				A4EBAB2726C1619E00F8E304 /* Assets.xcassets */,
 				A4EBAB2C26C1619E00F8E304 /* Info.plist */,
 				A4EBAB2D26C1619E00F8E304 /* Pinewood_Derby.entitlements */,
 				A4EBAB2926C1619E00F8E304 /* Preview Content */,
+				A4254AED26FB68580033F079 /* ShareView.swift */,
 			);
 			path = "Pinewood Derby";
 			sourceTree = "<group>";
@@ -158,13 +176,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4EBAB2626C1619C00F8E304 /* ContentView.swift in Sources */,
+				A4D76CA526F995AB0069CC0E /* SettingsView.swift in Sources */,
+				A4D76CA326F9958D0069CC0E /* InfoView.swift in Sources */,
+				A4EA230026FADB3F009D6444 /* ContentView.swift in Sources */,
 				A4EBAB2426C1619C00F8E304 /* Pinewood_DerbyApp.swift in Sources */,
-				A4D76C9926F8C3A90069CC0E /* Persist.swift in Sources */,
+				A4D76C9F26F9955D0069CC0E /* DerbyView.swift in Sources */,
+				A4D76C9926F8C3A90069CC0E /* Settings.swift in Sources */,
+				A4EA230226FAE926009D6444 /* LazyView.swift in Sources */,
 				A4D76C9D26F98A070069CC0E /* Heats.swift in Sources */,
 				A4EBAB7226C6C27300F8E304 /* Advertisement.swift in Sources */,
 				A4D76C9B26F961230069CC0E /* Derby.swift in Sources */,
+				A4254AEE26FB68580033F079 /* ShareView.swift in Sources */,
 				A4EBAB6B26C162A600F8E304 /* BTManager.swift in Sources */,
+				A4D76CA126F9957A0069CC0E /* HeatsView.swift in Sources */,
 				A4EBAB7026C6B1BE00F8E304 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

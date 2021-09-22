@@ -14,11 +14,30 @@ enum Gender {
 }
 
 class HeatEntry {
+    let id = UUID()             // id for SwiftUI
     var heat: UInt = 0
     var group: Gender = .unknown
     var tracks: [UInt] = []
+    var hasRun = false
 }
 
 class Heats {
     var heats: [HeatEntry] = []
+    
+    let heatsName = "heats.csv"
+    
+    static let shared = Heats()
+    private init() {}
+    
+    func generate() {
+        
+    }
+    
+    func readData() {
+        
+    }
+    
+    func saveData() {
+        
+    }
 }
