@@ -8,8 +8,7 @@
 import Foundation
 
 class DerbyEntry: Identifiable {
-    init(idx: UInt, number: UInt, carName: String, name: String, group: String) {
-        self.idx = idx
+    init(number: UInt, carName: String, name: String, group: String) {
         self.number = number
         self.carName = carName
         self.name = name
@@ -17,20 +16,41 @@ class DerbyEntry: Identifiable {
     }
     
     let id = UUID()             // id for SwiftUI
-    var idx: UInt
     var number: UInt
     var carName: String
     var name: String
     var group: String
     
-    var trackTimes: [UInt] = [] // the times for each track
-    var averages: [UInt] = []       // [0]: best time, [1]: avg of best 2 times, etc.
+    var times = [Double](repeating: 0.0, count: 6)  // the times for each track
+    var average = 0.0
+}
+
+class HeatsEntry: Identifiable {
+    init(heat: UInt, group: String, tracks: [UInt]) {
+        self.heat = heat
+        self.group = group
+        self.tracks = tracks
+    }
+    
+    let id = UUID()             // id for SwiftUI
+    var heat: UInt
+    var group: String
+    var tracks: [UInt] = []     // car number for each track
+    var hasRun = false
 }
 
 class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
+    @Published var heats: [HeatsEntry] = []
+    
     let derbyName = "derby.csv"
+    let heatsName = "heats.csv"
+    
+    let girls = "girls"
+    let boys = "boys"
+    
+    let trackCount = 4  // should be 4 or 6 (Settings)
     
     static let shared = Derby()
     private init() {}
@@ -43,7 +63,11 @@ class Derby: ObservableObject {
         print(#function)
     }
     
-    func readData() {
+    func generateHeats() {
+        print(#function)
+    }
+    
+    func readDerbyData() {
         print(#function)
         let name = Settings.shared.docDir.appendingPathComponent(derbyName)
         log("derby file: \(name)")
@@ -62,17 +86,38 @@ class Derby: ObservableObject {
                 print(x)
             }
         }
-        var derbyEntry = DerbyEntry(idx:1, number:42, carName:"fast", name:"Rand", group:"boys")
+        var derbyEntry = DerbyEntry(number:42, carName:"HWR", name:"Rand", group:boys)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.average = 4.5689
+        
         entries.append(derbyEntry)
-        derbyEntry = DerbyEntry(idx:2, number:43, carName:"slow", name:"Lina", group:"girls")
+        derbyEntry = DerbyEntry(number:43, carName:"Schnellst", name:"Lina", group:girls)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.times.append(4.5689)
+        derbyEntry.average = 4.5689
         entries.append(derbyEntry)
     }
+    
     
     func clearTimes() {
         print(#function)
+        // first: archive the old data
+        saveDerbyData()
     }
     
-    func saveData() {
+    func saveDerbyData() {
+        print(#function)
+    }
+    func readHeatsData() {
+        print(#function)
+    }
+    
+    func saveHeatsData() {
         print(#function)
     }
 }

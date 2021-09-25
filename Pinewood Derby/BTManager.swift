@@ -104,6 +104,5 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
         print(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
         btAdvertise?(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
-
     }
 }

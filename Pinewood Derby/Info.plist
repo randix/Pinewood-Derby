@@ -26,5 +26,9 @@
 	<string>This App listens to Raspberry Pi advertisements. It needs access to Bluetooth advertisements.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 </dict>
 </plist>
