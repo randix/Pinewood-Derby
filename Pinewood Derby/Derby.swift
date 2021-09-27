@@ -52,6 +52,9 @@ class Derby: ObservableObject {
     
     let trackCount = 4  // should be 4 or 6 (Settings)
     
+    var edit = false
+    var editEntryId = UUID()
+    
     static let shared = Derby()
     private init() {}
     
@@ -87,10 +90,10 @@ class Derby: ObservableObject {
             }
         }
         var derbyEntry = DerbyEntry(number:42, carName:"HWR", name:"Rand", group:boys)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
+        derbyEntry.times[0] = 4.5689
+        derbyEntry.times[1] = 4.5689
+        derbyEntry.times[2] = 4.5689
+        derbyEntry.times[3] = 4.5689
         derbyEntry.average = 4.5689
         
         entries.append(derbyEntry)

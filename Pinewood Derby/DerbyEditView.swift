@@ -9,12 +9,24 @@ import SwiftUI
 
 struct DerbyEditView: View {
     
-    @Binding var edit: Bool
+    let derby = Derby.shared
+    var entry: DerbyEntry?
     
-    @State var carNumber: String
-    @State var carName: String
-    @State var name: String
-    @State var group: String
+    @State var carNumber: String = ""
+    @State var carName: String = ""
+    @State var name: String = ""
+    @State var group: String = ""
+    
+    init() {
+        let entries = derby.entries.filter { derby.editEntryId == $0.id }
+        if derby.edit && entries.count == 1 {
+            entry = entries[0]
+            carNumber = String(entry!.number)
+            carName = entry!.name
+            name = entry!.name
+            group = entry!.group
+        }
+    }
     
     var body: some View {
         VStack {
@@ -47,7 +59,7 @@ struct DerbyEditView: View {
                     }) {
                         Text("Save")
                     }
-                    if !edit {
+                    if !derby.edit {
                         Button(action: {
                             print("save and new")
                         }) {

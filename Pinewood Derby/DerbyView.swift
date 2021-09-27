@@ -56,6 +56,7 @@ struct DerbyView: View {
     @ObservedObject var derby = Derby.shared
     
     @State var edit = false
+    @State var showEditModal = false
     
     let screenSize = UIScreen.main.bounds.size
     
@@ -66,10 +67,20 @@ struct DerbyView: View {
             // Sort row buttons
             HStack {
                 Spacer()
-                HText(text: "Car",      width: Sizes.cWidth)
-                HText(text: "Car Name", width: Sizes.cnWidth)
-                HText(text: "Name",     width: Sizes.nWidth)
-                HText(text: "Group",    width: Sizes.gWidth)
+                
+                Button(action: {
+                    print("sort on car")
+                }) { HText(text: "Car",      width: Sizes.cWidth) }
+                Button(action: {
+                    print("sort on car name")
+                }) { HText(text: "Car Name", width: Sizes.cnWidth) }
+                Button(action: {
+                    print("sort on name")
+                }) { HText(text: "Name",     width: Sizes.nWidth) }
+                Button(action: {
+                    print("sort on group")
+                }) {HText(text: "Group",    width: Sizes.gWidth) }
+                
                 Spacer()
                 
                 // times...
@@ -111,8 +122,9 @@ struct DerbyView: View {
                     
                             Button {
                                 print("Edit")
-                                
-                                
+                                derby.editEntryId = entry.id
+                                self.edit = false
+                                showEditModal = true
                             } label: {
                                 Label("Edit", systemImage: "square.and.pencil")
                             }
@@ -176,6 +188,7 @@ struct DerbyView: View {
             
             //Spacer().frame(height: 10)
         }
+        .sheet(isPresented: $showEditModal, content: { DerbyEditView() })
         // full screen:
         //.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         //.edgesIgnoringSafeArea(.all)
@@ -183,6 +196,8 @@ struct DerbyView: View {
         // Navigation Bar --------------------------------
         .navigationBarItems(leading: EmptyView(), trailing: Button(action: {
             print("add new")
+            self.edit = false
+            showEditModal = true
             
         }) {
             Image(systemName: "plus.circle")
