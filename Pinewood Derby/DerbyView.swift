@@ -55,7 +55,7 @@ struct DerbyView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
     
-    @State var edit = false
+    @State var thisEntry: DerbyEntry?
     @State var showEditModal = false
     
     let screenSize = UIScreen.main.bounds.size
@@ -110,34 +110,23 @@ struct DerbyView: View {
                 }
                 //.frame(height: 90)
                 .swipeActions {
-//                    NavigationLink(destination: LazyView(DerbyEditView())) {
-//                        VStack {
-//                            VStack {
-//                                Image(systemName: "square.and.pencil")
-//                                Text("Share").font(.system(size: 10))
-//                            }
-//                            //.background(Color(.orange))
-//                        }
-//                    }
+                    Button {
+                        thisEntry = entry
+                        showEditModal = true
+                    } label: {
+                        Label("Edit", systemImage: "square.and.pencil")
+                    }
+                    .tint(.yellow)
                     
-                            Button {
-                                print("Edit")
-                                derby.editEntryId = entry.id
-                                derby.edit = true
-                                showEditModal = true
-                            } label: {
-                                Label("Edit", systemImage: "square.and.pencil")
-                            }
-                            .tint(.yellow)
-                 
-                            Button {
-                                print("Delete")
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                            .tint(.red)
-                    // add confirmation
-                        }
+                    Button {
+                        print("Delete")
+                        // add confirmation
+                        
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    .tint(.red)
+                }
             }
             //.frame(minHeight: 0)
             
@@ -184,15 +173,14 @@ struct DerbyView: View {
             
             //Spacer().frame(height: 10)
         }
-        .sheet(isPresented: $showEditModal, content: { DerbyEditView() })
+        .sheet(isPresented: $showEditModal, content: { DerbyEditView(entry: $thisEntry) })
         // full screen:
         //.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
         //.edgesIgnoringSafeArea(.all)
         //        .background(Color.blue)
         // Navigation Bar --------------------------------
         .navigationBarItems(leading: EmptyView(), trailing: Button(action: {
-            print("add new")
-            derby.edit = false
+            thisEntry = nil
             showEditModal = true
             
         }) {
@@ -200,8 +188,7 @@ struct DerbyView: View {
             //Text("+").font(.system(size: 14)).bold()
         })
         .navigationBarTitle("Derby", displayMode: .inline)
-//        .onAppear(perform: {
-//            print(#function)
-//        })
+        //        .onAppear(perform: {
+        //        })
     }
 }

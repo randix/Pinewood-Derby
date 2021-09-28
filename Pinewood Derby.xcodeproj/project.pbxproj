@@ -13,8 +13,6 @@
 		A4D76CA326F9958D0069CC0E /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76CA226F9958D0069CC0E /* InfoView.swift */; };
 		A4D76CA526F995AB0069CC0E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D76CA426F995AB0069CC0E /* SettingsView.swift */; };
 		A4E0B17926FE13FC008E3880 /* DerbyEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B17826FE13FC008E3880 /* DerbyEditView.swift */; };
-		A4E0B17B27034589008E3880 /* RadioButtonGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B17A27034589008E3880 /* RadioButtonGroup.swift */; };
-		A4E0B17D27034770008E3880 /* MyRadioButtonGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B17C27034770008E3880 /* MyRadioButtonGroup.swift */; };
 		A4EA230026FADB3F009D6444 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EA22FF26FADB3F009D6444 /* ContentView.swift */; };
 		A4EA230226FAE926009D6444 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EA230126FAE926009D6444 /* LazyView.swift */; };
 		A4EBAB2426C1619C00F8E304 /* Pinewood_DerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EBAB2326C1619C00F8E304 /* Pinewood_DerbyApp.swift */; };
@@ -32,8 +30,6 @@
 		A4D76CA226F9958D0069CC0E /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		A4D76CA426F995AB0069CC0E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A4E0B17826FE13FC008E3880 /* DerbyEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerbyEditView.swift; sourceTree = "<group>"; };
-		A4E0B17A27034589008E3880 /* RadioButtonGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonGroup.swift; sourceTree = "<group>"; };
-		A4E0B17C27034770008E3880 /* MyRadioButtonGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRadioButtonGroup.swift; sourceTree = "<group>"; };
 		A4EA22FF26FADB3F009D6444 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A4EA230126FAE926009D6444 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		A4EBAB2026C1619C00F8E304 /* Pinewood Derby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pinewood Derby.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,8 +83,6 @@
 				A4D76CA426F995AB0069CC0E /* SettingsView.swift */,
 				A4D76CA226F9958D0069CC0E /* InfoView.swift */,
 				A4D76C9A26F961230069CC0E /* Derby.swift */,
-				A4E0B17C27034770008E3880 /* MyRadioButtonGroup.swift */,
-				A4E0B17A27034589008E3880 /* RadioButtonGroup.swift */,
 				A4EBAB6A26C162A600F8E304 /* BTManager.swift */,
 				A4EBAB7126C6C27300F8E304 /* Advertisement.swift */,
 				A4EBAB2726C1619E00F8E304 /* Assets.xcassets */,
@@ -183,13 +177,11 @@
 				A4D76C9F26F9955D0069CC0E /* DerbyView.swift in Sources */,
 				A4EA230226FAE926009D6444 /* LazyView.swift in Sources */,
 				A4EBAB7226C6C27300F8E304 /* Advertisement.swift in Sources */,
-				A4E0B17B27034589008E3880 /* RadioButtonGroup.swift in Sources */,
 				A4E0B17926FE13FC008E3880 /* DerbyEditView.swift in Sources */,
 				A4D76C9B26F961230069CC0E /* Derby.swift in Sources */,
 				A4EBAB6B26C162A600F8E304 /* BTManager.swift in Sources */,
 				A4D76CA126F9957A0069CC0E /* HeatsView.swift in Sources */,
 				A4EBAB7026C6B1BE00F8E304 /* Logger.swift in Sources */,
-				A4E0B17D27034770008E3880 /* MyRadioButtonGroup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

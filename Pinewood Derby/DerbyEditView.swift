@@ -9,8 +9,7 @@ import SwiftUI
 
 struct DerbyEditView: View {
     
-    let derby = Derby.shared
-    var entry: DerbyEntry?
+    @Binding var entry: DerbyEntry?
     
     @State var id = UUID()
     @State var carNumber = ""
@@ -18,18 +17,7 @@ struct DerbyEditView: View {
     @State var name = ""
     @State var group = ""
     
-    init() {
-        let entries = derby.entries.filter { derby.editEntryId == $0.id }
-        if derby.edit && entries.count == 1 {
-            entry = entries[0]
-            _id = .init(initialValue:entry!.id)
-            _carNumber = .init(initialValue: String(entry!.carNumber))
-            _carName = .init(initialValue: entry!.carName)
-            _name = .init(initialValue: entry!.name)
-            _group = .init(initialValue: entry!.group)
-            derby.currentGroup = group
-        }
-    }
+    let derby = Derby.shared
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -52,11 +40,33 @@ struct DerbyEditView: View {
             }
             HStack {
                 Label("Name: ", systemImage: "person")
-                TextField("Ocho", text: $name)
+                TextField("Rand", text: $name)
             }
             HStack {
                 Label("Group: ", systemImage: "person.3")
-                SRadioButtonViewGroup(dataProvider: DataProvider<RadioModel>(), selectedItem: getSelectedItemLabel)
+                // this is effectively a radio button selection
+                Group {
+                    if group == derby.girls {
+                        Image(systemName: "circle.fill")
+                    } else {
+                        Image(systemName: "circle")
+                    }
+                    Text(derby.girls)
+                }
+                .onTapGesture {
+                    group = derby.girls
+                }
+                Group {
+                    if group == derby.boys {
+                        Image(systemName: "circle.fill")
+                    } else {
+                        Image(systemName: "circle")
+                    }
+                    Text(derby.boys)
+                }
+                .onTapGesture {
+                    group = derby.boys
+                }
             }
             
             HStack {
@@ -78,22 +88,26 @@ struct DerbyEditView: View {
                         return
                     }
                     // find the entry in the array....
-                    let index = derby.entries.firstIndex{ $0.id == id}
-                    derby.entries[index!].carNumber = number!
-                    derby.entries[index!].carName = carName
-                    derby.entries[index!].name = name
-                    derby.entries[index!].group = group
+                    if let index = derby.entries.firstIndex(where: { $0.id == id}) {
+                        derby.entries[index].carNumber = number!
+                        derby.entries[index].carName = carName
+                        derby.entries[index].name = name
+                        derby.entries[index].group = group
+                    } else {
+                        
+                    }
                     derby.objectWillChange.send()
+                    // return from menu
+                    
                 }) {
                     Text("Save")
                 }
-                if !derby.edit {
+                if entry == nil {
                     Button(action: {
-                        print("save and new")
                         let number = UInt(carNumber)    // Optional
                         let entries = derby.entries.filter { $0.carNumber == number }
                         if entries.count > 0 {
-                            print("error - already entered car number \(number)")
+                            print("error - already entered car number \(String(describing: number))")
                         }
                         
                         Derby.shared.addEntry()
@@ -108,11 +122,15 @@ struct DerbyEditView: View {
             Spacer()
         }
         .navigationBarTitle("Derby Entry", displayMode: .inline)
+        
+        .onAppear(perform: {
+            if entry != nil {
+                self.id = entry!.id
+                carNumber = String(entry!.carNumber)
+                carName = entry!.carName
+                name = entry!.name
+                group = entry!.group
+            }
+        })
     }
-    
-    func getSelectedItemLabel<T>(item: T) {
-        group = String((item as! RadioModel).label)
-        print("selected item : \((item as! RadioModel).label)")
-    }
-    
 }

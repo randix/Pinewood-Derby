@@ -48,16 +48,11 @@ class Derby: ObservableObject {
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
     
+    // list of groups
     let girls = "girls"
     let boys = "boys"
     
     let trackCount = 4  // should be 4 or 6 (Settings)
-    
-    // the following are used as "global" variables to communicate between the
-    // DerbyView, DerbyEditView, and the MyRadiobuttonGroup
-    var edit = false
-    var editEntryId = UUID()
-    var currentGroup = "girls"
     
     static let shared = Derby()
     private init() {}
