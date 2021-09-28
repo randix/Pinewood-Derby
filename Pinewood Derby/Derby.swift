@@ -9,14 +9,14 @@ import Foundation
 
 class DerbyEntry: Identifiable {
     init(number: UInt, carName: String, name: String, group: String) {
-        self.number = number
+        self.carNumber = number
         self.carName = carName
         self.name = name
         self.group = group
     }
     
     let id = UUID()             // id for SwiftUI
-    var number: UInt
+    var carNumber: UInt
     var carName: String
     var name: String
     var group: String
@@ -39,6 +39,7 @@ class HeatsEntry: Identifiable {
     var hasRun = false
 }
 
+
 class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
@@ -52,8 +53,11 @@ class Derby: ObservableObject {
     
     let trackCount = 4  // should be 4 or 6 (Settings)
     
+    // the following are used as "global" variables to communicate between the
+    // DerbyView, DerbyEditView, and the MyRadiobuttonGroup
     var edit = false
     var editEntryId = UUID()
+    var currentGroup = "girls"
     
     static let shared = Derby()
     private init() {}
@@ -95,14 +99,14 @@ class Derby: ObservableObject {
         derbyEntry.times[2] = 4.5689
         derbyEntry.times[3] = 4.5689
         derbyEntry.average = 4.5689
-        
         entries.append(derbyEntry)
+        
         derbyEntry = DerbyEntry(number:43, carName:"Schnellst", name:"Lina", group:girls)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.times.append(4.5689)
-        derbyEntry.average = 4.5689
+        derbyEntry.times[0] = 3.5689
+        derbyEntry.times[1] = 3.5689
+        derbyEntry.times[2] = 3.5689
+        derbyEntry.times[3] = 3.5689
+        derbyEntry.average = 3.5689
         entries.append(derbyEntry)
     }
     

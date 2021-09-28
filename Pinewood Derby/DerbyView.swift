@@ -92,10 +92,10 @@ struct DerbyView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        DText(text: String(entry.number), width: Sizes.cWidth)
-                        DText(text: entry.carName,        width: Sizes.cnWidth)
-                        DText(text: entry.name,           width: Sizes.nWidth)
-                        DText(text: entry.group,          width: Sizes.gWidth)
+                        DText(text: String(entry.carNumber), width: Sizes.cWidth)
+                        DText(text: entry.carName,           width: Sizes.cnWidth)
+                        DText(text: entry.name,              width: Sizes.nWidth)
+                        DText(text: entry.group,             width: Sizes.gWidth)
                         Spacer()
                     }
                     HStack {
@@ -123,7 +123,7 @@ struct DerbyView: View {
                             Button {
                                 print("Edit")
                                 derby.editEntryId = entry.id
-                                self.edit = false
+                                derby.edit = true
                                 showEditModal = true
                             } label: {
                                 Label("Edit", systemImage: "square.and.pencil")
@@ -136,14 +136,10 @@ struct DerbyView: View {
                                 Label("Delete", systemImage: "trash")
                             }
                             .tint(.red)
+                    // add confirmation
                         }
             }
-            .frame(minHeight: 0)
-          //  .background(.yellow)
-            // swipe left: edit, delete(with CONFIRM)
-            
-//            Spacer().frame(minHeight: 0)
-//                .background(.orange)
+            //.frame(minHeight: 0)
             
             // Button Row ----------------------------------------
             HStack {
@@ -196,7 +192,7 @@ struct DerbyView: View {
         // Navigation Bar --------------------------------
         .navigationBarItems(leading: EmptyView(), trailing: Button(action: {
             print("add new")
-            self.edit = false
+            derby.edit = false
             showEditModal = true
             
         }) {
