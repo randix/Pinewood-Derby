@@ -57,14 +57,6 @@ class Derby: ObservableObject {
     static let shared = Derby()
     private init() {}
     
-    func addEntry() {
-        print(#function)
-    }
-    
-    func updateEntry() {
-        print(#function)
-    }
-    
     func generateHeats() {
         print(#function)
     }
@@ -84,27 +76,18 @@ class Derby: ObservableObject {
         for line in lines {
             log(line)
             let values = line.split(separator: ",")
-            for x in values {
-                print(x)
+            if values.count < 9 {
+                continue
             }
+            let d = DerbyEntry(number:UInt(values[0])!, carName: String(values[1]), name: String(values[2]), group: String(values[3]))
+            d.times[0] = Double(values[4])!
+            d.times[0] = Double(values[5])!
+            d.times[0] = Double(values[6])!
+            d.times[0] = Double(values[7])!
+            d.average = Double(values[8])!
+            entries.append(d)
         }
-        var derbyEntry = DerbyEntry(number:42, carName:"HWR", name:"Rand", group:boys)
-        derbyEntry.times[0] = 4.5689
-        derbyEntry.times[1] = 4.5689
-        derbyEntry.times[2] = 4.5689
-        derbyEntry.times[3] = 4.5689
-        derbyEntry.average = 4.5689
-        entries.append(derbyEntry)
-        
-        derbyEntry = DerbyEntry(number:43, carName:"Schnellst", name:"Lina", group:girls)
-        derbyEntry.times[0] = 3.5689
-        derbyEntry.times[1] = 3.5689
-        derbyEntry.times[2] = 3.5689
-        derbyEntry.times[3] = 3.5689
-        derbyEntry.average = 3.5689
-        entries.append(derbyEntry)
     }
-    
     
     func clearTimes() {
         print(#function)
@@ -113,8 +96,19 @@ class Derby: ObservableObject {
     }
     
     func saveDerbyData() {
-        print(#function)
+        var list = [String]()
+        for entry in entries {
+            let car = "\(entry.carNumber),\(entry.carName),\(entry.name),\(entry.group),"
+            let times = String(format: "%6.4f,%6.4f,%6.4f,%6.4f,%6.4f",
+                               entry.times[0], entry.times[1], entry.times[2], entry.times[3],
+                               entry.average)
+            list.append(car + times)
+        }
+        let name = Settings.shared.docDir.appendingPathComponent(derbyName)
+        let fileData = list.joined(separator: "\n")
+        try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
     }
+    
     func readHeatsData() {
         print(#function)
     }

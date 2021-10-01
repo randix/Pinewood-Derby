@@ -28,7 +28,7 @@ struct Pinewood_DerbyApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DerbyView()
         }
     }
 }

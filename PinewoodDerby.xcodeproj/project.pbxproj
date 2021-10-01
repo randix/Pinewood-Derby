@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */; };
+		A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A6270564C8008E3880 /* ContentView.swift */; };
+		A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4E0B1A8270564C9008E3880 /* Assets.xcassets */; };
+		A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4E0B1AB270564C9008E3880 /* Preview Assets.xcassets */; };
+		A4E0B1B327074994008E3880 /* RacersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B227074994008E3880 /* RacersView.swift */; };
+		A4E0B1B527074A64008E3880 /* HeatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B427074A64008E3880 /* HeatsView.swift */; };
+		A4E0B1B727074B05008E3880 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B627074B05008E3880 /* SettingsView.swift */; };
+		A4E0B1B927074B6A008E3880 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B827074B6A008E3880 /* InfoView.swift */; };
+		A4E0B1BB27074BBD008E3880 /* AddRacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1BA27074BBD008E3880 /* AddRacerView.swift */; };
+		A4E0B1BD27074BDC008E3880 /* RankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1BC27074BDC008E3880 /* RankingsView.swift */; };
+		A4E0B1BF2707596C008E3880 /* BTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1BE2707596C008E3880 /* BTManager.swift */; };
+		A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C027075982008E3880 /* DerbyModel.swift */; };
+		A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C2270759FC008E3880 /* Logger.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinewoodDerby.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinewoodDerbyApp.swift; sourceTree = "<group>"; };
+		A4E0B1A6270564C8008E3880 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A4E0B1A8270564C9008E3880 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A4E0B1AB270564C9008E3880 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A4E0B1B227074994008E3880 /* RacersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacersView.swift; sourceTree = "<group>"; };
+		A4E0B1B427074A64008E3880 /* HeatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsView.swift; sourceTree = "<group>"; };
+		A4E0B1B627074B05008E3880 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A4E0B1B827074B6A008E3880 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
+		A4E0B1BA27074BBD008E3880 /* AddRacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRacerView.swift; sourceTree = "<group>"; };
+		A4E0B1BC27074BDC008E3880 /* RankingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsView.swift; sourceTree = "<group>"; };
+		A4E0B1BE2707596C008E3880 /* BTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTManager.swift; sourceTree = "<group>"; };
+		A4E0B1C027075982008E3880 /* DerbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerbyModel.swift; sourceTree = "<group>"; };
+		A4E0B1C2270759FC008E3880 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4E0B19E270564C8008E3880 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A4E0B198270564C8008E3880 = {
+			isa = PBXGroup;
+			children = (
+				A4E0B1A3270564C8008E3880 /* PinewoodDerby */,
+				A4E0B1A2270564C8008E3880 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4E0B1A2270564C8008E3880 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4E0B1A3270564C8008E3880 /* PinewoodDerby */ = {
+			isa = PBXGroup;
+			children = (
+				A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */,
+				A4E0B1C2270759FC008E3880 /* Logger.swift */,
+				A4E0B1A6270564C8008E3880 /* ContentView.swift */,
+				A4E0B1B227074994008E3880 /* RacersView.swift */,
+				A4E0B1BA27074BBD008E3880 /* AddRacerView.swift */,
+				A4E0B1BC27074BDC008E3880 /* RankingsView.swift */,
+				A4E0B1B427074A64008E3880 /* HeatsView.swift */,
+				A4E0B1B627074B05008E3880 /* SettingsView.swift */,
+				A4E0B1B827074B6A008E3880 /* InfoView.swift */,
+				A4E0B1C027075982008E3880 /* DerbyModel.swift */,
+				A4E0B1BE2707596C008E3880 /* BTManager.swift */,
+				A4E0B1A8270564C9008E3880 /* Assets.xcassets */,
+				A4E0B1AA270564C9008E3880 /* Preview Content */,
+			);
+			path = PinewoodDerby;
+			sourceTree = "<group>";
+		};
+		A4E0B1AA270564C9008E3880 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				A4E0B1AB270564C9008E3880 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A4E0B1A0270564C8008E3880 /* PinewoodDerby */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4E0B1AF270564C9008E3880 /* Build configuration list for PBXNativeTarget "PinewoodDerby" */;
+			buildPhases = (
+				A4E0B19D270564C8008E3880 /* Sources */,
+				A4E0B19E270564C8008E3880 /* Frameworks */,
+				A4E0B19F270564C8008E3880 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PinewoodDerby;
+			productName = PinewoodDerby;
+			productReference = A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A4E0B199270564C8008E3880 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+				TargetAttributes = {
+					A4E0B1A0270564C8008E3880 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+				};
+			};
+			buildConfigurationList = A4E0B19C270564C8008E3880 /* Build configuration list for PBXProject "PinewoodDerby" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A4E0B198270564C8008E3880;
+			productRefGroup = A4E0B1A2270564C8008E3880 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4E0B1A0270564C8008E3880 /* PinewoodDerby */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A4E0B19F270564C8008E3880 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
+				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A4E0B19D270564C8008E3880 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4E0B1B727074B05008E3880 /* SettingsView.swift in Sources */,
+				A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */,
+				A4E0B1B327074994008E3880 /* RacersView.swift in Sources */,
+				A4E0B1BB27074BBD008E3880 /* AddRacerView.swift in Sources */,
+				A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */,
+				A4E0B1B527074A64008E3880 /* HeatsView.swift in Sources */,
+				A4E0B1BD27074BDC008E3880 /* RankingsView.swift in Sources */,
+				A4E0B1B927074B6A008E3880 /* InfoView.swift in Sources */,
+				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,
+				A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */,
+				A4E0B1BF2707596C008E3880 /* BTManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A4E0B1AD270564C9008E3880 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A4E0B1AE270564C9008E3880 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A4E0B1B0270564C9008E3880 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
+				DEVELOPMENT_TEAM = J27945M9KG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.randix.PinewoodDerby;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A4E0B1B1270564C9008E3880 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
+				DEVELOPMENT_TEAM = J27945M9KG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.randix.PinewoodDerby;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A4E0B19C270564C8008E3880 /* Build configuration list for PBXProject "PinewoodDerby" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4E0B1AD270564C9008E3880 /* Debug */,
+				A4E0B1AE270564C9008E3880 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4E0B1AF270564C9008E3880 /* Build configuration list for PBXNativeTarget "PinewoodDerby" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4E0B1B0270564C9008E3880 /* Debug */,
+				A4E0B1B1270564C9008E3880 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A4E0B199270564C8008E3880 /* Project object */;
+}
