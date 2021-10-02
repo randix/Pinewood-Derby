@@ -17,6 +17,7 @@ struct AddRacerView: View {
     @State var carName = ""
     @State var firstName = ""
     @State var lastName = ""
+    @State var age = ""
     @State var group = ""
     
     @State var alertShow = false
@@ -52,7 +53,7 @@ struct AddRacerView: View {
             Group {
                 HStack {
                     Spacer().frame(width: 20)
-                    Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
                     Text("Car Number: ").font(.system(size: fontSize))
                     TextField("88", text: $carNumber).font(.system(size: fontSize))
                         .frame(width:50)
@@ -63,7 +64,7 @@ struct AddRacerView: View {
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
+                    //Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
                     Text("Car Name: ").font(.system(size: fontSize))
                     TextField("Ocho", text: $carName).font(.system(size: fontSize))
                         .frame(width:120)
@@ -73,7 +74,7 @@ struct AddRacerView: View {
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    Image(systemName: "person").font(.system(size: fontSize))
+                    //Image(systemName: "person").font(.system(size: fontSize))
                     Text("Name: ").font(.system(size: fontSize))
                     TextField("first name", text: $firstName).font(.system(size: fontSize))
                         .frame(width:130)
@@ -88,7 +89,18 @@ struct AddRacerView: View {
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    Image(systemName: "person.3").font(.system(size: fontSize))
+                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                    Text("Age: ").font(.system(size: fontSize))
+                    TextField("10", text: $age).font(.system(size: fontSize))
+                        .frame(width:50)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        .keyboardType(.numberPad)
+                        //.background(.red)
+                }
+                HStack {
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "person.3").font(.system(size: fontSize))
                     Text("Group: ").font(.system(size: fontSize))
                     Group {
                         if group == derby.girls {
@@ -178,6 +190,7 @@ struct AddRacerView: View {
     
     func updateDerby() {
         let number = UInt(carNumber)
+        let ageUInt = UInt(age)
         // check that the number has not been changed to overlap another entry
         let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
         if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
@@ -194,9 +207,10 @@ struct AddRacerView: View {
             derby.entries[index].carName = carName
             derby.entries[index].firstName = firstName
             derby.entries[index].lastName = lastName
+            derby.entries[index].age = ageUInt!
             derby.entries[index].group = group
         } else {
-            let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, group: group)
+            let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageUInt!, group: group)
             derby.entries.append(d)
         }
         derby.saveDerbyData()

@@ -28,12 +28,18 @@ struct RankingsView: View {
             }
             Spacer().frame(height:10)
             
+            // TODO:
+            // girls - fastest
+            // girls - slowest
+            // boys - fastest
+            // boys - slowest
+            // all - fastest
+            // all - slowest
             
             
    
             
-            Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
-            .padding()
+          
             Spacer()
         }
     }

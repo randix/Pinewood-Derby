@@ -8,11 +8,12 @@
 import Foundation
 
 class DerbyEntry: Identifiable {
-    init(number: UInt, carName: String, firstName: String, lastName: String, group: String) {
+    init(number: UInt, carName: String, firstName: String, lastName: String, age: UInt, group: String) {
         self.carNumber = number
         self.carName = carName
         self.firstName = firstName
         self.lastName = lastName
+        self.age = age
         self.group = group
     }
     
@@ -21,10 +22,13 @@ class DerbyEntry: Identifiable {
     var carName: String
     var firstName: String
     var lastName: String
+    var age: UInt
     var group: String
     
     var times = [Double](repeating: 0.0, count: 6)  // the times for each track
-    var average = 0.0
+    var average: Double = 0.0
+    var rankOverall: UInt = 0
+    var rankGroup: UInt = 0
 }
 
 class HeatsEntry: Identifiable {
@@ -46,9 +50,12 @@ class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
     @Published var heats: [HeatsEntry] = []
+    @Published var isMaster: Bool = false
     
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
+    
+    var pin: String = "1234"
     
     // list of groups
     let girls = "girls"
@@ -84,29 +91,30 @@ class Derby: ObservableObject {
                                carName: String(values[1]),
                                firstName: String(values[2]),
                                lastName: String(values[3]),
-                               group: String(values[4]))
-            d.times[0] = Double(values[5])!
+                               age: UInt(values[4])!,
+                               group: String(values[5]))
             d.times[0] = Double(values[6])!
             d.times[0] = Double(values[7])!
             d.times[0] = Double(values[8])!
-            d.average = Double(values[9])!
+            d.times[0] = Double(values[9])!
+//            d.average = Double(values[10])!
+//            d.rank = UInt(values[11])!
             entries.append(d)
         }
     }
     
     func clearTimes() {
         log("clear times")
-        // first: archive the old data
+        // TODO: first: archive the old data
         saveDerbyData()
     }
     
     func saveDerbyData() {
         var list = [String]()
         for entry in entries {
-            let car = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.group),"
-            let times = String(format: "%6.4f,%6.4f,%6.4f,%6.4f,%6.4f",
-                               entry.times[0], entry.times[1], entry.times[2], entry.times[3],
-                               entry.average)
+            let car = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group),"
+            let times = String(format: "%6.4f,%6.4f,%6.4f,%6.4f",
+                               entry.times[0], entry.times[1], entry.times[2], entry.times[3])
             list.append(car + times)
         }
         let name = Settings.shared.docDir.appendingPathComponent(derbyName)
