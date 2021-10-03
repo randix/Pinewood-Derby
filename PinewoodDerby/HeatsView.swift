@@ -24,7 +24,6 @@ struct HeatsView: View {
                 Spacer()
                 if derby.isMaster {
                     Button(action: {
-                        log("generate")
                         if derby.heats.count > 0 {
                             alertShow = true
                         } else {
@@ -68,7 +67,11 @@ struct HeatsView: View {
             List(derby.heats) { heat in
                 HStack {
                     Text(String(heat.heat))
+                        .frame(width:40, alignment:.center).font(.system(size: 18))
+                        .background(.yellow)
                     Text(heat.group)
+                        .frame(width:40, alignment:.center).font(.system(size: 18))
+                        .background(.yellow)
                     Text(String(heat.tracks[0]))
                     Text(String(heat.tracks[1]))
                     Text(String(heat.tracks[2]))
@@ -83,11 +86,9 @@ struct HeatsView: View {
         }
         .alert(isPresented: self.$alertShow) {
             Alert(title: Text("Generate Heats"),
-                  message: Text("Are you sure?"),
+                  message: Text("This will re-generate the heats! If racing has started, this will invalidate all timing data!\nAre you sure?"),
                   primaryButton: .cancel(),
-                  secondaryButton: .destructive(Text("Generate")) {
-                self.alertButtonAction()
-            }
+                  secondaryButton: .destructive(Text("Generate")) { self.alertButtonAction() }
             )
         }
     }

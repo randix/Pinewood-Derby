@@ -68,9 +68,10 @@ class Derby: ObservableObject {
     func generateHeats() {
         log("generateHeats")
         
+        heats = []
+        
         let boysEntries = entries.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
-        print("boysCount=\(boysCars.count)")
         let boysToAdd = boysCars.count % trackCount != 0 ? trackCount - boysCars.count % trackCount : 0
         for _ in 0..<boysToAdd {
             boysCars.append(0)
@@ -78,11 +79,10 @@ class Derby: ObservableObject {
         boysCars.sort { $0 < $1 }
         boysCars.shuffle()
         let boysOffset = boysCars.count / trackCount
-        print("boysCount=\(boysCars.count) boysOffset=\(boysOffset)")
+        log("boys count=\(boysCars.count) boys added=\(boysToAdd) boys offset=\(boysOffset)")
         
         let girlsEntries = entries.filter { $0.group == girls }
         var girlsCars = girlsEntries.map { $0.carNumber }
-        print("girlsCount=\(girlsCars.count)")
         
         let girlsToAdd = girlsCars.count % trackCount != 0 ? trackCount - girlsCars.count % trackCount : 0
         for _ in 0..<girlsToAdd {
@@ -91,7 +91,7 @@ class Derby: ObservableObject {
         girlsCars.sort { $0 < $1 }
         girlsCars.shuffle()
         let girlsOffset = girlsCars.count / trackCount
-        print("girlsCount=\(girlsCars.count) girlsOffset=\(girlsOffset)")
+        log("girls count=\(girlsCars.count) girls added=\(girlsToAdd) girls offset=\(girlsOffset)")
         
         var boysHeats: [HeatsEntry] = []
         var girlsHeats: [HeatsEntry] = []
@@ -99,35 +99,60 @@ class Derby: ObservableObject {
         // generate the boys heats
         for i in 0..<boysCars.count {
             var tracks: [Int] = []
-            print("heat \(i+1) ", terminator: "")
             for j in 0..<trackCount {
                 var idx = j*boysOffset + i
                 if idx >= boysCars.count {
                     idx -= boysCars.count
                 }
                 tracks.append(boysCars[idx])
-                print("\(boysCars[idx]) ", terminator: "")
             }
-            print()
             boysHeats.append(HeatsEntry(heat:0, group: boys, tracks: tracks))
         }
         
         // generate the girls heats
         for i in 0..<girlsCars.count {
             var tracks: [Int] = []
-            print("heat \(i+1) ", terminator: "")
             for j in 0..<trackCount {
                 var idx = j*girlsOffset + i
                 if idx >= girlsCars.count {
                     idx -= girlsCars.count
                 }
                 tracks.append(girlsCars[idx])
-                print("\(girlsCars[idx]) ", terminator: "")
             }
-            print()
-            girlsHeats.append(HeatsEntry(heat:0, group: boys, tracks: tracks))
+            girlsHeats.append(HeatsEntry(heat:0, group: girls, tracks: tracks))
         }
-        print("TODO: merge heats...")
+        
+        var b = 0
+        var g = 0
+        var heat = 1
+        while true {
+            if g < girlsHeats.count {
+                girlsHeats[g].heat = heat
+                heat += 1
+                heats.append(girlsHeats[g])
+                g += 1
+            }
+            if b < boysHeats.count {
+                boysHeats[b].heat = heat
+                heat += 1
+                heats.append(boysHeats[b])
+                b += 1
+            }
+            if b >= boysHeats.count && g >= girlsHeats.count {
+                break
+            }
+        }
+        
+        for i in 0..<heats.count {
+            var heat = "\(heats[i].heat) \(heats[i].group) "
+            for j in 0..<heats[i].tracks.count {
+                heat += "\(heats[i].tracks[j]) "
+            }
+            log(heat)
+        }
+        
+        self.objectWillChange.send()
+        saveHeatsData()
     }
     
     func readDerbyData() {
@@ -187,10 +212,22 @@ class Derby: ObservableObject {
     }
     
     func readHeatsData() {
-        print(#function)
+        print("TODO: ", #function)
+        
     }
     
     func saveHeatsData() {
-        print(#function)
+        var list = [String]()
+        for entry in heats {
+            var heat = "\(entry.heat),\(entry.group),"
+            for i in 0..<entry.tracks.count {
+                heat.append("\(entry.tracks[i]),")
+            }
+            list.append(heat)
+        }
+        let name = Settings.shared.docDir.appendingPathComponent(heatsName)
+        let fileData = list.joined(separator: "\n")
+        try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        log("saved heats data")
     }
 }
