@@ -179,7 +179,6 @@ struct RacersView: View {
             }
             .frame(minHeight:100)
             .sheet(isPresented: $showEditModal, content: { AddRacerView(entry: $thisEntry) })
-            .sheet(isPresented: $showRankingsModal, content: { RankingsView() })
             
             Spacer()
         }

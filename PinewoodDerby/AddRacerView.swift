@@ -189,8 +189,8 @@ struct AddRacerView: View {
     }
     
     func updateDerby() {
-        let number = UInt(carNumber)
-        let ageUInt = UInt(age)
+        let number = Int(carNumber)
+        let ageInt = Int(age)
         // check that the number has not been changed to overlap another entry
         let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
         if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
@@ -207,10 +207,10 @@ struct AddRacerView: View {
             derby.entries[index].carName = carName
             derby.entries[index].firstName = firstName
             derby.entries[index].lastName = lastName
-            derby.entries[index].age = ageUInt!
+            derby.entries[index].age = ageInt!
             derby.entries[index].group = group
         } else {
-            let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageUInt!, group: group)
+            let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageInt!, group: group)
             derby.entries.append(d)
         }
         derby.saveDerbyData()

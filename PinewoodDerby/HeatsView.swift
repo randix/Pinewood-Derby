@@ -25,9 +25,11 @@ struct HeatsView: View {
                 if derby.isMaster {
                     Button(action: {
                         log("generate")
-                        
-                        // TODO: only generate alert if not empty
-                        alertShow = true
+                        if derby.heats.count > 0 {
+                            alertShow = true
+                        } else {
+                            alertButtonAction()
+                        }
                     }) {
                         VStack {
                             Image(systemName: "wand.and.stars").font(.system(size: 14))
@@ -91,6 +93,6 @@ struct HeatsView: View {
     }
     
     func alertButtonAction() {
-        print(#function)
+        derby.generateHeats()
     }
 }
