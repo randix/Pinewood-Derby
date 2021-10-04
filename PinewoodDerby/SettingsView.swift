@@ -42,20 +42,18 @@ struct SettingsView: View {
 // TODO: clear times (archive and "Are you sure?")
 // TODO: generate heats (archive)
 
-// number of tracks
-// minimum time, if less than, discard and mark
+// TODO: minimum time, if less than, discard and mark
 // maximum time, if more than, discard and mark
 
-// ask for PIN, become server
-// show IP address
-// start server for files
-// display connections and successful transfers
+// TODO: ask for PIN, become server
+  // show IP address
+  // start server for files
+  // display connections and successful transfers
 
-// No Pin
-// enter IP address
-// copy derby.csv and heats.csv from server
-// display successful transfer
-
+// TODO: No Pin, become slave
+  // enter IP address
+  // copy derby.csv and heats.csv from server
+  // display successful transfer
 
 class Settings {
     

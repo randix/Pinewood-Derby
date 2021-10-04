@@ -63,6 +63,15 @@ class Derby: ObservableObject {
     let girls = "girls"
     let boys = "boys"
     
+    
+    // sorting:
+    var sortRankGroup = false
+    var sortRankOverall = false
+    var sortCarNumber = false
+    var sortName = false
+    var sortGroup = false
+    var sortAge = false
+    
     static let shared = Derby()
     private init() {}
     

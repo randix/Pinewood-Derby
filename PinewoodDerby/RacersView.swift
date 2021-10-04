@@ -60,7 +60,16 @@ struct RacersView: View {
                 Button(action: {
                     log("sort on group rank")
                     // TODO: sort boys or girs together, then sort the rank
-                    // TODO: invert the sort for each tap
+                    if derby.sortRankGroup {
+                        derby.entries.sort { $0.group < $1.group }
+                        derby.entries.sort { $0.rankGroup < $1.rankGroup }
+                        derby.sortRankGroup = false
+                    } else {
+                        derby.entries.sort { $0.group > $1.group }
+                        derby.entries.sort { $0.rankGroup > $1.rankGroup }
+                        derby.sortRankGroup = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 13))
@@ -71,7 +80,14 @@ struct RacersView: View {
                 Button(action: {
                     log("sort on overall rank")
                     // TODO:  sort the overall rank
-                    // TODO: invert the sort for each tap
+                    if derby.sortRankOverall {
+                        derby.entries.sort { $0.rankOverall < $1.rankOverall }
+                        derby.sortRankOverall = false
+                    } else {
+                        derby.entries.sort { $0.rankOverall > $1.rankOverall }
+                        derby.sortRankOverall = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 13))
@@ -81,6 +97,14 @@ struct RacersView: View {
                 }
                 Button(action: {
                     log("sort on car")
+                    if derby.sortCarNumber {
+                        derby.entries.sort { $0.carNumber < $1.carNumber }
+                        derby.sortCarNumber = false
+                    } else {
+                        derby.entries.sort { $0.carNumber > $1.carNumber }
+                        derby.sortCarNumber = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     HStack {
                         Image(systemName: "number").frame(width: 20, alignment: .leading).font(.system(size: 18))
@@ -90,6 +114,14 @@ struct RacersView: View {
                 }
                 Button(action: {
                     log("sort on group")
+                    if derby.sortGroup {
+                        derby.entries.sort { $0.group < $1.group }
+                        derby.sortGroup = false
+                    } else {
+                        derby.entries.sort { $0.group > $1.group }
+                        derby.sortGroup = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     Text("Group")
                         .bold()
@@ -104,6 +136,14 @@ struct RacersView: View {
                 Spacer().frame(width:137)
                 Button(action: {
                     log("sort on name")
+                    if derby.sortName {
+                        derby.entries.sort { $0.lastName == $1.lastName ? $0.firstName < $1.firstName : $0.lastName < $1.lastName }
+                        derby.sortName = false
+                    } else {
+                        derby.entries.sort { $0.lastName == $1.lastName ? $0.firstName > $1.firstName : $0.lastName > $1.lastName }
+                        derby.sortName = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     Text("Name").bold().frame(width: 180, alignment: .leading).font(.system(size: 18))
                     //.background(.yellow)
@@ -111,6 +151,14 @@ struct RacersView: View {
                 Spacer().frame(width:10)
                 Button(action: {
                     log("no sort on age")
+                    if derby.sortAge {
+                        derby.entries.sort { $0.age < $1.age }
+                        derby.sortAge = false
+                    } else {
+                        derby.entries.sort { $0.age > $1.age }
+                        derby.sortAge = true
+                    }
+                    derby.saveDerbyData()
                 }) {
                     Text("Age").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
                     //.background(.yellow)
