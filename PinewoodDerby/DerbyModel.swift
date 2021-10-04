@@ -32,24 +32,25 @@ class DerbyEntry: Identifiable {
 }
 
 class HeatsEntry: Identifiable {
-    init(heat: Int, group: String, tracks: [Int]) {
+    init(heat: Int, group: String, tracks: [Int], hasRun: Bool) {
         self.heat = heat
         self.group = group
         self.tracks = tracks
+        self.hasRun = hasRun
     }
     
     let id = UUID()             // id for SwiftUI
     var heat: Int
     var group: String
-    var tracks: [Int] = []     // car number for each track
-    var hasRun = false
+    var tracks: [Int]           // car number for each track
+    var hasRun: Bool
 }
 
 class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
     @Published var heats: [HeatsEntry] = []
-    @Published var isMaster: Bool = false
+    let settings = Settings.shared
     
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
@@ -60,8 +61,6 @@ class Derby: ObservableObject {
     let girls = "girls"
     let boys = "boys"
     
-    let trackCount = 4  // should be 4 or 6 (Settings)
-    
     static let shared = Derby()
     private init() {}
     
@@ -69,28 +68,29 @@ class Derby: ObservableObject {
         log("generateHeats")
         
         heats = []
+        // TODO: clear all timing data
         
         let boysEntries = entries.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
-        let boysToAdd = boysCars.count % trackCount != 0 ? trackCount - boysCars.count % trackCount : 0
+        let boysToAdd = boysCars.count % settings.trackCount != 0 ? settings.trackCount - boysCars.count % settings.trackCount : 0
         for _ in 0..<boysToAdd {
             boysCars.append(0)
         }
         boysCars.sort { $0 < $1 }
         boysCars.shuffle()
-        let boysOffset = boysCars.count / trackCount
+        let boysOffset = boysCars.count / settings.trackCount
         log("boys count=\(boysCars.count) boys added=\(boysToAdd) boys offset=\(boysOffset)")
         
         let girlsEntries = entries.filter { $0.group == girls }
         var girlsCars = girlsEntries.map { $0.carNumber }
         
-        let girlsToAdd = girlsCars.count % trackCount != 0 ? trackCount - girlsCars.count % trackCount : 0
+        let girlsToAdd = girlsCars.count % settings.trackCount != 0 ? settings.trackCount - girlsCars.count % settings.trackCount : 0
         for _ in 0..<girlsToAdd {
             girlsCars.append(0)
         }
         girlsCars.sort { $0 < $1 }
         girlsCars.shuffle()
-        let girlsOffset = girlsCars.count / trackCount
+        let girlsOffset = girlsCars.count / settings.trackCount
         log("girls count=\(girlsCars.count) girls added=\(girlsToAdd) girls offset=\(girlsOffset)")
         
         var boysHeats: [HeatsEntry] = []
@@ -99,27 +99,27 @@ class Derby: ObservableObject {
         // generate the boys heats
         for i in 0..<boysCars.count {
             var tracks: [Int] = []
-            for j in 0..<trackCount {
+            for j in 0..<settings.trackCount {
                 var idx = j*boysOffset + i
                 if idx >= boysCars.count {
                     idx -= boysCars.count
                 }
                 tracks.append(boysCars[idx])
             }
-            boysHeats.append(HeatsEntry(heat:0, group: boys, tracks: tracks))
+            boysHeats.append(HeatsEntry(heat:0, group: boys, tracks: tracks, hasRun: false))
         }
         
         // generate the girls heats
         for i in 0..<girlsCars.count {
             var tracks: [Int] = []
-            for j in 0..<trackCount {
+            for j in 0..<settings.trackCount {
                 var idx = j*girlsOffset + i
                 if idx >= girlsCars.count {
                     idx -= girlsCars.count
                 }
                 tracks.append(girlsCars[idx])
             }
-            girlsHeats.append(HeatsEntry(heat:0, group: girls, tracks: tracks))
+            girlsHeats.append(HeatsEntry(heat:0, group: girls, tracks: tracks, hasRun: false))
         }
         
         var b = 0
@@ -212,7 +212,34 @@ class Derby: ObservableObject {
     }
     
     func readHeatsData() {
-        print("TODO: ", #function)
+        let name = Settings.shared.docDir.appendingPathComponent(heatsName)
+        log("heats file: \(name)")
+        var data: String?
+        do {
+            data = try String(contentsOf: name)
+        } catch {
+            log("error: \(error)")
+            data = ""
+        }
+        let lines = data!.components(separatedBy: .newlines)
+        for line in lines {
+            log(line)
+            let values = line.split(separator: ",")
+            if values.count < 4 {
+                continue
+            }
+            let heat = Int(values[0])!
+            let group = values[1]
+            let tCnt = values.count - 3
+            var tracks: [Int] = [Int](repeating: 0, count: tCnt)
+            for i in 0..<tCnt {
+                tracks[i] = Int(values[i+2])!
+            }
+            let hasRun = values.last == "true"
+            
+            let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
+            heats.append(h)
+        }
         
     }
     
@@ -223,6 +250,7 @@ class Derby: ObservableObject {
             for i in 0..<entry.tracks.count {
                 heat.append("\(entry.tracks[i]),")
             }
+            heat.append("\(entry.hasRun)")
             list.append(heat)
         }
         let name = Settings.shared.docDir.appendingPathComponent(heatsName)

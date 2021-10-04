@@ -11,6 +11,7 @@ struct RacersView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
+    let settings = Settings.shared
     
     @State var thisEntry: DerbyEntry?
     @State var showEditModal = false
@@ -28,7 +29,7 @@ struct RacersView: View {
                 //.background(.red)
                 Spacer()
                 Spacer().frame(width:30)
-                if derby.isMaster {
+                if settings.isMaster {
                     Button(action: {
                         log("add")
                         thisEntry = nil

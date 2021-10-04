@@ -11,6 +11,7 @@ struct HeatsView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
+    let settings = Settings.shared
     
     @State var alertShow = false
     
@@ -22,7 +23,7 @@ struct HeatsView: View {
                 Spacer()
                 Text("Heats").font(.system(size: 20)).bold()
                 Spacer()
-                if derby.isMaster {
+                if settings.isMaster {
                     Button(action: {
                         if derby.heats.count > 0 {
                             alertShow = true
@@ -45,41 +46,73 @@ struct HeatsView: View {
             Spacer().frame(height:10)
             
             HStack {
-                Text("Heat").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                Text("Group").bold().frame(width: 60, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                Text("Trk1").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                Text("Trk2").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                Text("Trk3").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                Text("Trk4").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
-                if derby.trackCount > 4 {
-                    Text("Trk5").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    Text("Trk6").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
+                Spacer().frame(width:115)
+                
+                Text("T1").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                //.background(.yellow)
+                Text("T2").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                //.background(.yellow)
+                if settings.trackCount > 2 {
+                    Text("T3").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                    //.background(.yellow)
+                    if settings.trackCount > 3 {
+                        Text("T4").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                        //.background(.yellow)
+                        if settings.trackCount > 4 {
+                            Text("T5").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                            //.background(.yellow)
+                            if settings.trackCount > 5 {
+                                Text("T6").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
+                                //.background(.yellow)
+                            }
+                            Text("Ran").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
+                            //.background(.yellow)
+                        }
+                    }
                 }
-                Text("Ran").bold().frame(width: 40, alignment: .leading).font(.system(size: 18))
-                    .background(.yellow)
+                Spacer()
             }
             List(derby.heats) { heat in
                 HStack {
                     Text(String(heat.heat))
-                        .frame(width:40, alignment:.center).font(.system(size: 18))
-                        .background(.yellow)
+                        .frame(width:25, alignment:.center).font(.system(size: 18))
+                        //.background(.yellow)
                     Text(heat.group)
-                        .frame(width:40, alignment:.center).font(.system(size: 18))
-                        .background(.yellow)
+                        .frame(width:42, alignment:.center).font(.system(size: 18))
+                        //.background(.yellow)
                     Text(String(heat.tracks[0]))
+                        .frame(width:25, alignment:.center).font(.system(size: 18))
+                        //.background(.yellow)
                     Text(String(heat.tracks[1]))
-                    Text(String(heat.tracks[2]))
-                    Text(String(heat.tracks[3]))
-                    if derby.trackCount > 4 {
-                        Text(String(heat.tracks[4]))
-                        Text(String(heat.tracks[5]))
+                        .frame(width:25, alignment:.center).font(.system(size: 18))
+                    //.background(.yellow)
+                    if settings.trackCount > 2 {
+                        Text(String(heat.tracks[2]))
+                            .frame(width:25, alignment:.center).font(.system(size: 18))
+                        //.background(.yellow)
+                        if settings.trackCount > 3 {
+                            Text(String(heat.tracks[3]))
+                                .frame(width:25, alignment:.center).font(.system(size: 18))
+                            //.background(.yellow)
+                            if settings.trackCount > 4 {
+                                Text(String(heat.tracks[4]))
+                                    .frame(width:25, alignment:.center).font(.system(size: 18))
+                                //.background(.yellow)
+                                if settings.trackCount > 5 {
+                                    Text(String(heat.tracks[5]))
+                                        .frame(width:25, alignment:.center).font(.system(size: 18))
+                                    //.background(.yellow)
+                                }
+                            }
+                        }
                     }
+                    Image(systemName: "square")
+                        .frame(width:25, alignment:.center).font(.system(size: 20))
+                        //.background(.yellow)
+//                    Image(systemName: "checkmark.square")
+//                        .frame(width:25, alignment:.center).font(.system(size: 20))
+//                        //.background(.yellow)
+                    Spacer()
                 }
             }
             Spacer()

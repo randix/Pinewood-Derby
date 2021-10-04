@@ -7,18 +7,17 @@
 
 import SwiftUI
 
-struct InfoView: View {
+struct ResultsView: View {
     var body: some View {
         VStack {
             HStack {
                 Spacer()
-                Text("Information").font(.system(size: 20)).bold()
+                Text("Results").font(.system(size: 20)).bold()
                 Spacer()
             }
             Spacer().frame(height:10)
             
-            Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
-            .padding()
+            
             Spacer()
         }
     }

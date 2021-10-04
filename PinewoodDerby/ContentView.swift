@@ -31,23 +31,24 @@ struct ContentView: View {
             //---------------------------------------------------
             HeatsView()
                 .tabItem {
-                    Image(systemName: "tablecells")
+                    Image(systemName: "flag.2.crossed")
                     Text("Heats")
                 }
             //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
+            
+            
+            //---------------------------------------------------
+            ResultsView()
+                .tabItem {
+                    Image(systemName: "tablecells")
+                    Text("Results")
+                }
             
             //---------------------------------------------------
             SettingsView()
                 .tabItem {
                     Image(systemName: "gear").font(.system(size: 11))
                     Text("Settings").font(.system(size: 11))
-                }
-            
-            //---------------------------------------------------
-            InfoView()
-                .tabItem {
-                    Image(systemName: "info.circle")
-                    Text("Info")
                 }
         }
         

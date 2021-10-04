@@ -10,13 +10,17 @@ import SwiftUI
 struct SettingsView: View {
     
     let derby = Derby.shared
+    let settings = Settings.shared
+    
+    let settingsName = "settings.csv"
     
     let fontSize = CGFloat(18)
     let iconSize = CGFloat(14)
     
     @State var pin: String = ""
-    @FocusState private var nameIsFocused: Bool
+    @State var tracks: Int =  0
     
+    @FocusState private var nameIsFocused: Bool
     
     var body: some View {
         VStack {
@@ -27,8 +31,12 @@ struct SettingsView: View {
             }
             Spacer().frame(height:30)
             
+            Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
+                .font(.system(size: fontSize))
+            Spacer().frame(height:30)
+            
             HStack {
-                Spacer().frame(width: 20)
+                //Spacer().frame(width: 20)
                 Image(systemName: "123.rectangle").font(.system(size: fontSize)).frame(width: 30)
                 Text("Pin: ").font(.system(size: fontSize))
                 TextField("0000", text: $pin).font(.system(size: fontSize))
@@ -39,19 +47,43 @@ struct SettingsView: View {
                     .focused($nameIsFocused)
                 //.background(.red)
                 Button(action: {
-                    derby.isMaster = pin == derby.pin
+                    settings.isMaster = pin == derby.pin
                     pin = ""
                     nameIsFocused = false
+                    Settings.shared.saveData()
                 }) {
                     Image(systemName: pin == derby.pin ? "checkmark.square.fill" : "checkmark").font(.system(size: fontSize)).frame(width: 30)
                 }
             }
-            
-            if derby.isMaster {
+            if settings.isMaster {
                 Text("This device is the Timer Master").font(.system(size:fontSize))
             } else {
                 Text("This device is a Timer Observer").font(.system(size:fontSize))
             }
+            Spacer().frame(height:30)
+            
+            // Number of tracks
+            HStack {
+                Image(systemName: "rectangle.grid.1x2").font(.system(size: fontSize)).frame(width: 30)
+                Text("Tracks: ").font(.system(size: fontSize))
+                Picker(selection: $tracks,
+                       label: Text("Tracks"),
+                       content: {
+                    Text("2").tag(2)
+                    Text("3").tag(3)
+                    Text("4").tag(4)
+                    Text("5").tag(5)
+                    Text("6").tag(6)
+                })
+                    .pickerStyle(MenuPickerStyle())
+                    .onChange(of: tracks) { _ in
+                        settings.trackCount = tracks
+                        settings.saveData()
+                    }
+            }
+            
+            // Generate times for all heats
+            //TODO: test time and rankings
             
             Spacer()
         }
@@ -76,7 +108,7 @@ struct SettingsView: View {
 // display successful transfer
 
 
-class Settings {
+class Settings: ObservableObject {
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let settingsName = "settings.txt"
@@ -87,17 +119,43 @@ class Settings {
     var minimumTime =  1.0
     var maximumTime = 20.0
     
-    var numberOfTracks = 4  // 4 or 6
+    @Published var isMaster: Bool = false
+    @Published var trackCount = 4
     
     static let shared = Settings()
     private init() {}
     
     func readData() {
         log("Settings.readData")
-        log(docDir.path)
+        let name = docDir.appendingPathComponent(settingsName)
+        var settings: String
+        do {
+            settings = try String(contentsOf: name)
+        } catch {
+            log("error: \(error)")
+            settings = ""
+        }
+        let items = settings.components(separatedBy: ",")
+        if items.count == 2 {
+            let isMast = items[0].components(separatedBy: "=")
+            
+            isMaster = false
+            if isMast[1] == "true" {
+                isMaster = true
+            }
+            print("isMaster = \(isMaster)")
+            let tracks = items[1].components(separatedBy: "=")
+            trackCount = Int(tracks[1].trimmingCharacters(in: .whitespacesAndNewlines))!
+            print("trackCount = \(trackCount)")
+        }
+        self.objectWillChange.send()
     }
     
     func saveData() {
-        
+        log("Settings.saveData")
+        let settings = "isMaster=\(isMaster),trackCount=\(trackCount)\n"
+        let name = docDir.appendingPathComponent(settingsName)
+        try! settings.write(toFile: name.path, atomically: true, encoding: .utf8)
+        log("saved settings data")
     }
 }
