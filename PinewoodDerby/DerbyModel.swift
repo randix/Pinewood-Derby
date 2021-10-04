@@ -50,12 +50,14 @@ class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
     @Published var heats: [HeatsEntry] = []
-    let settings = Settings.shared
+    
     
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
     
+    @Published var isMaster = false
     var pin: String = "1234"
+    var trackCount = 4
     
     // list of groups
     let girls = "girls"
@@ -72,25 +74,25 @@ class Derby: ObservableObject {
         
         let boysEntries = entries.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
-        let boysToAdd = boysCars.count % settings.trackCount != 0 ? settings.trackCount - boysCars.count % settings.trackCount : 0
+        let boysToAdd = boysCars.count % trackCount != 0 ? trackCount - boysCars.count % trackCount : 0
         for _ in 0..<boysToAdd {
             boysCars.append(0)
         }
         boysCars.sort { $0 < $1 }
         boysCars.shuffle()
-        let boysOffset = boysCars.count / settings.trackCount
+        let boysOffset = boysCars.count / trackCount
         log("boys count=\(boysCars.count) boys added=\(boysToAdd) boys offset=\(boysOffset)")
         
         let girlsEntries = entries.filter { $0.group == girls }
         var girlsCars = girlsEntries.map { $0.carNumber }
         
-        let girlsToAdd = girlsCars.count % settings.trackCount != 0 ? settings.trackCount - girlsCars.count % settings.trackCount : 0
+        let girlsToAdd = girlsCars.count % trackCount != 0 ? trackCount - girlsCars.count % trackCount : 0
         for _ in 0..<girlsToAdd {
             girlsCars.append(0)
         }
         girlsCars.sort { $0 < $1 }
         girlsCars.shuffle()
-        let girlsOffset = girlsCars.count / settings.trackCount
+        let girlsOffset = girlsCars.count / trackCount
         log("girls count=\(girlsCars.count) girls added=\(girlsToAdd) girls offset=\(girlsOffset)")
         
         var boysHeats: [HeatsEntry] = []
@@ -99,7 +101,7 @@ class Derby: ObservableObject {
         // generate the boys heats
         for i in 0..<boysCars.count {
             var tracks: [Int] = []
-            for j in 0..<settings.trackCount {
+            for j in 0..<trackCount {
                 var idx = j*boysOffset + i
                 if idx >= boysCars.count {
                     idx -= boysCars.count
@@ -112,7 +114,7 @@ class Derby: ObservableObject {
         // generate the girls heats
         for i in 0..<girlsCars.count {
             var tracks: [Int] = []
-            for j in 0..<settings.trackCount {
+            for j in 0..<trackCount {
                 var idx = j*girlsOffset + i
                 if idx >= girlsCars.count {
                     idx -= girlsCars.count

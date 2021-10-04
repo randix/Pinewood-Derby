@@ -1,12 +1,13 @@
 determine what to do with car number 0 and heats less that full
 
-display times in heats
-colorize heats that have run, run management
-add special heats and car selection
-
+add times generator
 sorting
 timing and ranking calculations
 delete alert and delete
+
+add times View
+colorize heats that have run, run management
+add special heats and car selection
 
 add background photo
 everthing for the app store

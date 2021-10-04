@@ -22,30 +22,34 @@ struct RacersView: View {
             
             // Title row - with Rankings and Add buttons
             HStack {
-                Spacer().frame(width:60)
+                Spacer().frame(width:35)
+                Button(action: {
+                    log("add")
+                    thisEntry = nil
+                    showEditModal = true
+                }) {
+                    VStack {
+                        Image(systemName: "plus").font(.system(size: 14))
+                        Text("Add").font(.system(size: 14))
+                    }
+                }
+                .frame(width:30)
+                //.background(.red)
+                Spacer().frame(width:5)
+                
                 Spacer()
                 Text("Racers").font(.system(size: 20)).bold()
                     .frame(width:100, alignment: .center)
                 //.background(.red)
                 Spacer()
-                Spacer().frame(width:30)
-                if settings.isMaster {
-                    Button(action: {
-                        log("add")
-                        thisEntry = nil
-                        showEditModal = true
-                    }) {
-                        VStack {
-                            Image(systemName: "plus").font(.system(size: 14))
-                            Text("Add").font(.system(size: 14))
-                        }
-                    }
-                    .frame(width:30)
-                    //.background(.red)
-                } else {
-                    Spacer().frame(width:30)
+                
+                VStack(alignment: .leading) {
+                    Text("girls: \(derby.entries.filter { $0.group == derby.girls }.count)").font(.system(size: 14))
+                    Text("boys: \(derby.entries.filter { $0.group == derby.boys }.count)").font(.system(size: 14))
                 }
-                Spacer().frame(width:30)
+                .frame(width: 60)
+                //.background(.yellow)
+                Spacer().frame(width:10)
             }
             Spacer().frame(height:10)
             

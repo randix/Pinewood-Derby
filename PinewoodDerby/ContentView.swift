@@ -8,12 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let settings = Settings.shared
+    
     var body: some View {
-        HStack {
-            Spacer()
-            // TODO: make this dynamic - "Grand Prix"xxx
-            Text("Pinewood Derby").font(.system(size: 24)).bold()//.foregroundColor(.brown)
-            Spacer()
+        VStack {
+            HStack {
+                Spacer()
+                Text(settings.title).font(.system(size: 24)).bold()//.foregroundColor(.brown)
+                Spacer()
+            }
+            HStack {
+                Spacer()
+                Text(settings.subtitle).font(.system(size: 16)).bold()//.foregroundColor(.brown)
+                Spacer()
+            }
         }
         
         TabView {
@@ -51,7 +60,6 @@ struct ContentView: View {
                     Text("Settings").font(.system(size: 11))
                 }
         }
-        
     }
 }
 

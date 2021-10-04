@@ -12,6 +12,9 @@ struct AddRacerView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var entry: DerbyEntry?
     
+    @State var pin = ""
+    @FocusState private var pinIsFocused: Bool
+    
     @State var id = UUID()
     @State var carNumber = ""
     @State var carName = ""
@@ -48,7 +51,36 @@ struct AddRacerView: View {
                 Text("Racer Entry").font(.system(size: 20)).bold()
                 Spacer()
             }
-            Spacer().frame(height:10)
+            Spacer().frame(height:30)
+            
+            if derby.isMaster == false {
+                HStack {
+                    Spacer()
+                    Image(systemName: "123.rectangle").font(.system(size: fontSize)).frame(width: 30)
+                    Text("Pin: ").font(.system(size: fontSize))
+                    TextField("0000", text: $pin).font(.system(size: fontSize))
+                        .frame(width:60)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        .keyboardType(.numberPad)
+                        .focused($pinIsFocused)
+                    //.background(.red)
+                    Button(action: {
+                        derby.isMaster = pin == derby.pin
+                        pin = ""
+                        pinIsFocused = false
+                        if derby.isMaster == false {
+                            presentationMode.wrappedValue.dismiss()
+                        } else {
+                            derby.objectWillChange.send()
+                        }
+                    }) {
+                        Image(systemName: "checkmark").font(.system(size: fontSize)).frame(width: 30)
+                    }
+                    Spacer()
+                }
+
+        } else {
             
             Group {
                 HStack {
@@ -60,7 +92,7 @@ struct AddRacerView: View {
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
-                        //.background(.red)
+                    //.background(.red)
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -70,7 +102,7 @@ struct AddRacerView: View {
                         .frame(width:120)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
+                    //.background(.red)
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -80,12 +112,12 @@ struct AddRacerView: View {
                         .frame(width:130)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
+                    //.background(.red)
                     TextField("last name", text: $lastName).font(.system(size: fontSize))
                         .frame(width:130)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
+                    //.background(.red)
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -96,7 +128,7 @@ struct AddRacerView: View {
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
-                        //.background(.red)
+                    //.background(.red)
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -126,6 +158,7 @@ struct AddRacerView: View {
                         group = derby.boys
                     }
                 }
+                
             }
             
             Spacer().frame(height: 20)
@@ -166,9 +199,10 @@ struct AddRacerView: View {
                 
                 Spacer()
             }
-            
-            Spacer()
         }
+        
+        Spacer()
+    }
         .alert(isPresented: self.$alertShow) {
             Alert(title: Text(self.alertTitle),
                   message: Text(self.alertMessage),
@@ -186,34 +220,34 @@ struct AddRacerView: View {
                 group = entry!.group
             }
         })
+}
+
+func updateDerby() {
+    let number = Int(carNumber)
+    let ageInt = Int(age)
+    // check that the number has not been changed to overlap another entry
+    let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
+    if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
+        // another id has the same carNumber
+        alertTitle = "Duplicate"
+        alertMessage = "Duplicate car number"
+        alertButton = "OK"
+        alertShow = true
+        return
     }
-    
-    func updateDerby() {
-        let number = Int(carNumber)
-        let ageInt = Int(age)
-        // check that the number has not been changed to overlap another entry
-        let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
-        if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
-            // another id has the same carNumber
-            alertTitle = "Duplicate"
-            alertMessage = "Duplicate car number"
-            alertButton = "OK"
-            alertShow = true
-            return
-        }
-        // find the entry in the array....
-        if let index = derby.entries.firstIndex(where: { $0.id == id}) {
-            derby.entries[index].carNumber = number!
-            derby.entries[index].carName = carName
-            derby.entries[index].firstName = firstName
-            derby.entries[index].lastName = lastName
-            derby.entries[index].age = ageInt!
-            derby.entries[index].group = group
-        } else {
-            let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageInt!, group: group)
-            derby.entries.append(d)
-        }
-        derby.saveDerbyData()
-        derby.objectWillChange.send()
+    // find the entry in the array....
+    if let index = derby.entries.firstIndex(where: { $0.id == id}) {
+        derby.entries[index].carNumber = number!
+        derby.entries[index].carName = carName
+        derby.entries[index].firstName = firstName
+        derby.entries[index].lastName = lastName
+        derby.entries[index].age = ageInt!
+        derby.entries[index].group = group
+    } else {
+        let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageInt!, group: group)
+        derby.entries.append(d)
     }
+    derby.saveDerbyData()
+    derby.objectWillChange.send()
+}
 }

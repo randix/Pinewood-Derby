@@ -13,34 +13,37 @@ struct HeatsView: View {
     @ObservedObject var derby = Derby.shared
     let settings = Settings.shared
     
-    @State var alertShow = false
+    @State var showAlert = false
+    @State var showPopover = false
     
     var body: some View {
         VStack {
             HStack {
                 Spacer().frame(width:30)
-                Spacer().frame(width:62)
+                
+                Button(action: {
+                    if !derby.isMaster {
+                        showPopover = true
+                    } else {
+                        if derby.heats.count == 0 {
+                            derby.generateHeats()
+                        } else {
+                            showAlert = true
+                        }
+                    }
+                }) {
+                    VStack {
+                        Image(systemName: "wand.and.stars").font(.system(size: 14))
+                        Text("Generate").font(.system(size: 14))
+                    }
+                }
+                .frame(width:62)
+         
                 Spacer()
                 Text("Heats").font(.system(size: 20)).bold()
                 Spacer()
-                if settings.isMaster {
-                    Button(action: {
-                        if derby.heats.count > 0 {
-                            alertShow = true
-                        } else {
-                            alertButtonAction()
-                        }
-                    }) {
-                        VStack {
-                            Image(systemName: "wand.and.stars").font(.system(size: 14))
-                            Text("Generate").font(.system(size: 14))
-                        }
-                    }
-                    .frame(width:62)
-                    //.background(.red)
-                } else {
-                    Spacer().frame(width:30)
-                }
+                
+                Spacer().frame(width:62)
                 Spacer().frame(width:30)
             }
             Spacer().frame(height:10)
@@ -52,16 +55,16 @@ struct HeatsView: View {
                 //.background(.yellow)
                 Text("T2").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
                 //.background(.yellow)
-                if settings.trackCount > 2 {
+                if derby.trackCount > 2 {
                     Text("T3").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
                     //.background(.yellow)
-                    if settings.trackCount > 3 {
+                    if derby.trackCount > 3 {
                         Text("T4").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
                         //.background(.yellow)
-                        if settings.trackCount > 4 {
+                        if derby.trackCount > 4 {
                             Text("T5").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
                             //.background(.yellow)
-                            if settings.trackCount > 5 {
+                            if derby.trackCount > 5 {
                                 Text("T6").bold().frame(width: 25, alignment: .leading).font(.system(size: 18))
                                 //.background(.yellow)
                             }
@@ -86,19 +89,19 @@ struct HeatsView: View {
                     Text(String(heat.tracks[1]))
                         .frame(width:25, alignment:.center).font(.system(size: 18))
                     //.background(.yellow)
-                    if settings.trackCount > 2 {
+                    if derby.trackCount > 2 {
                         Text(String(heat.tracks[2]))
                             .frame(width:25, alignment:.center).font(.system(size: 18))
                         //.background(.yellow)
-                        if settings.trackCount > 3 {
+                        if derby.trackCount > 3 {
                             Text(String(heat.tracks[3]))
                                 .frame(width:25, alignment:.center).font(.system(size: 18))
                             //.background(.yellow)
-                            if settings.trackCount > 4 {
+                            if derby.trackCount > 4 {
                                 Text(String(heat.tracks[4]))
                                     .frame(width:25, alignment:.center).font(.system(size: 18))
                                 //.background(.yellow)
-                                if settings.trackCount > 5 {
+                                if derby.trackCount > 5 {
                                     Text(String(heat.tracks[5]))
                                         .frame(width:25, alignment:.center).font(.system(size: 18))
                                     //.background(.yellow)
@@ -109,6 +112,7 @@ struct HeatsView: View {
                     Image(systemName: "square")
                         .frame(width:25, alignment:.center).font(.system(size: 20))
                         //.background(.yellow)
+                    // TODO: manage hasRun
 //                    Image(systemName: "checkmark.square")
 //                        .frame(width:25, alignment:.center).font(.system(size: 20))
 //                        //.background(.yellow)
@@ -117,16 +121,15 @@ struct HeatsView: View {
             }
             Spacer()
         }
-        .alert(isPresented: self.$alertShow) {
+        .alert(isPresented: self.$showAlert) {
             Alert(title: Text("Generate Heats"),
-                  message: Text("This will re-generate the heats! If racing has started, this will invalidate all timing data!\nAre you sure?"),
+                  message: Text("This will re-generate the heats!\nIf racing has started, this will invalidate all timing data!\n\nAre you sure?"),
                   primaryButton: .cancel(),
-                  secondaryButton: .destructive(Text("Generate")) { self.alertButtonAction() }
+                  secondaryButton: .destructive(Text("Generate")) { derby.generateHeats() }
             )
         }
-    }
-    
-    func alertButtonAction() {
-        derby.generateHeats()
+        .popover(isPresented: $showPopover) {
+            PinView()
+        }
     }
 }

@@ -12,15 +12,12 @@ struct SettingsView: View {
     let derby = Derby.shared
     let settings = Settings.shared
     
-    let settingsName = "settings.csv"
+    let configName = "config.txt"
     
     let fontSize = CGFloat(18)
     let iconSize = CGFloat(14)
     
     @State var pin: String = ""
-    @State var tracks: Int =  0
-    
-    @FocusState private var nameIsFocused: Bool
     
     var body: some View {
         VStack {
@@ -35,63 +32,15 @@ struct SettingsView: View {
                 .font(.system(size: fontSize))
             Spacer().frame(height:30)
             
-            HStack {
-                //Spacer().frame(width: 20)
-                Image(systemName: "123.rectangle").font(.system(size: fontSize)).frame(width: 30)
-                Text("Pin: ").font(.system(size: fontSize))
-                TextField("0000", text: $pin).font(.system(size: fontSize))
-                    .frame(width:60)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    .keyboardType(.numberPad)
-                    .focused($nameIsFocused)
-                //.background(.red)
-                Button(action: {
-                    settings.isMaster = pin == derby.pin
-                    pin = ""
-                    nameIsFocused = false
-                    Settings.shared.saveData()
-                }) {
-                    Image(systemName: pin == derby.pin ? "checkmark.square.fill" : "checkmark").font(.system(size: fontSize)).frame(width: 30)
-                }
-            }
-            if settings.isMaster {
-                Text("This device is the Timer Master").font(.system(size:fontSize))
-            } else {
-                Text("This device is a Timer Observer").font(.system(size:fontSize))
-            }
-            Spacer().frame(height:30)
             
-            // Number of tracks
-            HStack {
-                Image(systemName: "rectangle.grid.1x2").font(.system(size: fontSize)).frame(width: 30)
-                Text("Tracks: ").font(.system(size: fontSize))
-                Picker(selection: $tracks,
-                       label: Text("Tracks"),
-                       content: {
-                    Text("2").tag(2)
-                    Text("3").tag(3)
-                    Text("4").tag(4)
-                    Text("5").tag(5)
-                    Text("6").tag(6)
-                })
-                    .pickerStyle(MenuPickerStyle())
-                    .onChange(of: tracks) { _ in
-                        settings.trackCount = tracks
-                        settings.saveData()
-                    }
-            }
-            
-            // Generate times for all heats
-            //TODO: test time and rankings
-            
+           
             Spacer()
         }
     }
 }
 
 // TODO: clear times (archive and "Are you sure?")
-// TODO: generate heats (archive and "Ary you sure?)
+// TODO: generate heats (archive)
 
 // number of tracks
 // minimum time, if less than, discard and mark
@@ -108,54 +57,55 @@ struct SettingsView: View {
 // display successful transfer
 
 
-class Settings: ObservableObject {
+class Settings {
+    
+    let derby = Derby.shared
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let settingsName = "settings.txt"
+    let configName = "config.txt"
     
-    var appName: String = ""
-    var appVersion: String = ""
+    var appName = ""
+    var appVersion = ""
+    
+    var title = ""
+    var subtitle = ""
     
     var minimumTime =  1.0
     var maximumTime = 20.0
-    
-    @Published var isMaster: Bool = false
-    @Published var trackCount = 4
     
     static let shared = Settings()
     private init() {}
     
     func readData() {
         log("Settings.readData")
-        let name = docDir.appendingPathComponent(settingsName)
-        var settings: String
+        let name = docDir.appendingPathComponent(configName)
+        var config: String
         do {
-            settings = try String(contentsOf: name)
+            config = try String(contentsOf: name)
         } catch {
             log("error: \(error)")
-            settings = ""
+            config = "Title=Pinewood Derby\nSubtitle=Event\nNumberOfTracks=4\n"
+            try! config.write(to: name, atomically: true, encoding: .utf8)
         }
-        let items = settings.components(separatedBy: ",")
-        if items.count == 2 {
-            let isMast = items[0].components(separatedBy: "=")
-            
-            isMaster = false
-            if isMast[1] == "true" {
-                isMaster = true
+        
+        let lines = config.components(separatedBy: "\n")
+        for i in 0..<lines.count {
+            let keyValue = lines[i].components(separatedBy: "=")
+            print("'\(keyValue[0])' '\(keyValue[1])'")
+            switch keyValue[0] {
+            case "Title":
+                title = keyValue[1]
+                log("Title=\(title)")
+            case "Subtitle":
+                subtitle = keyValue[1]
+                log("Subtitle=\(subtitle)")
+            case "NumberOfTracks":
+                derby.trackCount = Int(keyValue[1])!
+                log("NumberOfTracks=\(derby.trackCount)")
+            default:
+                log("incorrect format: \(config)")
             }
-            print("isMaster = \(isMaster)")
-            let tracks = items[1].components(separatedBy: "=")
-            trackCount = Int(tracks[1].trimmingCharacters(in: .whitespacesAndNewlines))!
-            print("trackCount = \(trackCount)")
         }
-        self.objectWillChange.send()
-    }
-    
-    func saveData() {
-        log("Settings.saveData")
-        let settings = "isMaster=\(isMaster),trackCount=\(trackCount)\n"
-        let name = docDir.appendingPathComponent(settingsName)
-        try! settings.write(toFile: name.path, atomically: true, encoding: .utf8)
-        log("saved settings data")
+        //self.objectWillChange.send()
     }
 }
