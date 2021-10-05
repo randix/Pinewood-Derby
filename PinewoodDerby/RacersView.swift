@@ -59,14 +59,11 @@ struct RacersView: View {
                 
                 Button(action: {
                     log("sort on group rank")
-                    // TODO: sort boys or girs together, then sort the rank
                     if derby.sortRankGroup {
-                        derby.entries.sort { $0.group < $1.group }
-                        derby.entries.sort { $0.rankGroup < $1.rankGroup }
+                        derby.entries.sort { $0.group + String($0.rankGroup) < $1.group + String(format: "%03d", $1.rankGroup) }
                         derby.sortRankGroup = false
                     } else {
-                        derby.entries.sort { $0.group > $1.group }
-                        derby.entries.sort { $0.rankGroup > $1.rankGroup }
+                        derby.entries.sort { $0.group + String($0.rankGroup) > $1.group + String(format: "%03d", $1.rankGroup) }
                         derby.sortRankGroup = true
                     }
                     derby.saveDerbyData()
@@ -79,7 +76,6 @@ struct RacersView: View {
                 }
                 Button(action: {
                     log("sort on overall rank")
-                    // TODO:  sort the overall rank
                     if derby.sortRankOverall {
                         derby.entries.sort { $0.rankOverall < $1.rankOverall }
                         derby.sortRankOverall = false
@@ -137,10 +133,10 @@ struct RacersView: View {
                 Button(action: {
                     log("sort on name")
                     if derby.sortName {
-                        derby.entries.sort { $0.lastName == $1.lastName ? $0.firstName < $1.firstName : $0.lastName < $1.lastName }
+                        derby.entries.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
                         derby.sortName = false
                     } else {
-                        derby.entries.sort { $0.lastName == $1.lastName ? $0.firstName > $1.firstName : $0.lastName > $1.lastName }
+                        derby.entries.sort { $0.lastName + $0.firstName >  $1.lastName + $1.firstName }
                         derby.sortName = true
                     }
                     derby.saveDerbyData()

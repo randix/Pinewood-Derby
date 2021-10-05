@@ -63,7 +63,6 @@ class Derby: ObservableObject {
     let girls = "girls"
     let boys = "boys"
     
-    
     // sorting:
     var sortRankGroup = false
     var sortRankOverall = false
@@ -76,9 +75,10 @@ class Derby: ObservableObject {
     private init() {}
     
     func generateHeats() {
-        log("generateHeats")
+        log(#function)
         
         heats = []
+        // TODO: archive
         // TODO: clear all timing data
         
         let boysEntries = entries.filter { $0.group == boys }
@@ -168,7 +168,7 @@ class Derby: ObservableObject {
     
     func readDerbyData() {
         let name = Settings.shared.docDir.appendingPathComponent(derbyName)
-        log("derby file: \(name)")
+        log("\(#function) \(name)")
         var data: String?
         do {
             data = try String(contentsOf: name)
@@ -193,22 +193,13 @@ class Derby: ObservableObject {
             d.times[0] = Double(values[7])!
             d.times[0] = Double(values[8])!
             d.times[0] = Double(values[9])!
-//            d.average = Double(values[10])!
-//            d.rank = Int(values[11])!
-            // TODO: calulate average
             entries.append(d)
         }
-        
-        // TODO: calculate ranks
-    }
-    
-    func clearTimes() {
-        log("clear times")
-        // TODO: first: archive the old data
-        saveDerbyData()
+        calculateRankingss()
     }
     
     func saveDerbyData() {
+        log(#function)
         var list = [String]()
         for entry in entries {
             let car = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group),"
@@ -219,12 +210,11 @@ class Derby: ObservableObject {
         let name = Settings.shared.docDir.appendingPathComponent(derbyName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-        log("saved derby data")
     }
     
     func readHeatsData() {
         let name = Settings.shared.docDir.appendingPathComponent(heatsName)
-        log("heats file: \(name)")
+        log("\(#function) \(name)")
         var data: String?
         do {
             data = try String(contentsOf: name)
@@ -251,10 +241,11 @@ class Derby: ObservableObject {
             let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
             heats.append(h)
         }
-        
+        calculateRankingss()
     }
     
     func saveHeatsData() {
+        log(#function)
         var list = [String]()
         for entry in heats {
             var heat = "\(entry.heat),\(entry.group),"
@@ -267,6 +258,79 @@ class Derby: ObservableObject {
         let name = Settings.shared.docDir.appendingPathComponent(heatsName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-        log("saved heats data")
+    }
+    
+    func clearTimes() {
+        log(#function)
+        let times = [Double](repeating: 0.0, count: 6)
+        for entry in entries {
+            entry.times = times
+        }
+    }
+    
+    func generateTestTimes() {
+        log(#function)
+        for entry in entries {
+            entry.times[0] = Double.random(in: 4..<6.3)
+            for i in 1..<trackCount {
+                let t = entry.times[0]
+                entry.times[i] = Double.random(in: (t-0.3)..<(t+0.3))
+            }
+        }
+        calculateRankingss()
+        saveDerbyData()
+    }
+    
+    func calculateRankingss() {
+        log(#function)
+   
+        for entry in entries {
+            entry.average = 0.0
+            var count = 0
+            for i in 0..<trackCount {
+                if entry.times[i] > 3.0 && entry.times[i] < 10.0 {
+                    count += 1
+                    entry.average += entry.times[i]
+                }
+            }
+            entry.average = entry.average / Double(count)
+        }
+        // calculate girls rankings
+        let g = entries.filter { $0.group == girls }
+        let gRank = g.sorted { $0.average < $1.average }
+        var rank = 1
+        for gEntry in gRank {
+            let entry = entries.filter { $0.carNumber == gEntry.carNumber }[0]
+            entry.rankGroup = rank
+            rank += 1
+        }
+        // calculate boys rankings
+        let b = entries.filter { $0.group == boys }
+        let bRank = b.sorted { $0.average < $1.average }
+        rank = 1
+        for bEntry in bRank {
+            let entry = entries.filter { $0.carNumber == bEntry.carNumber }[0]
+            entry.rankGroup = rank
+            rank += 1
+        }
+        // calcuates overall rankings
+        let a = entries
+        let aRank = a.sorted { $0.average < $1.average }
+        rank = 1
+        for aEntry in aRank {
+            let entry = entries.filter { $0.carNumber == aEntry.carNumber }[0]
+            entry.rankOverall = rank
+            rank += 1
+        }
+    }
+    
+    func archiveData() {
+        log(#function)
+        // TODO:
+        // create archive dir if not exist on todays date/time
+        // copy heats/derby/config/log-* into archive dir
+        // remove heats
+        clearTimes()
+        saveDerbyData()
     }
 }

@@ -32,7 +32,20 @@ struct SettingsView: View {
                 .font(.system(size: fontSize))
             Spacer().frame(height:30)
             
+            // TODO: put these behind a "Test" entry started with a pin entry...
+            Button(action: {
+                derby.clearTimes()
+            }) {
+                Text("Clear Times").font(.system(size: fontSize))
+            }
+            Spacer().frame(height:30)
             
+            Button(action: {
+                derby.generateTestTimes()
+            }) {
+                Text("Generate Test Times").font(.system(size: fontSize))
+            }
+            Spacer().frame(height:30)
            
             Spacer()
         }
@@ -40,7 +53,7 @@ struct SettingsView: View {
 }
 
 // TODO: clear times (archive and "Are you sure?")
-// TODO: generate heats (archive)
+// TODO: archive before generate heats (archive)
 
 // TODO: minimum time, if less than, discard and mark
 // maximum time, if more than, discard and mark
