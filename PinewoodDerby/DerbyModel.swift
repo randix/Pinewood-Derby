@@ -62,20 +62,14 @@ class Derby: ObservableObject {
     // list of groups
     let girls = "girls"
     let boys = "boys"
-    
-    // sorting:
-    var sortRankGroup = false
-    var sortRankOverall = false
-    var sortCarNumber = false
-    var sortName = false
-    var sortGroup = false
-    var sortAge = false
+    let overall = "overall"
     
     static let shared = Derby()
     private init() {}
     
     func generateHeats() {
         log(#function)
+        archiveData()
         
         heats = []
         // TODO: archive
@@ -190,9 +184,19 @@ class Derby: ObservableObject {
                                age: Int(values[4])!,
                                group: String(values[5]))
             d.times[0] = Double(values[6])!
-            d.times[0] = Double(values[7])!
-            d.times[0] = Double(values[8])!
-            d.times[0] = Double(values[9])!
+            d.times[1] = Double(values[7])!
+            if trackCount > 2 {
+                d.times[2] = Double(values[8])!
+                if trackCount > 2 {
+                    d.times[3] = Double(values[9])!
+                    if trackCount > 2 {
+                        d.times[4] = Double(values[9])!
+                        if trackCount > 2 {
+                            d.times[5] = Double(values[9])!
+                        }
+                    }
+                }
+            }
             entries.append(d)
         }
         calculateRankingss()
@@ -215,31 +219,29 @@ class Derby: ObservableObject {
     func readHeatsData() {
         let name = Settings.shared.docDir.appendingPathComponent(heatsName)
         log("\(#function) \(name)")
-        var data: String?
         do {
-            data = try String(contentsOf: name)
+            let data = try String(contentsOf: name)
+            let lines = data.components(separatedBy: .newlines)
+            for line in lines {
+                log(line)
+                let values = line.split(separator: ",")
+                if values.count < 4 {
+                    continue
+                }
+                let heat = Int(values[0])!
+                let group = values[1]
+                let tCnt = values.count - 3
+                var tracks: [Int] = [Int](repeating: 0, count: tCnt)
+                for i in 0..<tCnt {
+                    tracks[i] = Int(values[i+2])!
+                }
+                let hasRun = values.last == "true"
+                
+                let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
+                heats.append(h)
+            }
         } catch {
-            log("error: \(error)")
-            data = ""
-        }
-        let lines = data!.components(separatedBy: .newlines)
-        for line in lines {
-            log(line)
-            let values = line.split(separator: ",")
-            if values.count < 4 {
-                continue
-            }
-            let heat = Int(values[0])!
-            let group = values[1]
-            let tCnt = values.count - 3
-            var tracks: [Int] = [Int](repeating: 0, count: tCnt)
-            for i in 0..<tCnt {
-                tracks[i] = Int(values[i+2])!
-            }
-            let hasRun = values.last == "true"
-            
-            let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
-            heats.append(h)
+            log("error: \(error.localizedDescription)")
         }
         calculateRankingss()
     }
@@ -266,24 +268,33 @@ class Derby: ObservableObject {
         for entry in entries {
             entry.times = times
         }
+        saveDerbyData()
+        self.objectWillChange.send()
     }
     
     func generateTestTimes() {
         log(#function)
         for entry in entries {
             entry.times[0] = Double.random(in: 4..<6.3)
+            let t = entry.times[0]
             for i in 1..<trackCount {
-                let t = entry.times[0]
-                entry.times[i] = Double.random(in: (t-0.3)..<(t+0.3))
+                entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
             }
+        }
+        for entry in entries {
+            for i in 0..<trackCount {
+                print(entry.times[i], terminator: "")
+            }
+            print("")
         }
         calculateRankingss()
         saveDerbyData()
+        self.objectWillChange.send()
     }
     
     func calculateRankingss() {
         log(#function)
-   
+        
         for entry in entries {
             entry.average = 0.0
             var count = 0
@@ -322,13 +333,43 @@ class Derby: ObservableObject {
             entry.rankOverall = rank
             rank += 1
         }
+        self.objectWillChange.send()
     }
     
     func archiveData() {
         log(#function)
-        // TODO:
-        // create archive dir if not exist on todays date/time
-        // copy heats/derby/config/log-* into archive dir
+        
+        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let archiveURL = docURL.appendingPathComponent("archive")
+        if !FileManager.default.fileExists(atPath: archiveURL.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: archiveURL.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                log(error.localizedDescription)
+            }
+        }
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm"
+        let archiveName = formatter.string(from: now)
+        let archive = archiveURL.appendingPathComponent(archiveName)
+        if !FileManager.default.fileExists(atPath: archive.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: archive.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                log(error.localizedDescription)
+            }
+        }
+        let files = ["derby.csv", "heats.csv", "config.txt"]
+        for f in files {
+            let srcURL = docURL.appendingPathComponent(f)
+            let dstURL = archive.appendingPathComponent(f)
+            do {
+                try FileManager.default.copyItem(at: srcURL, to: dstURL)
+            } catch (let error) {
+                print("Cannot copy item at \(srcURL) to \(dstURL): \(error)")
+            }
+        }
         // remove heats
         clearTimes()
         saveDerbyData()

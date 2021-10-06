@@ -13,7 +13,7 @@ struct PinView: View {
     
     let derby = Derby.shared
     @State var pin = ""
-    
+    @FocusState private var pinIsFocused: Bool
     @State var showAlert = false
     
     var body: some View {
@@ -45,10 +45,12 @@ struct PinView: View {
                     .textFieldStyle(.roundedBorder)
                     .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                     .keyboardType(.numberPad)
+                    .focused($pinIsFocused)
                 Button(action: {
                     derby.isMaster = pin == derby.pin
                     log("isMaster = \(derby.isMaster)")
                     pin = ""
+                    pinIsFocused = false
                     derby.objectWillChange.send()
                     if derby.isMaster == false {
                         presentationMode.wrappedValue.dismiss()

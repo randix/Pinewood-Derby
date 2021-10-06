@@ -18,7 +18,7 @@ class Advertisement {
     static let shared = Advertisement()
     
     func adverisement(_ race: Int, _ t1: Double, _ t2: Double, _ t3: Double, _  t4: Double) -> Void {
-        log(String(format: "advertisement %d %0.4f $0.4f %0.4f %0.f4", race, t1, t2, t3, t4))
+        log(String(format: "advertisement %d %0.4f $0.4f %0.4f %0.4f", race, t1, t2, t3, t4))
     }
 }
 
