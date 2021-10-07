@@ -18,19 +18,31 @@ struct SettingsView: View {
     let iconSize = CGFloat(14)
     
     @State var pin: String = ""
+    @State var ipAddress: String = ""
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Text("Settings").font(.system(size: 20)).bold()
-                Spacer()
-            }
-            Spacer().frame(height:30)
+           
+                HStack {
+                    Spacer()
+                    Text("Settings").font(.system(size: 20)).bold()
+                    Spacer()
+                }
+                Spacer().frame(height:30)
+                
+                Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
+                    .font(.system(size: fontSize))
+                Spacer().frame(height:30)
             
-            Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
-                .font(.system(size: fontSize))
-            Spacer().frame(height:30)
+            
+            HStack {
+                Spacer().frame(width:40)
+                Text("Timer IP Address:").font(.system(size: 18))
+                TextField("192.168.42.16", text: $ipAddress).font(.system(size: 18))
+                    .textFieldStyle(.roundedBorder)
+                Spacer().frame(width:40)
+            }
+            
             
             // TODO: put these behind a "Test" entry started with a pin entry...
             Button(action: {
@@ -102,6 +114,9 @@ class Settings {
         let lines = config.components(separatedBy: "\n")
         for i in 0..<lines.count {
             let keyValue = lines[i].components(separatedBy: "=")
+            if keyValue.count < 2 {
+                continue
+            }
             print("'\(keyValue[0])' '\(keyValue[1])'")
             switch keyValue[0] {
             case "Title":

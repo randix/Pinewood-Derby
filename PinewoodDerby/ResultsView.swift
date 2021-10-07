@@ -39,6 +39,30 @@ struct SingleView: View {
         }
     }
     
+    func getEntry(_ group: String, _ place: Int) -> DerbyEntry? {
+        var p = place
+        if group == derby.overall {
+            if place < 0 {
+                p = derby.entries.count + place + 1
+            }
+            let entries = derby.entries.filter { $0.rankOverall == p }
+            if entries.count == 0 {
+                return(nil)
+            }
+            return(entries[0])
+        } else {
+            let groupEntries = derby.entries.filter { $0.group == group }
+            if place < 0 {
+                p = groupEntries.count + place + 1
+            }
+            let entries = groupEntries.filter { $0.rankGroup == p }
+            if entries.count == 0 {
+                return(nil)
+            }
+            return(entries[0])
+        }
+    }
+    
     func place(_ group: String, _ place: Int) -> String {
         var p = place
         if group == derby.overall {
@@ -55,75 +79,35 @@ struct SingleView: View {
     }
     
     func carForPlace(_ group: String, _ place: Int) -> String {
-        var entry: DerbyEntry
-        var p = place
-        if group == derby.overall {
-            if place < 0 {
-                p = derby.entries.count + place + 1
-            }
-            entry = derby.entries.filter { $0.rankOverall == p }[0]
+        if let entry = getEntry(group, place) {
+            return(String(entry.carNumber))
         } else {
-            let entries = derby.entries.filter { $0.group == group }
-            if place < 0 {
-                p = entries.count + place + 1
-            }
-            entry = entries.filter { $0.rankGroup == p }[0]
+            return("")
         }
-        return(String(entry.carNumber))
     }
-    
+
     func carNameForPlace(_ group: String, _ place: Int) -> String {
-        var entry: DerbyEntry
-        var p = place
-        if group == derby.overall {
-            if place < 0 {
-                p = derby.entries.count + place + 1
-            }
-            entry = derby.entries.filter { $0.rankOverall == p }[0]
+        if let entry = getEntry(group, place) {
+            return(String(entry.carName))
         } else {
-            let entries = derby.entries.filter { $0.group == group }
-            if place < 0 {
-                p = entries.count + place + 1
-            }
-            entry = entries.filter { $0.rankGroup == p }[0]
+            return("")
         }
-        return(String(entry.carName))
     }
     
     func nameForPlace(_ group: String, _ place: Int) -> String {
-        var entry: DerbyEntry
-        var p = place
-        if group == derby.overall {
-            if place < 0 {
-                p = derby.entries.count + place + 1
-            }
-            entry = derby.entries.filter { $0.rankOverall == p }[0]
+        if let entry = getEntry(group, place) {
+            return(String(entry.firstName + " " + entry.lastName))
         } else {
-            let entries = derby.entries.filter { $0.group == group }
-            if place < 0 {
-                p = entries.count + place + 1
-            }
-            entry = entries.filter { $0.rankGroup == p }[0]
+            return("")
         }
-        return(String(entry.firstName + " " + entry.lastName))
     }
     
     func ageForPlace(_ group: String, _ place: Int) -> String {
-        var entry: DerbyEntry
-        var p = place
-        if group == derby.overall {
-            if place < 0 {
-                p = derby.entries.count + place
-            }
-            entry = derby.entries.filter { $0.rankOverall == p }[0]
+        if let entry = getEntry(group, place) {
+            return(String(entry.age))
         } else {
-            let entries = derby.entries.filter { $0.group == group }
-            if place < 0 {
-                p = entries.count + place
-            }
-            entry = entries.filter { $0.rankGroup == p }[0]
+            return("")
         }
-        return(String(entry.age))
     }
 }
 
@@ -182,7 +166,7 @@ struct ResultsView: View {
                 }
                 HStack {
                     SingleView(group: derby.boys, place: 2)
-                    SingleView(group: derby.girls, place: -2)
+                    SingleView(group: derby.boys, place: -2)
                 }
                 HStack {
                     SingleView(group: derby.boys, place: 3)

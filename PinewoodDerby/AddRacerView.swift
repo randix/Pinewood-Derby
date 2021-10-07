@@ -59,7 +59,7 @@ struct AddRacerView: View {
                     Image(systemName: "123.rectangle").font(.system(size: fontSize)).frame(width: 30)
                     Text("Pin: ").font(.system(size: fontSize))
                     TextField("0000", text: $pin).font(.system(size: fontSize))
-                        .frame(width:60)
+                        .frame(width:70)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
@@ -192,6 +192,7 @@ struct AddRacerView: View {
                         firstName = ""
                         lastName = ""
                         group = ""
+                        age = ""
                     }) {
                         Text("Save+New")
                     }
