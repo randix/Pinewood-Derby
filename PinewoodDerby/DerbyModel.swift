@@ -214,6 +214,8 @@ class Derby: ObservableObject {
         let name = Settings.shared.docDir.appendingPathComponent(derbyName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        
+        saveDerbyToServer()
     }
     
     func readHeatsData() {
@@ -260,6 +262,18 @@ class Derby: ObservableObject {
         let name = Settings.shared.docDir.appendingPathComponent(heatsName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        
+        saveHeatsToServer()
+    }
+    
+    func saveDerbyToServer() {
+        print(#function)
+        
+    }
+    
+    func saveHeatsToServer() {
+        print(#function)
+        
     }
     
     func clearTimes() {
