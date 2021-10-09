@@ -11,11 +11,7 @@ struct SettingsView: View {
     
     let derby = Derby.shared
     let settings = Settings.shared
-    
-    let configName = "config.txt"
-    
-    let fontSize = CGFloat(18)
-    let iconSize = CGFloat(14)
+    let rest = REST.shared
     
     @State var pin: String = ""
     @State var ipAddress: String = ""
@@ -34,30 +30,48 @@ struct SettingsView: View {
             
             Group {
                 Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
-                    .font(.system(size: fontSize))
+                    .font(.system(size: 18))
                 Spacer().frame(height:30)
                 
-                if Settings.shared.serverAddress == "" {
-                    Text("Timer Server Not Found!").font(.system(size: 18))
+                if let serverAddress = rest.serverAddress {
+                    Text("Timer IP Address: \(serverAddress)").font(.system(size: 18))
                 } else {
-                    Text("Timer IP Address: \(Settings.shared.serverAddress)").font(.system(size: 18))
+                    Text("Timer Server Not Found!").font(.system(size: 18))
+                }
+                Spacer().frame(height:30)
+            }
+            
+            Group {
+                Button(action: {
+                    rest.readFilesFromServer()
+                })  {
+                    Text("Update Configuration").font(.system(size:18))
+                }
+                Spacer().frame(height:30)
+            }
+            
+            // TODO: put these behind a "Test" entry started with a pin entry...
+            Group {
+                Button(action: {
+                    rest.saveFilesToServer()
+                })  {
+                    Text("Send Configuration").font(.system(size:18))
                 }
                 Spacer().frame(height:30)
             }
             
             
-            // TODO: put these behind a "Test" entry started with a pin entry...
             Button(action: {
                 derby.clearTimes()
             }) {
-                Text("Clear Times").font(.system(size: fontSize))
+                Text("Clear Times").font(.system(size: 18))
             }
             Spacer().frame(height:30)
             
             Button(action: {
                 derby.generateTestTimes()
             }) {
-                Text("Generate Test Times").font(.system(size: fontSize))
+                Text("Generate Test Times").font(.system(size: 18))
             }
             Spacer().frame(height:30)
             
@@ -72,23 +86,13 @@ struct SettingsView: View {
 // TODO: minimum time, if less than, discard and mark
 // maximum time, if more than, discard and mark
 
-// TODO: ask for PIN, become server
-// show IP address
-// start server for files
-// display connections and successful transfers
-
-// TODO: No Pin, become slave
-// enter IP address
-// copy derby.csv and heats.csv from server
-// display successful transfer
-
 class Settings {
     
     let derby = Derby.shared
+    let rest = REST.shared
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let configName = "config.txt"
-    
+  
     var appName = ""
     var appVersion = ""
     
@@ -98,18 +102,13 @@ class Settings {
     var minimumTime =  1.0
     var maximumTime = 20.0
     
-    var webProtocol = "http://"
-    var ipAddress = ""
-    var serverAddress = ""
-    let port = "8080"
-    var timerUrl = ""
-    
+   
     static let shared = Settings()
     private init() {}
     
     func readData() {
         log("Settings.readData")
-        let name = docDir.appendingPathComponent(configName)
+        let name = docDir.appendingPathComponent(rest.configName)
         var config: String
         do {
             config = try String(contentsOf: name)
@@ -137,8 +136,8 @@ class Settings {
                 derby.trackCount = Int(keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines))!
                 log("NumberOfTracks=\(derby.trackCount)")
             case "IPAddress":
-                ipAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("IPAddress=\(ipAddress)")
+                rest.ipAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("IPAddress=\(rest.ipAddress)")
             default:
                 log("incorrect format: \(config)")
             }
@@ -146,31 +145,5 @@ class Settings {
         //self.objectWillChange.send()
     }
     
-    func findTimer() {
-        let ipParts = ipAddress.components(separatedBy: ".")
-        let network = "\(ipParts[0]).\(ipParts[1]).\(ipParts[2])."
-        
-        for addr in 1..<255 {
-            if let url = URL(string: "\(webProtocol)\(network)\(addr):\(port)/") {
-                var request = URLRequest(url: url)
-                request.httpMethod = "HEAD"
-                URLSession(configuration: .default)
-                    .dataTask(with: request) { (_, response, error) -> Void in
-                        guard error == nil else {
-                            //print("Error:", error ?? "")
-                            return
-                        }
-                        guard (response as? HTTPURLResponse)?
-                                .statusCode == 200 else {
-                                    //print("down")
-                                    return
-                                }
-                        self.serverAddress = network + String(addr)
-                        self.timerUrl = "http://" + self.serverAddress + ":" + self.port + "/"
-                        log("PDServer: \(self.timerUrl)")
-                    }
-                    .resume()
-            }
-        }
-    }
+    
 }

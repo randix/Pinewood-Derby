@@ -51,10 +51,6 @@ class Derby: ObservableObject {
     @Published var entries: [DerbyEntry] = []
     @Published var heats: [HeatsEntry] = []
     
-    
-    let derbyName = "derby.csv"
-    let heatsName = "heats.csv"
-    
     @Published var isMaster = false
     var pin: String = "1234"
     var trackCount = 4
@@ -63,6 +59,8 @@ class Derby: ObservableObject {
     let girls = "girls"
     let boys = "boys"
     let overall = "overall"
+    
+    let rest = REST.shared
     
     static let shared = Derby()
     private init() {}
@@ -161,7 +159,7 @@ class Derby: ObservableObject {
     }
     
     func readDerbyData() {
-        let name = Settings.shared.docDir.appendingPathComponent(derbyName)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
         log("\(#function) \(name)")
         var data: String?
         do {
@@ -212,23 +210,21 @@ class Derby: ObservableObject {
                                entry.times[0], entry.times[1], entry.times[2], entry.times[3])
             list.append(car + times)
         }
-        let name = Settings.shared.docDir.appendingPathComponent(derbyName)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-        
-        saveDerbyToServer()
     }
     
     func readHeatsData() {
-        let name = Settings.shared.docDir.appendingPathComponent(heatsName)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.heatsName)
         log("\(#function) \(name)")
         do {
             let data = try String(contentsOf: name)
             let lines = data.components(separatedBy: .newlines)
             for line in lines {
                 log(line)
-                let values = line.split(separator: ",")
-                if values.count < 4 {
+                let values = line.split(separator: ",", omittingEmptySubsequences: false)
+                if values.count < trackCount {
                     continue
                 }
                 let heat = Int(values[0])!
@@ -260,53 +256,11 @@ class Derby: ObservableObject {
             heat.append("\(entry.hasRun)")
             list.append(heat)
         }
-        let name = Settings.shared.docDir.appendingPathComponent(heatsName)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.heatsName)
         let fileData = list.joined(separator: "\n")
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-        
-        saveHeatsToServer()
     }
-    
-    func saveDerbyToServer() {
-        print(#function)
-        
-    }
-    
-    func saveHeatsToServer() {
-        print(#function)
-        
-    }
-    
-    func clearTimes() {
-        log(#function)
-        let times = [Double](repeating: 0.0, count: 6)
-        for entry in entries {
-            entry.times = times
-        }
-        saveDerbyData()
-        self.objectWillChange.send()
-    }
-    
-    func generateTestTimes() {
-        log(#function)
-        for entry in entries {
-            entry.times[0] = Double.random(in: 4..<6.3)
-            let t = entry.times[0]
-            for i in 1..<trackCount {
-                entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
-            }
-        }
-        for entry in entries {
-            for i in 0..<trackCount {
-                print(entry.times[i], terminator: "")
-            }
-            print("")
-        }
-        calculateRankingss()
-        saveDerbyData()
-        self.objectWillChange.send()
-    }
-    
+  
     func calculateRankingss() {
         log(#function)
         
@@ -375,7 +329,7 @@ class Derby: ObservableObject {
                 log(error.localizedDescription)
             }
         }
-        let files = ["derby.csv", "heats.csv", "config.txt"]
+        let files = [rest.derbyName, rest.heatsName, rest.configName, rest.timesName]
         for f in files {
             let srcURL = docURL.appendingPathComponent(f)
             let dstURL = archive.appendingPathComponent(f)
@@ -389,4 +343,36 @@ class Derby: ObservableObject {
         clearTimes()
         saveDerbyData()
     }
+    
+    
+    func clearTimes() {
+        log(#function)
+        let times = [Double](repeating: 0.0, count: 6)
+        for entry in entries {
+            entry.times = times
+        }
+        saveDerbyData()
+        self.objectWillChange.send()
+    }
+    
+    func generateTestTimes() {
+        log(#function)
+        for entry in entries {
+            entry.times[0] = Double.random(in: 4..<6.3)
+            let t = entry.times[0]
+            for i in 1..<trackCount {
+                entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
+            }
+        }
+        for entry in entries {
+            for i in 0..<trackCount {
+                print(entry.times[i], terminator: "")
+            }
+            print("")
+        }
+        calculateRankingss()
+        saveDerbyData()
+        self.objectWillChange.send()
+    }
+    
 }

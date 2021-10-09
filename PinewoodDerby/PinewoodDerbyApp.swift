@@ -21,7 +21,7 @@ struct PinewoodDerbyApp: App {
         Settings.shared.readData()
         Derby.shared.readDerbyData()
         Derby.shared.readHeatsData()
-        Settings.shared.findTimer()
+        REST.shared.findTimer()
         
         //BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
     }
