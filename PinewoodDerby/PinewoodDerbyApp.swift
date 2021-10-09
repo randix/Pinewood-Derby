@@ -23,7 +23,7 @@ struct PinewoodDerbyApp: App {
         Derby.shared.readHeatsData()
         Settings.shared.findTimer()
         
-        BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
+        //BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
     }
     
     var body: some Scene {
