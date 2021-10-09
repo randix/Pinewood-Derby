@@ -15,24 +15,24 @@ struct SingleView: View {
     let place: Int
     
     var body: some View {
-        VStack {
+        VStack(spacing: 2) {
             HStack(spacing:3) {
                 Spacer().frame(width:10)
-                Text(place(group, place)).font(.system(size: 16)).frame(width:25)
+                Text(place(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
                     //.background(.yellow)
-                Text(carForPlace(group, place)).font(.system(size: 16)).frame(width:25)
+                Text(carForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
                     //.background(.yellow)
-                Text(carNameForPlace(group, place)).font(.system(size: 16)).frame(width:100, alignment: .leading)
+                Text(carNameForPlace(group, place)).font(.system(size: 16)).frame(width:100, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
                 Spacer()
             }
             HStack(spacing:3) {
-                Spacer().frame(width:45)
-                Text(nameForPlace(group, place)).font(.system(size: 16)).frame(width:115, alignment: .leading)
+                Spacer().frame(width:43)
+                Text(nameForPlace(group, place)).font(.system(size: 16)).frame(width:115, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
-                Text(ageForPlace(group, place)).font(.system(size: 16)).frame(width:25)
+                Text(ageForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
                     //.background(.yellow)
                 Spacer()
             }
@@ -134,14 +134,17 @@ struct ResultsView: View {
                         //.background(.yellow)
                     Spacer().frame(width:10)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.girls, place: 1)
                     SingleView(group: derby.girls, place: -1)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.girls, place: 2)
                     SingleView(group: derby.girls, place: -2)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.girls, place: 3)
                     SingleView(group: derby.girls, place: -3)
@@ -160,14 +163,17 @@ struct ResultsView: View {
                     
                     Spacer().frame(width:10)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.boys, place: 1)
                     SingleView(group: derby.boys, place: -1)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.boys, place: 2)
                     SingleView(group: derby.boys, place: -2)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.boys, place: 3)
                     SingleView(group: derby.boys, place: -3)
@@ -188,20 +194,23 @@ struct ResultsView: View {
                     
                     Spacer().frame(width:10)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.overall, place: 1)
                     SingleView(group: derby.overall, place: -1)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.overall, place: 2)
                     SingleView(group: derby.overall, place: -2)
                 }
+                //Spacer().frame(height:5)
                 HStack {
                     SingleView(group: derby.overall, place: 3)
                     SingleView(group: derby.overall, place: -3)
                 }
             }
-            Spacer().frame(height:15)
+            //Spacer().frame(height:15)
             
             Spacer()
         }

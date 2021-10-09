@@ -79,131 +79,133 @@ struct AddRacerView: View {
                     }
                     Spacer()
                 }
-
-        } else {
-            
-            Group {
-                HStack {
-                    Spacer().frame(width: 20)
-                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
-                    Text("Car Number: ").font(.system(size: fontSize))
-                    TextField("88", text: $carNumber).font(.system(size: fontSize))
-                        .frame(width:50)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .keyboardType(.numberPad)
-                    //.background(.red)
-                }
-                HStack {
-                    Spacer().frame(width: 20)
-                    //Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
-                    Text("Car Name: ").font(.system(size: fontSize))
-                    TextField("Ocho", text: $carName).font(.system(size: fontSize))
-                        .frame(width:120)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.red)
-                }
-                HStack {
-                    Spacer().frame(width: 20)
-                    //Image(systemName: "person").font(.system(size: fontSize))
-                    Text("Name: ").font(.system(size: fontSize))
-                    TextField("first name", text: $firstName).font(.system(size: fontSize))
-                        .frame(width:130)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.red)
-                    TextField("last name", text: $lastName).font(.system(size: fontSize))
-                        .frame(width:130)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.red)
-                }
-                HStack {
-                    Spacer().frame(width: 20)
-                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
-                    Text("Age: ").font(.system(size: fontSize))
-                    TextField("10", text: $age).font(.system(size: fontSize))
-                        .frame(width:50)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .keyboardType(.numberPad)
-                    //.background(.red)
-                }
-                HStack {
-                    Spacer().frame(width: 20)
-                    //Image(systemName: "person.3").font(.system(size: fontSize))
-                    Text("Group: ").font(.system(size: fontSize))
-                    Group {
-                        if group == derby.girls {
-                            Image(systemName: "circle.fill").font(.system(size: circleSize))
-                        } else {
-                            Image(systemName: "circle").font(.system(size: circleSize))
+                
+            } else {
+                
+                Group {
+                    HStack {
+                        Spacer().frame(width: 20)
+                        //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                        Text("Car Number: ").font(.system(size: fontSize))
+                        TextField("88", text: $carNumber).font(.system(size: fontSize))
+                            .frame(width:50)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                            .keyboardType(.numberPad)
+                        //.background(.red)
+                    }
+                    HStack {
+                        Spacer().frame(width: 20)
+                        //Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
+                        Text("Car Name: ").font(.system(size: fontSize))
+                        TextField("Ocho", text: $carName).font(.system(size: fontSize))
+                            .frame(width:120)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        //.background(.red)
+                    }
+                    HStack {
+                        Spacer().frame(width: 20)
+                        //Image(systemName: "person").font(.system(size: fontSize))
+                        Text("Name: ").font(.system(size: fontSize))
+                        TextField("first name", text: $firstName).font(.system(size: fontSize))
+                            .frame(width:130)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        //.background(.red)
+                        TextField("last name", text: $lastName).font(.system(size: fontSize))
+                            .frame(width:130)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        //.background(.red)
+                    }
+                    HStack {
+                        Spacer().frame(width: 20)
+                        //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                        Text("Age: ").font(.system(size: fontSize))
+                        TextField("10", text: $age).font(.system(size: fontSize))
+                            .frame(width:50)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                            .keyboardType(.numberPad)
+                        //.background(.red)
+                    }
+                    HStack {
+                        Spacer().frame(width: 20)
+                        //Image(systemName: "person.3").font(.system(size: fontSize))
+                        Text("Group: ").font(.system(size: fontSize))
+                        Group {
+                            if group == derby.girls {
+                                Image(systemName: "circle.fill").font(.system(size: circleSize))
+                            } else {
+                                Image(systemName: "circle").font(.system(size: circleSize))
+                            }
+                            Text(derby.girls).font(.system(size: fontSize))
                         }
-                        Text(derby.girls).font(.system(size: fontSize))
-                    }
-                    .onTapGesture {
-                        group = derby.girls
-                    }
-                    Spacer().frame(width:20)
-                    Group {
-                        if group == derby.boys {
-                            Image(systemName: "circle.fill").font(.system(size: circleSize))
-                        } else {
-                            Image(systemName: "circle").font(.system(size: circleSize))
+                        .onTapGesture {
+                            group = derby.girls
                         }
-                        Text(derby.boys).font(.system(size: fontSize))
+                        Spacer().frame(width:20)
+                        Group {
+                            if group == derby.boys {
+                                Image(systemName: "circle.fill").font(.system(size: circleSize))
+                            } else {
+                                Image(systemName: "circle").font(.system(size: circleSize))
+                            }
+                            Text(derby.boys).font(.system(size: fontSize))
+                        }
+                        .onTapGesture {
+                            group = derby.boys
+                        }
                     }
-                    .onTapGesture {
-                        group = derby.boys
-                    }
-                }
-                
-            }
-            
-            Spacer().frame(height: 20)
-            
-            HStack {
-                Spacer()
-                
-                Button(action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text("Cancel")
-                }
-                
-                Spacer().frame(width: 40)
-                
-                Button(action: {
-                    updateDerby()
-                    self.presentationMode.wrappedValue.dismiss()
                     
-                }) {
-                    Text("Save")
                 }
                 
-                if entry == nil {
+                Spacer().frame(height: 20)
+                
+                HStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text("Cancel")
+                    }
+                    
                     Spacer().frame(width: 40)
                     
                     Button(action: {
-                        updateDerby()
-                        carNumber = ""
-                        carName = ""
-                        firstName = ""
-                        lastName = ""
-                        group = ""
-                        age = ""
+                        if true == updateDerby() {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                        
                     }) {
-                        Text("Save+New")
+                        Text("Save")
                     }
+                    
+                    if entry == nil {
+                        Spacer().frame(width: 40)
+                        
+                        Button(action: {
+                            if true == updateDerby() {
+                                carNumber = ""
+                                carName = ""
+                                firstName = ""
+                                lastName = ""
+                                group = ""
+                                age = ""
+                            }
+                        }) {
+                            Text("Save+New")
+                        }
+                    }
+                    
+                    Spacer()
                 }
-                
-                Spacer()
             }
+            
+            Spacer()
         }
-        
-        Spacer()
-    }
         .alert(isPresented: self.$alertShow) {
             Alert(title: Text(self.alertTitle),
                   message: Text(self.alertMessage),
@@ -212,43 +214,76 @@ struct AddRacerView: View {
             )
         }
         .onAppear(perform: {
-            if entry != nil {
-                self.id = entry!.id
-                carNumber = String(entry!.carNumber)
-                carName = entry!.carName
-                firstName = entry!.firstName
-                lastName = entry!.lastName
-                group = entry!.group
+            if let entry = entry {
+                self.id = entry.id
+                carNumber = String(entry.carNumber)
+                carName = entry.carName
+                firstName = entry.firstName
+                lastName = entry.lastName
+                group = entry.group
+                age = String(entry.age)
             }
         })
-}
-
-func updateDerby() {
-    let number = Int(carNumber)
-    let ageInt = Int(age)
-    // check that the number has not been changed to overlap another entry
-    let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
-    if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
-        // another id has the same carNumber
-        alertTitle = "Duplicate"
-        alertMessage = "Duplicate car number"
-        alertButton = "OK"
-        alertShow = true
-        return
     }
-    // find the entry in the array....
-    if let index = derby.entries.firstIndex(where: { $0.id == id}) {
-        derby.entries[index].carNumber = number!
-        derby.entries[index].carName = carName
-        derby.entries[index].firstName = firstName
-        derby.entries[index].lastName = lastName
-        derby.entries[index].age = ageInt!
-        derby.entries[index].group = group
-    } else {
-        let d = DerbyEntry(number: number!, carName: carName, firstName: firstName, lastName: lastName, age: ageInt!, group: group)
-        derby.entries.append(d)
+    
+    func updateDerby() -> Bool {
+        if let number = Int(carNumber) {
+            if let ageInt = Int(age) {
+                // check that the number has not been changed to overlap another entry
+                let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
+                if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
+                    // another id has the same carNumber
+                    alertTitle = "Duplicate"
+                    alertMessage = "Duplicate car number"
+                    alertButton = "OK"
+                    alertShow = true
+                    return false
+                }
+                if firstName == "" || lastName == "" {
+                    alertTitle = "Missing Name"
+                    alertMessage = "Please enter the full Name"
+                    alertButton = "OK"
+                    alertShow = true
+                    return false
+                }
+                if group == "" {
+                    alertTitle = "Group Not Selected"
+                    alertMessage = "Please select a Group"
+                    alertButton = "OK"
+                    alertShow = true
+                    return false
+                }
+                if carName == "" {
+                    carName = "--"
+                }
+                // find the entry in the array....
+                if let index = derby.entries.firstIndex(where: { $0.id == id}) {
+                    derby.entries[index].carNumber = number
+                    derby.entries[index].carName = carName
+                    derby.entries[index].firstName = firstName
+                    derby.entries[index].lastName = lastName
+                    derby.entries[index].age = ageInt
+                    derby.entries[index].group = group
+                } else {
+                    let d = DerbyEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: ageInt, group: group)
+                    derby.entries.append(d)
+                }
+                derby.saveDerbyData()
+                derby.objectWillChange.send()
+                return true
+            } else {
+                alertTitle = "Age Missing"
+                alertMessage = "Please enter the Age"
+                alertButton = "OK"
+                alertShow = true
+                return false
+            }
+        }else {
+            alertTitle = "Car Number Missing"
+            alertMessage = "Please enter the Car Number"
+            alertButton = "OK"
+            alertShow = true
+            return false
+        }
     }
-    derby.saveDerbyData()
-    derby.objectWillChange.send()
-}
 }

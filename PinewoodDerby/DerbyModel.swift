@@ -173,8 +173,9 @@ class Derby: ObservableObject {
         let lines = data!.components(separatedBy: .newlines)
         for line in lines {
             log(line)
-            let values = line.split(separator: ",")
-            if values.count < 9 {
+            let values = line.split(separator: ",", omittingEmptySubsequences: false)
+            print(values.count)
+            if values.count < trackCount + 5 {
                 continue
             }
             let d = DerbyEntry(number:Int(values[0])!,
@@ -187,12 +188,12 @@ class Derby: ObservableObject {
             d.times[1] = Double(values[7])!
             if trackCount > 2 {
                 d.times[2] = Double(values[8])!
-                if trackCount > 2 {
+                if trackCount > 3 {
                     d.times[3] = Double(values[9])!
-                    if trackCount > 2 {
-                        d.times[4] = Double(values[9])!
-                        if trackCount > 2 {
-                            d.times[5] = Double(values[9])!
+                    if trackCount > 4 {
+                        d.times[4] = Double(values[10])!
+                        if trackCount > 5 {
+                            d.times[5] = Double(values[11])!
                         }
                     }
                 }
