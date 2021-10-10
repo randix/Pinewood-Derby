@@ -188,7 +188,7 @@ class Derby: ObservableObject {
             log(line)
             let values = line.split(separator: ",", omittingEmptySubsequences: false)
             print(values.count)
-            if values.count < trackCount + 5 {
+            if values.count < 6 {
                 continue
             }
             let d = DerbyEntry(number:Int(values[0])!,
@@ -199,21 +199,23 @@ class Derby: ObservableObject {
                                group: String(values[5]))
             d.times[0] = Double(values[6])!
             d.times[1] = Double(values[7])!
-            if trackCount > 2 {
+            if trackCount > 2 && values.count > 8 {
                 d.times[2] = Double(values[8])!
-                if trackCount > 3 {
+                if trackCount > 3 && values.count > 9 {
                     d.times[3] = Double(values[9])!
-                    if trackCount > 4 {
+                    if trackCount > 4 && values.count > 10 {
                         d.times[4] = Double(values[10])!
-                        if trackCount > 5 {
+                        if trackCount > 5 && values.count > 11 {
                             d.times[5] = Double(values[11])!
                         }
                     }
                 }
             }
             entries.append(d)
+            print("entries.count: ", entries.count)
         }
         calculateRankingss()
+        print("entries.count: ", entries.count)
     }
     
     func saveDerbyData() {
