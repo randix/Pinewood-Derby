@@ -1,7 +1,18 @@
-determine what to do with car number 0 and heats less than full
+heats view: colorize heats that have run, run management
+heats view: add special heats and car selection
 
-colorize heats that have run, run management
-add special heats and car selection
+times view: be able to toggle in/out individual times
+
+Settings: manage testing
+pin for all testing
+generate internal realtime testing (speed setting?)
+
+REST: change to https
+
+determine what to do with car number 0 and heats less than full - Russell
+
+consider Settings view to update config.txt
+
 
 add background photo
 everything for the app store
@@ -9,3 +20,11 @@ everything for the app store
 archive old races
 
 Check all todos
+
+Server:
+add test run generator
+connect to timer and read and parse - save raw and times.csv
+add functionality to take manual heats
+interaction between master iOS and individual heats?
+server: add cert for https
+
