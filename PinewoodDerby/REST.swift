@@ -8,14 +8,15 @@
 import Foundation
 
 class REST {
-   
+    
     var timer: Timer?
     
+    // TODO: Apple requires https
     var webProtocol = "http://"
     var ipAddress = ""
     var serverAddress: String?
     let port = "8080"
-    var timerUrl = ""
+    var timerUrl: URL?
     
     var timesUpdated = false
     var derbyUpdated = false
@@ -45,18 +46,81 @@ class REST {
     }
     
     func readFileFromServer(_ name: String) {
-        print(#function)
+        guard timerUrl != nil else { return }
+        let url = timerUrl!.appendingPathComponent(name)
+        log("fetch: \(url)")
+        let task = URLSession.shared.downloadTask(with: url) {
+            (tempURL, response, error) in
+            guard let tempURL = tempURL else {
+                log(error?.localizedDescription ?? "\(name): not downloaded")
+                return
+            }
+            do {
+                // Remove any existing document at name
+                let file =  Settings.shared.docDir.appendingPathComponent(name)
+                if FileManager.default.fileExists(atPath: file.path) {
+                    try FileManager.default.removeItem(at: file)
+                }
+                
+                // Copy the tempURL to name
+                try FileManager.default.copyItem(at: tempURL, to: file)
+                log("success")
+            }
+            catch {
+                log(error.localizedDescription)
+            }
+        }
+        task.resume()
     }
     
     func readFilesFromServer() {
-        
+        readFileFromServer(timesName)
+        // config.txt
+        // derby.csv
+        // heats.csv
+        // times.csv
     }
     
     func saveFileToServer(_ name: String) {
-        print(#function)
+        guard timerUrl != nil else { return }
+        let url = timerUrl!.appendingPathComponent(name)
+        print(url)
+        var urlSession = URLSession.shared
+        
+        // To ensure that our request is always sent, we tell
+        // the system to ignore all local cache data:
+        var request = URLRequest(
+            url: url,
+            cachePolicy: .reloadIgnoringLocalCacheData
+        )
+        let fileUrl = Settings.shared.docDir.appendingPathComponent(name)
+        print(fileUrl)
+
+        do {
+            request.httpBody = try Data(contentsOf: fileUrl)
+        } catch {
+            log("\(name): \(error.localizedDescription)")
+            return
+        }
+        request.httpMethod = "POST"
+        
+        let task = urlSession.dataTask(
+            with: request,
+            completionHandler: { data, response, error in
+                print("data", data)
+                print("response: ", response)
+//                for k in response.keys {
+//                    print(k)
+//                }
+                //print(response?.value(forKey: "Status Code"))
+                print("error", error)
+            })
+        task.resume()
     }
     
     func saveFilesToServer() {
+        saveFileToServer(derbyName)
+        
         
     }
     
@@ -80,8 +144,8 @@ class REST {
                                     return
                                 }
                         self.serverAddress = network + String(addr)
-                        self.timerUrl = "http://" + self.serverAddress! + ":" + self.port + "/"
-                        log("PDServer: \(self.timerUrl)")
+                        self.timerUrl = URL(string: "http://" + self.serverAddress! + ":" + self.port + "/")
+                        log("PDServer: \(self.timerUrl!)")
                     }
                     .resume()
             }

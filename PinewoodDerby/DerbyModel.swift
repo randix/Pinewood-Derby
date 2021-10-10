@@ -65,6 +65,21 @@ class Derby: ObservableObject {
     static let shared = Derby()
     private init() {}
     
+    func delete(_ entry: DerbyEntry) {
+        var idx = 0
+        for i in 0..<entries.count {
+            if entry.id == entries[i].id {
+                idx = i
+                break
+            }
+        }
+        print("delete \(entry.carNumber)")
+        entries.remove(at: idx)
+        // TODO: if heats were generated, this will affect them
+        saveHeatsData()
+        self.objectWillChange.send()
+    }
+    
     func generateHeats() {
         log(#function)
         archiveData()
@@ -374,5 +389,4 @@ class Derby: ObservableObject {
         saveDerbyData()
         self.objectWillChange.send()
     }
-    
 }

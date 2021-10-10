@@ -45,6 +45,13 @@ struct ContentView: View {
                 }
             //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
             
+            //---------------------------------------------------
+            TimesView()
+                .tabItem {
+                    Image(systemName: "flag.2.crossed")
+                    Text("Times")
+                }
+            //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
             
             //---------------------------------------------------
             ResultsView()

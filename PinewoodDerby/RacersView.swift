@@ -17,6 +17,8 @@ struct RacersView: View {
     @State var showEditModal = false
     @State var showRankingsModal = false
     
+    @State var alertShow = false
+    
     var body: some View {
         VStack {
             
@@ -175,18 +177,24 @@ struct RacersView: View {
                     
                     Button {
                         print("Delete")
-                        // add confirmation
-                        //TODO: Alert
-                        
+                        thisEntry = entry
+                        alertShow = true
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }
                     .tint(.red)
                 }
+                .alert(isPresented: self.$alertShow) {
+                    Alert(title: Text("Delete Car Number \(thisEntry!.carNumber)"),
+                          message: Text("Are you sure?"),
+                          primaryButton: .cancel(),
+                          secondaryButton: .destructive(Text("Delete")) { derby.delete(thisEntry!) }
+                    )
+                }
             }
             .frame(minHeight:100)
             .sheet(isPresented: $showEditModal, content: { AddRacerView(entry: $thisEntry) })
-            
+        
             Spacer()
         }
     }
