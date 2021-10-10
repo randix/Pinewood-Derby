@@ -1,16 +1,11 @@
 determine what to do with car number 0 and heats less than full
 
-delete alert and delete
-
-add times View?
-
 colorize heats that have run, run management
 add special heats and car selection
 
 add background photo
 everything for the app store
 
-possible group "all"
 archive old races
 
 Check all todos

@@ -53,11 +53,21 @@ struct TimesView: View {
                 }
                 Spacer()
             }
-            List(derby.entries) { entry in
+            HStack(spacing: 3) {
+                Spacer().frame(width:285)
+                
+                Text("Average").bold().frame(width: 70).font(.system(size: 16))
+                //.background(.yellow)
+                Spacer()
+            }
+            
+            // ---------------------------------------------------
+            List(derby.entries.sorted { $0.carNumber < $1.carNumber }) { entry in
                 HStack(spacing: 3) {
                     Text(String(entry.carNumber))
                         .frame(width:30, alignment:.center).font(.system(size: 18))
                     //.background(.yellow)
+                    
                     Text(entry.times[0] == 0.0 ? "-" : String(format: "%0.4f", entry.times[0]))
                         .frame(width:48, alignment:.center).font(.system(size: 14))
                     //.background(.yellow)
@@ -86,7 +96,19 @@ struct TimesView: View {
                     }
                     Spacer()
                 }
-            }
+                // TODO: make each row a button -- which toggles it in or out of the counting
+                
+                HStack(spacing: 3) {
+                    Spacer().frame(width:253)
+                    
+                    Text(entry.average == 0.0 ? "-" : String(format: "%0.4f", entry.average))
+                        .frame(width:70, alignment:.center).font(.system(size: 14))
+                    //.background(.yellow)
+                    
+                    Spacer()
+                }
+                .frame(height: 18)
+            }.environment(\.defaultMinListRowHeight, 10)
             Spacer()
         }
     }
