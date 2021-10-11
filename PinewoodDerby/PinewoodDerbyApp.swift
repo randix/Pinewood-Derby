@@ -18,10 +18,10 @@ struct PinewoodDerbyApp: App {
         Settings.shared.appVersion = "\(version).\(build)"
         log("\(Settings.shared.appName) \(Settings.shared.appVersion)")
         
-        Settings.shared.readData()
+        Settings.shared.readSettings()
         Derby.shared.readDerbyData()
         Derby.shared.readHeatsData()
-        REST.shared.findTimer()
+        //REST.shared.findTimer()
         
         //BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
     }

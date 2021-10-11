@@ -11,23 +11,11 @@ struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    @ObservedObject var settings = Settings.shared
     let derby = Derby.shared
-    let settings = Settings.shared
     let rest = REST.shared
     
-    @State var pin: String = ""
-    @FocusState var pinIsFocused: Bool
-    @State var myIpAddress: String = ""
-    @FocusState var myIpAddressIsFocused: Bool
-    @State var serverIpAddress: String = ""
-    @FocusState var serverIpAddressIsFocused: Bool
-    @State var serverPort: String = ""
-    @FocusState var serverPortIsFocused: Bool
-    
-    @State var title = ""
-    @State var event = ""
-    @State var noTracks = ""
-    
+  
     var body: some View {
         VStack {
             
@@ -51,12 +39,11 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("192.168.12.125", text: $myIpAddress)
+                    TextField("192.168.12.125", text: $settings.myIpAddress)
                         .font(.system(size: 18))
                         .frame(width:150)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .focused($myIpAddressIsFocused)
                     //.background(.yellow)
                 }
                 HStack {
@@ -64,12 +51,11 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("192.168.12.125", text: $serverIpAddress)
+                    TextField("192.168.12.128", text: $settings.serverIpAddress)
                         .font(.system(size: 18))
                         .frame(width:150)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .focused($serverIpAddressIsFocused)
                     //.background(.yellow)
                 }
                 HStack {
@@ -77,12 +63,11 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("8080", text: $serverIpAddress)
+                    TextField("8080", text: $settings.serverPort)
                         .font(.system(size: 18))
                         .frame(width:70)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .focused($serverIpAddressIsFocused)
                     //.background(.yellow)
                     Spacer().frame(width: 80)
                 }
@@ -91,7 +76,7 @@ struct SettingsView: View {
                     Text("Connected:")
                         .font(.system(size: 18))
                     Spacer().frame(width:20)
-                    if serverIpAddress == rest.serverAddress {
+                    if settings.serverIpAddress == rest.serverIpAddress {
                         Image(systemName: "checkmark.square").font(.system(size: 18))
                             .foregroundColor(.green)
                     } else {
@@ -111,7 +96,7 @@ struct SettingsView: View {
             }
             
             // --------------- Server Data pull ---------------
-            if !derby.isMaster {
+            if !settings.isMaster {
                 Group {
                     Button(action: {
                         rest.readFilesFromServer()
@@ -123,22 +108,20 @@ struct SettingsView: View {
             }
             
             // --------------- Server Data pull and master stuff ---------------
-            if !derby.isMaster {
+            if !settings.isMaster {
                 HStack {
                     Spacer()
                     Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
                     Text("Pin: ").font(.system(size: 18))
-                    TextField("0000", text: $pin).font(.system(size: 18))
+                    TextField("0000", text: $settings.pin).font(.system(size: 18))
                         .frame(width:70)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
-                        .focused($pinIsFocused)
                     //.background(.red)
                     Button(action: {
-                        derby.isMaster = pin == derby.pin
-                        pin = ""
-                        pinIsFocused = false
+                        settings.isMaster = settings.pin == settings.masterPin
+                        settings.pin = ""
                         if derby.isMaster == false {
                             presentationMode.wrappedValue.dismiss()
                         } else {
@@ -156,12 +139,11 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:60, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("Title", text: $title)
+                    TextField("Title", text: $settings.title)
                         .font(.system(size: 18))
                         .frame(width:220)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .focused($myIpAddressIsFocused)
                     //.background(.yellow)
                 }
                     HStack {
@@ -169,12 +151,11 @@ struct SettingsView: View {
                             .font(.system(size: 18))
                             .frame(width:60, alignment: .trailing)
                         //.background(.yellow)
-                        TextField("Event", text: $event)
+                        TextField("Event", text: $settings.event)
                             .font(.system(size: 18))
                             .frame(width:220)
                             .textFieldStyle(.roundedBorder)
                             .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                            .focused($myIpAddressIsFocused)
                         //.background(.yellow)
                     }
                 HStack {
@@ -182,12 +163,11 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:70, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("#", text: $noTracks)
+                    TextField("#", text: $settings.tracks)
                         .font(.system(size: 18))
                         .frame(width:40)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .focused($myIpAddressIsFocused)
                     //.background(.yellow)
                 }
                 Spacer().frame(height:20)
@@ -202,6 +182,8 @@ struct SettingsView: View {
                 Group {
                     Button(action: {
                         rest.saveFilesToServer()
+                        // TODO: alert are you sure?
+                        // prepare racing
                     })  {
                         Text("Start Racing").font(.system(size:20)).bold()
                     }
@@ -237,72 +219,111 @@ struct SettingsView: View {
             }
             Spacer()
         }
+        .onDisappear(perform: {
+            settings.saveSettings()
+        })
     }
 }
 
-// TODO: clear times (archive and "Are you sure?")
+// TODO: Start Races times (archive and "Are you sure?")
 // TODO: archive before generate heats (archive)
 
-// TODO: minimum time, if less than, discard and mark
-// maximum time, if more than, discard and mark
-
-class Settings {
+class Settings: ObservableObject {
     
+    var isMaster = false
     let derby = Derby.shared
-    let rest = REST.shared
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
     var appName = ""
     var appVersion = ""
     
-    var title = ""
-    var subtitle = ""
+    let settingsName = "settings.txt"
     
-    var minimumTime =  1.0
-    var maximumTime = 20.0
+    @Published var myIpAddress: String = "192.168.12.125"
+    @Published var serverIpAddress: String = "192.168.12.128"
+    @Published var serverPort: String = "8080"
+    
+    var masterPin = "1234"
+    @Published var pin: String = ""
+    
+    @Published var title = ""
+    @Published var event = ""
+    @Published var tracks = ""
     
     
     static let shared = Settings()
     private init() {}
     
-    func readData() {
-        log("Settings.readData")
-        let name = docDir.appendingPathComponent(rest.configName)
+    func readSettings() {
+        log(#function)
+        let name = docDir.appendingPathComponent(settingsName)
         var config: String
         do {
             config = try String(contentsOf: name)
         } catch {
-            log("error: \(error)")
-            config = "Title=Pinewood Derby\nSubtitle=Event\nNumberOfTracks=4\nIPAddress=192.168.12.125"
-            try! config.write(to: name, atomically: true, encoding: .utf8)
+            log("error: \(error.localizedDescription)")
+            title = "Pinewood Derby"
+            event = "Event"
+            tracks = "4"
+            myIpAddress =  "192.168.12.125"
+            serverIpAddress = "192.168.12.128"
+            serverPort = "8080"
+            saveSettings()
+            objectWillChange.send()
+            return
         }
         
         let lines = config.components(separatedBy: "\n")
         for i in 0..<lines.count {
             let keyValue = lines[i].components(separatedBy: "=")
             if keyValue.count < 2 {
+                log("\(settingsName): format error")
                 continue
             }
             //print("'\(keyValue[0])' '\(keyValue[1])'")
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
-            case "Title":
+            case "title":
                 title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("Title=\(title)")
-            case "Subtitle":
-                subtitle = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("Subtitle=\(subtitle)")
-            case "NumberOfTracks":
-                derby.trackCount = Int(keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines))!
-                log("NumberOfTracks=\(derby.trackCount)")
-            case "IPAddress":
-                rest.ipAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("IPAddress=\(rest.ipAddress)")
+                log("title=\(title)")
+            case "event":
+                event = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("event=\(event)")
+            case "tracks":
+                tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("tracks=\(tracks)")
+            case "myIpAddress":
+                myIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("myIpAddress=\(myIpAddress)")
+            case "serverIpAddress":
+                serverIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("serverIpAddress=\(serverIpAddress)")
+            case "serverPort":
+                serverPort = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("serverPort=\(serverPort)")
             default:
                 log("incorrect format: \(config)")
             }
         }
-        //self.objectWillChange.send()
+        self.objectWillChange.send()
+    }
+    
+    func saveSettings() {
+        log(#function)
+        var list = [String]()
+        list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
+        list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
+        list.append("tracks=\(tracks.trimmingCharacters(in: .whitespaces))")
+        list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
+        list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
+        list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")
+        let name = Settings.shared.docDir.appendingPathComponent(settingsName)
+        let fileData = list.joined(separator: "\n") + "\n"
+        
+        do {
+            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        } catch {
+            log(error.localizedDescription)
+        }
     }
 }
-

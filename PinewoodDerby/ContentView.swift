@@ -23,7 +23,7 @@ struct ContentView: View {
             }
             HStack {
                 Spacer()
-                Text(settings.subtitle).font(.system(size: 16)).bold()//.foregroundColor(.brown)
+                Text(settings.event).font(.system(size: 16)).bold()//.foregroundColor(.brown)
                 Spacer()
             }
         }

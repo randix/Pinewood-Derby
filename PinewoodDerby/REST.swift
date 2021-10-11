@@ -14,7 +14,7 @@ class REST {
     // TODO: Apple requires https
     var webProtocol = "http://"
     var ipAddress = ""
-    var serverAddress: String?
+    var serverIpAddress: String?
     let port = "8080"
     var timerUrl: URL?
     
@@ -58,6 +58,7 @@ class REST {
             do {
                 // Remove any existing document at name
                 let file =  Settings.shared.docDir.appendingPathComponent(name)
+                // TODO: only try to remove it file exists
                 if FileManager.default.fileExists(atPath: file.path) {
                     try FileManager.default.removeItem(at: file)
                 }
@@ -85,7 +86,7 @@ class REST {
         guard timerUrl != nil else { return }
         let url = timerUrl!.appendingPathComponent(name)
         print(url)
-        var urlSession = URLSession.shared
+        let urlSession = URLSession.shared
         
         // To ensure that our request is always sent, we tell
         // the system to ignore all local cache data:
@@ -107,13 +108,13 @@ class REST {
         let task = urlSession.dataTask(
             with: request,
             completionHandler: { data, response, error in
-                print("data", data)
+                print("data", data ?? "nil")
                 print("response: ", response)
 //                for k in response.keys {
 //                    print(k)
 //                }
                 //print(response?.value(forKey: "Status Code"))
-                print("error", error)
+                print("error", error ?? "nil")
             })
         task.resume()
     }
@@ -143,8 +144,8 @@ class REST {
                                     //print("down")
                                     return
                                 }
-                        self.serverAddress = network + String(addr)
-                        self.timerUrl = URL(string: "http://" + self.serverAddress! + ":" + self.port + "/")
+                        self.serverIpAddress = network + String(addr)
+                        self.timerUrl = URL(string: "http://" + self.serverIpAddress! + ":" + self.port + "/")
                         log("PDServer: \(self.timerUrl!)")
                     }
                     .resume()

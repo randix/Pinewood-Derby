@@ -62,6 +62,11 @@ class Derby: ObservableObject {
     
     let rest = REST.shared
     
+    
+    var minimumTime =  1.0
+    var maximumTime = 20.0
+    
+    
     static let shared = Derby()
     private init() {}
     
@@ -278,6 +283,9 @@ class Derby: ObservableObject {
         try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
     }
   
+    // TODO: minimum time, if less than, discard and mark
+    // maximum time, if more than, discard and mark
+
     func calculateRankingss() {
         log(#function)
         
