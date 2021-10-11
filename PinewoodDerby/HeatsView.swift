@@ -14,36 +14,16 @@ struct HeatsView: View {
     let settings = Settings.shared
     
     @State var showAlert = false
-    @State var showPopover = false
     
     var body: some View {
         VStack {
             HStack {
                 Spacer().frame(width:30)
                 
-                Button(action: {
-                    if !derby.isMaster {
-                        showPopover = true
-                    } else {
-                        if derby.heats.count == 0 {
-                            derby.generateHeats()
-                        } else {
-                            showAlert = true
-                        }
-                    }
-                }) {
-                    VStack {
-                        Image(systemName: "wand.and.stars").font(.system(size: 14))
-                        Text("Generate").font(.system(size: 14))
-                    }
-                }
-                .frame(width:62)
-                
                 Spacer()
                 Text("Heats").font(.system(size: 20)).bold()
                 Spacer()
-                
-                Spacer().frame(width:62)
+               
                 Spacer().frame(width:30)
             }
             Spacer().frame(height:10)
@@ -149,16 +129,6 @@ struct HeatsView: View {
                 }
             }
             Spacer()
-        }
-        .alert(isPresented: self.$showAlert) {
-            Alert(title: Text("Generate Heats"),
-                  message: Text("This will re-generate the heats!\nIf racing has started, this will invalidate all timing data!\n\nAre you sure?"),
-                  primaryButton: .cancel(),
-                  secondaryButton: .destructive(Text("Generate")) { derby.generateHeats() }
-            )
-        }
-        .popover(isPresented: $showPopover) {
-            PinView()
         }
     }
     

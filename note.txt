@@ -4,8 +4,12 @@ heats view: add special heats and car selection
 times view: be able to toggle in/out individual times
 
 Settings: manage testing
-pin for all testing
-generate internal realtime testing (speed setting?)
+  pin for all testing
+  generate internal realtime testing (speed setting?)
+  Test
+    generate test data
+    simulate
+
 
 REST: change to https
 
@@ -22,9 +26,12 @@ archive old races
 Check all todos
 
 Server:
-add test run generator
-connect to timer and read and parse - save raw and times.csv
-add functionality to take manual heats
-interaction between master iOS and individual heats?
-server: add cert for https
+  add test run generator
+    simulate
+  connect to timer and read and parse - save raw and times.csv
+  add functionality to take manual heats
+  interaction between master iOS and individual heats?
+  server: add cert for https
 
+Settings
+  

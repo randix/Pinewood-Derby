@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4645558270B323D00886AA2 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4645557270B323D00886AA2 /* PinView.swift */; };
 		A464555A27114A8B00886AA2 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555927114A8B00886AA2 /* REST.swift */; };
 		A464555C271319A300886AA2 /* Times.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555B271319A300886AA2 /* Times.swift */; };
 		A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */; };
@@ -25,7 +24,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A4645557270B323D00886AA2 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
 		A464555927114A8B00886AA2 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		A464555B271319A300886AA2 /* Times.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Times.swift; sourceTree = "<group>"; };
 		A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinewoodDerby.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,7 +79,6 @@
 				A4E0B1B227074994008E3880 /* RacersView.swift */,
 				A4E0B1BA27074BBD008E3880 /* AddRacerView.swift */,
 				A4E0B1B427074A64008E3880 /* HeatsView.swift */,
-				A4645557270B323D00886AA2 /* PinView.swift */,
 				A464555B271319A300886AA2 /* Times.swift */,
 				A4E0B1B827074B6A008E3880 /* ResultsView.swift */,
 				A4E0B1B627074B05008E3880 /* SettingsView.swift */,
@@ -182,7 +179,6 @@
 				A4E0B1B927074B6A008E3880 /* ResultsView.swift in Sources */,
 				A464555A27114A8B00886AA2 /* REST.swift in Sources */,
 				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,
-				A4645558270B323D00886AA2 /* PinView.swift in Sources */,
 				A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */,
 				A4E0B1BF2707596C008E3880 /* BTManager.swift in Sources */,
 				A464555C271319A300886AA2 /* Times.swift in Sources */,

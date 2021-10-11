@@ -12,9 +12,6 @@ struct AddRacerView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var entry: DerbyEntry?
     
-    @State var pin = ""
-    @FocusState private var pinIsFocused: Bool
-    
     @State var id = UUID()
     @State var carNumber = ""
     @State var carName = ""
@@ -53,113 +50,84 @@ struct AddRacerView: View {
             }
             Spacer().frame(height:30)
             
-            if derby.isMaster == false {
+            Group {
                 HStack {
-                    Spacer()
-                    Image(systemName: "123.rectangle").font(.system(size: fontSize)).frame(width: 30)
-                    Text("Pin: ").font(.system(size: fontSize))
-                    TextField("0000", text: $pin).font(.system(size: fontSize))
-                        .frame(width:70)
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                    Text("Car Number: ").font(.system(size: fontSize))
+                    TextField("88", text: $carNumber).font(.system(size: fontSize))
+                        .frame(width:50)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
-                        .focused($pinIsFocused)
                     //.background(.red)
-                    Button(action: {
-                        derby.isMaster = pin == derby.pin
-                        pin = ""
-                        pinIsFocused = false
-                        if derby.isMaster == false {
-                            presentationMode.wrappedValue.dismiss()
+                }
+                HStack {
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
+                    Text("Car Name: ").font(.system(size: fontSize))
+                    TextField("Ocho", text: $carName).font(.system(size: fontSize))
+                        .frame(width:120)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.red)
+                }
+                HStack {
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "person").font(.system(size: fontSize))
+                    Text("Name: ").font(.system(size: fontSize))
+                    TextField("first name", text: $firstName).font(.system(size: fontSize))
+                        .frame(width:130)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.red)
+                    TextField("last name", text: $lastName).font(.system(size: fontSize))
+                        .frame(width:130)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.red)
+                }
+                HStack {
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
+                    Text("Age: ").font(.system(size: fontSize))
+                    TextField("10", text: $age).font(.system(size: fontSize))
+                        .frame(width:50)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        .keyboardType(.numberPad)
+                    //.background(.red)
+                }
+                HStack {
+                    Spacer().frame(width: 20)
+                    //Image(systemName: "person.3").font(.system(size: fontSize))
+                    Text("Group: ").font(.system(size: fontSize))
+                    Group {
+                        if group == derby.girls {
+                            Image(systemName: "circle.fill").font(.system(size: circleSize))
                         } else {
-                            derby.objectWillChange.send()
+                            Image(systemName: "circle").font(.system(size: circleSize))
                         }
-                    }) {
-                        Image(systemName: "checkmark").font(.system(size: fontSize)).frame(width: 30)
+                        Text(derby.girls).font(.system(size: fontSize))
                     }
-                    Spacer()
+                    .onTapGesture {
+                        group = derby.girls
+                    }
+                    Spacer().frame(width:20)
+                    Group {
+                        if group == derby.boys {
+                            Image(systemName: "circle.fill").font(.system(size: circleSize))
+                        } else {
+                            Image(systemName: "circle").font(.system(size: circleSize))
+                        }
+                        Text(derby.boys).font(.system(size: fontSize))
+                    }
+                    .onTapGesture {
+                        group = derby.boys
+                    }
                 }
                 
-            } else {
                 
-                Group {
-                    HStack {
-                        Spacer().frame(width: 20)
-                        //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
-                        Text("Car Number: ").font(.system(size: fontSize))
-                        TextField("88", text: $carNumber).font(.system(size: fontSize))
-                            .frame(width:50)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                            .keyboardType(.numberPad)
-                        //.background(.red)
-                    }
-                    HStack {
-                        Spacer().frame(width: 20)
-                        //Image(systemName: "car").font(.system(size: fontSize)).frame(width: 30)
-                        Text("Car Name: ").font(.system(size: fontSize))
-                        TextField("Ocho", text: $carName).font(.system(size: fontSize))
-                            .frame(width:120)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
-                    }
-                    HStack {
-                        Spacer().frame(width: 20)
-                        //Image(systemName: "person").font(.system(size: fontSize))
-                        Text("Name: ").font(.system(size: fontSize))
-                        TextField("first name", text: $firstName).font(.system(size: fontSize))
-                            .frame(width:130)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
-                        TextField("last name", text: $lastName).font(.system(size: fontSize))
-                            .frame(width:130)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.red)
-                    }
-                    HStack {
-                        Spacer().frame(width: 20)
-                        //Image(systemName: "number.square").font(.system(size: fontSize)).frame(width: 30)
-                        Text("Age: ").font(.system(size: fontSize))
-                        TextField("10", text: $age).font(.system(size: fontSize))
-                            .frame(width:50)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                            .keyboardType(.numberPad)
-                        //.background(.red)
-                    }
-                    HStack {
-                        Spacer().frame(width: 20)
-                        //Image(systemName: "person.3").font(.system(size: fontSize))
-                        Text("Group: ").font(.system(size: fontSize))
-                        Group {
-                            if group == derby.girls {
-                                Image(systemName: "circle.fill").font(.system(size: circleSize))
-                            } else {
-                                Image(systemName: "circle").font(.system(size: circleSize))
-                            }
-                            Text(derby.girls).font(.system(size: fontSize))
-                        }
-                        .onTapGesture {
-                            group = derby.girls
-                        }
-                        Spacer().frame(width:20)
-                        Group {
-                            if group == derby.boys {
-                                Image(systemName: "circle.fill").font(.system(size: circleSize))
-                            } else {
-                                Image(systemName: "circle").font(.system(size: circleSize))
-                            }
-                            Text(derby.boys).font(.system(size: fontSize))
-                        }
-                        .onTapGesture {
-                            group = derby.boys
-                        }
-                    }
-                    
-                }
                 
                 Spacer().frame(height: 20)
                 

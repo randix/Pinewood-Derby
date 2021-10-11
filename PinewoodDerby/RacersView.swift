@@ -25,19 +25,23 @@ struct RacersView: View {
             // Title row - with Rankings and Add buttons
             HStack {
                 Spacer().frame(width:35)
-                Button(action: {
-                    log("add")
-                    thisEntry = nil
-                    showEditModal = true
-                }) {
-                    VStack {
-                        Image(systemName: "plus").font(.system(size: 14))
-                        Text("Add").font(.system(size: 14))
+                if derby.isMaster {
+                    Button(action: {
+                        log("add")
+                        thisEntry = nil
+                        showEditModal = true
+                    }) {
+                        VStack {
+                            Image(systemName: "plus").font(.system(size: 14))
+                            Text("Add").font(.system(size: 14))
+                        }
                     }
+                    .frame(width:30)
+                    //.background(.red)
+                    Spacer().frame(width:5)
+                } else {
+                    Spacer().frame(width: 35)
                 }
-                .frame(width:30)
-                //.background(.red)
-                Spacer().frame(width:5)
                 
                 Spacer()
                 Text("Racers").font(.system(size: 20)).bold()

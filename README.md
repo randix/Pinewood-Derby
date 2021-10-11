@@ -1,2 +1,3 @@
 # Pinewood-Derby
-Time and Score a Pinewood Derby race.
+
+Time and score a Pinewood Derby (or an AWANA Grand Prix) race.
