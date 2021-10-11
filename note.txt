@@ -35,3 +35,19 @@ Server:
 
 Settings
   
+
+PD operation
+
+    Pin
+       Set title
+       Set subtitle
+       Set trackCount
+
+Racers
+   Add all
+
+Settings
+    Finalize for races
+
+Heats
+Calculation is wrong
