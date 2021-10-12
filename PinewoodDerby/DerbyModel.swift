@@ -79,7 +79,7 @@ class Derby: ObservableObject {
                 break
             }
         }
-        print("\(#function) \(entry.carNumber)")
+        log("\(#function) \(entry.carNumber)")
         entries.remove(at: idx)
         
         clearTimes()
@@ -91,21 +91,23 @@ class Derby: ObservableObject {
     
     func calculateRankings() {
         log(#function)
-        
+        var changed = false
         // calculate averages
         for entry in entries {
-            entry.average = 0.0
+            var average = 0.0
             var count = 0
             for i in 0..<settings.trackCount {
                 if !entry.ignores[i] && entry.times[i] > 3.0 && entry.times[i] < 10.0 {
                     count += 1
-                    entry.average += entry.times[i]
+                    average += entry.times[i]
                 }
             }
             if count > 0 {
-                entry.average = entry.average / Double(count)
-            } else {
-                entry.average = 0.0
+                average = average / Double(count)
+            }
+            if average > 0.0 {
+                entry.average = average
+                changed = true
             }
         }
         // calculate girls rankings
@@ -114,8 +116,11 @@ class Derby: ObservableObject {
         var rank = 1
         for gEntry in gRank {
             let entry = entries.filter { $0.carNumber == gEntry.carNumber }[0]
-            entry.rankGroup = rank
-            rank += 1
+            if entry.average > 0.0 {
+                entry.rankGroup = rank
+                changed = true
+                rank += 1
+            }
         }
         // calculate boys rankings
         let b = entries.filter { $0.group == boys }
@@ -123,8 +128,11 @@ class Derby: ObservableObject {
         rank = 1
         for bEntry in bRank {
             let entry = entries.filter { $0.carNumber == bEntry.carNumber }[0]
-            entry.rankGroup = rank
-            rank += 1
+            if entry.average > 0.0 {
+                entry.rankGroup = rank
+                changed = true
+                rank += 1
+            }
         }
         // calcuates overall rankings
         let a = entries
@@ -132,12 +140,17 @@ class Derby: ObservableObject {
         rank = 1
         for aEntry in aRank {
             let entry = entries.filter { $0.carNumber == aEntry.carNumber }[0]
-            entry.rankOverall = rank
-            rank += 1
+            if entry.average > 0.0 {
+                entry.rankOverall = rank
+                changed = true
+                rank += 1
+            }
         }
         
-        saveDerbyData()
-        objectWillChange.send()
+        if changed {
+            saveDerbyData()
+            objectWillChange.send()
+        }
     }
     
     // MARK: Racing Data
@@ -146,6 +159,8 @@ class Derby: ObservableObject {
         archiveData()
         clearTimes()
         generateHeats()
+        rest.saveFilesToServer()
+        // TODO: send next heat data
     }
     
     func archiveData() {
@@ -179,7 +194,7 @@ class Derby: ObservableObject {
             do {
                 try FileManager.default.copyItem(at: srcURL, to: dstURL)
             } catch (let error) {
-                print("Cannot copy item at \(srcURL) to \(dstURL): \(error)")
+                log(error.localizedDescription)
             }
         }
     }
@@ -209,13 +224,6 @@ class Derby: ObservableObject {
                 entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
             }
         }
-        for entry in entries {
-            for i in 0..<settings.trackCount {
-                print(entry.times[i], terminator: "")
-            }
-            print("")
-        }
-        
         calculateRankings()
         saveDerbyData()
         self.objectWillChange.send()
@@ -325,7 +333,6 @@ class Derby: ObservableObject {
         for line in lines {
             log(line)
             let values = line.split(separator: ",", omittingEmptySubsequences: false)
-            print(values.count)
             if values.count < 6 {
                 continue
             }
@@ -344,6 +351,7 @@ class Derby: ObservableObject {
             }
             entries.append(d)
         }
+        
         calculateRankings()
         objectWillChange.send()
     }
@@ -396,7 +404,6 @@ class Derby: ObservableObject {
             log("error: \(error.localizedDescription)")
         }
         
-        calculateRankings()
         objectWillChange.send()
     }
     

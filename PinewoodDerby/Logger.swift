@@ -20,7 +20,6 @@ class Logger {
     
     init() {
         docs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        //print("path: \(docs)")
     }
     
     func log(_ msg: String) {

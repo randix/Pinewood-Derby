@@ -65,34 +65,39 @@ struct TimesView: View {
             }
             
             // ---------------------------------------------------
-            //ScrollView {
-            //ForEach(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
             List(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
                 HStack(spacing: 3) {
                     Text(String(entry.carNumber))
                         .frame(width:30, alignment:.center).font(.system(size: 18))
                     //.background(.yellow)
+                    
                     Text(entry.times[0] == 0.0 ? "-" : String(format: "%0.4f", entry.times[0]))
                         .frame(width:48, alignment:.center).font(.system(size: 14))
+                        .foregroundColor(entry.ignores[0] ? .red : colorScheme == .dark ? Color.white : Color.black)
                     //.background(.yellow)
                     Text(entry.times[1] == 0 ? "-" : String(format: "%0.4f", entry.times[1]))
                         .frame(width:48, alignment:.center).font(.system(size: 14))
+                        .foregroundColor(entry.ignores[1] ? .red : colorScheme == .dark ? Color.white : Color.black)
                     //.background(.yellow)
                     if settings.trackCount > 2 {
                         Text(entry.times[2] == 0 ? "-" : String(format: "%0.4f", entry.times[2]))
                             .frame(width:48, alignment:.center).font(.system(size: 14))
+                            .foregroundColor(entry.ignores[2] ? .red : colorScheme == .dark ? Color.white : Color.black)
                         //.background(.yellow)
                         if settings.trackCount > 3 {
                             Text(entry.times[3] == 0 ? "-" : String(format: "%0.4f", entry.times[3]))
                                 .frame(width:48, alignment:.center).font(.system(size: 14))
+                                .foregroundColor(entry.ignores[3] ? .red : colorScheme == .dark ? Color.white : Color.black)
                             //.background(.yellow)
                             if settings.trackCount > 4 {
                                 Text(entry.times[4] == 0 ? "-" : String(format: "%0.4f", entry.times[4]))
                                     .frame(width:48, alignment:.center).font(.system(size: 14))
+                                    .foregroundColor(entry.ignores[4] ? .red : colorScheme == .dark ? Color.white : Color.black)
                                 //.background(.yellow)
                                 if settings.trackCount > 5 {
                                     Text(entry.times[5] == 0 ? "-" : String(format: "%0.4f", entry.times[5]))
                                         .frame(width:48, alignment:.center).font(.system(size: 14))
+                                        .foregroundColor(entry.ignores[5] ? .red : colorScheme == .dark ? Color.white : Color.black)
                                     //.background(.yellow)
                                 }
                             }
@@ -104,7 +109,6 @@ struct TimesView: View {
                     Button {
                         thisEntry = entry
                         showEditModal = true
-                        print("edit")
                     } label: {
                         Label("Edit", systemImage: "square.and.pencil")
                     }

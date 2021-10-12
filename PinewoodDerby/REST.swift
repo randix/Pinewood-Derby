@@ -85,18 +85,16 @@ class REST {
     func saveFileToServer(_ name: String) {
         guard timerUrl != nil else { return }
         let url = timerUrl!.appendingPathComponent(name)
-        print(url)
         let urlSession = URLSession.shared
         
         // To ensure that our request is always sent, we tell
-        // the system to ignore all local cache data:
+        // the system to ignore all local cache data
         var request = URLRequest(
             url: url,
             cachePolicy: .reloadIgnoringLocalCacheData
         )
         let fileUrl = Settings.shared.docDir.appendingPathComponent(name)
-        print(fileUrl)
-
+  
         do {
             request.httpBody = try Data(contentsOf: fileUrl)
         } catch {
@@ -136,12 +134,10 @@ class REST {
                 URLSession(configuration: .default)
                     .dataTask(with: request) { (_, response, error) -> Void in
                         guard error == nil else {
-                            //print("Error:", error ?? "")
                             return
                         }
                         guard (response as? HTTPURLResponse)?
                                 .statusCode == 200 else {
-                                    //print("down")
                                     return
                                 }
                         self.serverIpAddress = network + String(addr)

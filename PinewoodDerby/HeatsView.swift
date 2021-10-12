@@ -133,15 +133,9 @@ struct HeatsView: View {
     }
     
     func timeForCar(_ carNumber: Int, _ track: Int) -> String {
-        //print(#function, carNumber, track)
         if carNumber == 0 { return "" }
         let entry = derby.entries.filter { $0.carNumber == carNumber }
-        //for i in 0..<4 {
-        //    print(entry[0].times[i], terminator: "")
-        //}
-        //print()
         let time = entry[0].times[track]
-        //print(time)
         if time == 0.0 { return "-" }
         return String(format: "%0.4f", time)
     }

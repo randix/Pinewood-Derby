@@ -184,15 +184,8 @@ struct SettingsView: View {
                 Spacer().frame(height:20)
                 Group {
                     Button(action: {
-                        rest.saveFilesToServer()
-                    })  {
-                        Text("Send Configuration to Server").font(.system(size:18))
-                    }
-                    Spacer().frame(height:10)
-                }
-                Group {
-                    Button(action: {
                         showAlert = true
+                        // TODO: alert if timer not connected!!
                     })  {
                         Text("Start Racing").font(.system(size:20)).bold()
                     }
@@ -290,7 +283,6 @@ class Settings: ObservableObject {
                 log("\(settingsName): format error")
                 continue
             }
-            //print("'\(keyValue[0])' '\(keyValue[1])'")
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
             case "title":
                 title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)

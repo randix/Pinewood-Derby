@@ -149,7 +149,6 @@ struct RacersView: View {
                     .tint(.yellow)
                     
                     Button {
-                        print("Delete")
                         thisEntry = entry
                         alertShow = true
                     } label: {
