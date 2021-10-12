@@ -10,6 +10,7 @@
 		A464555A27114A8B00886AA2 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555927114A8B00886AA2 /* REST.swift */; };
 		A464555C271319A300886AA2 /* Times.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555B271319A300886AA2 /* Times.swift */; };
 		A464555E27146E0600886AA2 /* Rankings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555D27146E0600886AA2 /* Rankings.swift */; };
+		A464556027154A9E00886AA2 /* EditTImesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555F27154A9E00886AA2 /* EditTImesView.swift */; };
 		A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */; };
 		A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A6270564C8008E3880 /* ContentView.swift */; };
 		A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4E0B1A8270564C9008E3880 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 		A464555927114A8B00886AA2 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		A464555B271319A300886AA2 /* Times.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Times.swift; sourceTree = "<group>"; };
 		A464555D27146E0600886AA2 /* Rankings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rankings.swift; sourceTree = "<group>"; };
+		A464555F27154A9E00886AA2 /* EditTImesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTImesView.swift; sourceTree = "<group>"; };
 		A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinewoodDerby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinewoodDerbyApp.swift; sourceTree = "<group>"; };
 		A4E0B1A6270564C8008E3880 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				A4E0B1BA27074BBD008E3880 /* AddRacerView.swift */,
 				A4E0B1B427074A64008E3880 /* HeatsView.swift */,
 				A464555B271319A300886AA2 /* Times.swift */,
+				A464555F27154A9E00886AA2 /* EditTImesView.swift */,
 				A464555D27146E0600886AA2 /* Rankings.swift */,
 				A4E0B1B827074B6A008E3880 /* ResultsView.swift */,
 				A4E0B1B627074B05008E3880 /* SettingsView.swift */,
@@ -180,6 +183,7 @@
 				A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */,
 				A4E0B1B527074A64008E3880 /* HeatsView.swift in Sources */,
 				A464555E27146E0600886AA2 /* Rankings.swift in Sources */,
+				A464556027154A9E00886AA2 /* EditTImesView.swift in Sources */,
 				A4E0B1B927074B6A008E3880 /* ResultsView.swift in Sources */,
 				A464555A27114A8B00886AA2 /* REST.swift in Sources */,
 				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,

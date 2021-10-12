@@ -3,19 +3,10 @@ heats view: add special heats and car selection
 times view: be able to toggle in/out individual times
 
 Settings: manage testing
-  pin for all testing
-  generate internal realtime testing (speed setting?)
-  Test
-    generate test data
     simulate
-
+  finalize racing
 
 REST: change to https
-
-determine what to do with car number 0 and heats less than full - Russell
-
-consider Settings view to update config.txt
-
 
 add background photo
 everything for the app store
@@ -31,22 +22,9 @@ Server:
   add functionality to take manual heats
   interaction between master iOS and individual heats?
   server: add cert for https
-
-Settings
-  
+  serve pin.txt
 
 PD operation
 
-    Pin
-       Set title
-       Set subtitle
-       Set trackCount
-
-Racers
-   Add all
-
-Settings
-    Finalize for races
-
 Heats
-Calculation is wrong
+Calculation is wrong - under #tracks

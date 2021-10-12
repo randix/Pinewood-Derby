@@ -127,8 +127,6 @@ struct AddRacerView: View {
                     }
                 }
                 
-                
-                
                 Spacer().frame(height: 20)
                 
                 HStack {
@@ -138,6 +136,7 @@ struct AddRacerView: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
                         Text("Cancel")
+                            .font(.system(size: 18))
                     }
                     
                     Spacer().frame(width: 40)
@@ -149,6 +148,7 @@ struct AddRacerView: View {
                         
                     }) {
                         Text("Save")
+                            .font(.system(size: 18))
                     }
                     
                     if entry == nil {
@@ -165,6 +165,7 @@ struct AddRacerView: View {
                             }
                         }) {
                             Text("Save+New")
+                                .font(.system(size: 18))
                         }
                     }
                     
@@ -246,7 +247,7 @@ struct AddRacerView: View {
                 alertShow = true
                 return false
             }
-        }else {
+        } else {
             alertTitle = "Car Number Missing"
             alertMessage = "Please enter the Car Number"
             alertButton = "OK"

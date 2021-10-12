@@ -15,6 +15,8 @@ struct SettingsView: View {
     let derby = Derby.shared
     let rest = REST.shared
     
+    @State var showAlert = false
+    
     var body: some View {
         VStack {
             
@@ -106,8 +108,8 @@ struct SettingsView: View {
                     }
                     Spacer().frame(height:30)
                 }
-            
-            // --------------- Server Data pull and master stuff ---------------
+                
+                // --------------- Server Data pull and master stuff ---------------
                 HStack {
                     Spacer()
                     Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
@@ -145,18 +147,18 @@ struct SettingsView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
                 }
-                    HStack {
-                        Text("Event:")
-                            .font(.system(size: 18))
-                            .frame(width:60, alignment: .trailing)
-                        //.background(.yellow)
-                        TextField("Event", text: $settings.event)
-                            .font(.system(size: 18))
-                            .frame(width:220)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        //.background(.yellow)
-                    }
+                HStack {
+                    Text("Event:")
+                        .font(.system(size: 18))
+                        .frame(width:60, alignment: .trailing)
+                    //.background(.yellow)
+                    TextField("Event", text: $settings.event)
+                        .font(.system(size: 18))
+                        .frame(width:220)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.yellow)
+                }
                 HStack {
                     Text("Tracks:")
                         .font(.system(size: 18))
@@ -190,10 +192,7 @@ struct SettingsView: View {
                 }
                 Group {
                     Button(action: {
-                        rest.saveFilesToServer()
-                        derby.generateHeats()
-                        // TODO: alert are you sure?
-                        // prepare racing
+                        showAlert = true
                     })  {
                         Text("Start Racing").font(.system(size:20)).bold()
                     }
@@ -204,7 +203,7 @@ struct SettingsView: View {
                 Spacer().frame(height:10)
                 Group {
                     Button(action: {
-                        rest.saveFilesToServer()
+                        // TODO: start simulation timer
                     })  {
                         Text("Start Simulation").font(.system(size:18))
                     }
@@ -217,16 +216,16 @@ struct SettingsView: View {
                         Text("Generate Test Times").font(.system(size: 18))
                     }
                     Spacer().frame(height:10)
-                    Group {
-                        Button(action: {
-                            derby.clearTimes()
-                        }) {
-                            Text("Clear Times").font(.system(size: 18))
-                        }
-                    Spacer().frame(height:10)
-                    }
+                }
+                .alert(isPresented: self.$showAlert) {
+                    Alert(title: Text("Reset All Timing Data"),
+                          message: Text("Are you sure?"),
+                          primaryButton: .cancel(),
+                          secondaryButton: .destructive(Text("Go")) { derby.startRacing() }
+                    )
                 }
             }
+            
             Spacer()
         }
         .onDisappear(perform: {

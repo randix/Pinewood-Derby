@@ -13,6 +13,9 @@ struct TimesView: View {
     @ObservedObject var derby = Derby.shared
     let settings = Settings.shared
     
+    @State var thisEntry: DerbyEntry?
+    @State var showEditModal = false
+    
     var body: some View {
         VStack {
             HStack {
@@ -62,12 +65,13 @@ struct TimesView: View {
             }
             
             // ---------------------------------------------------
-            List(derby.entries.sorted { $0.carNumber < $1.carNumber }) { entry in
+            //ScrollView {
+            //ForEach(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
+            List(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
                 HStack(spacing: 3) {
                     Text(String(entry.carNumber))
                         .frame(width:30, alignment:.center).font(.system(size: 18))
                     //.background(.yellow)
-                    
                     Text(entry.times[0] == 0.0 ? "-" : String(format: "%0.4f", entry.times[0]))
                         .frame(width:48, alignment:.center).font(.system(size: 14))
                     //.background(.yellow)
@@ -96,7 +100,16 @@ struct TimesView: View {
                     }
                     Spacer()
                 }
-                // TODO: make each row a button -- which toggles it in or out of the counting
+                .swipeActions {
+                    Button {
+                        thisEntry = entry
+                        showEditModal = true
+                        print("edit")
+                    } label: {
+                        Label("Edit", systemImage: "square.and.pencil")
+                    }
+                    .tint(.blue)
+                }
                 
                 HStack(spacing: 3) {
                     Spacer().frame(width:253)
@@ -107,9 +120,11 @@ struct TimesView: View {
                     
                     Spacer()
                 }
-                .frame(height: 18)
-            }.environment(\.defaultMinListRowHeight, 10)
-            Spacer()
+                //.frame(height: 18)
+            }
+            //.environment(\.defaultMinListRowHeight, 10)
+            .sheet(isPresented: $showEditModal, content: { EditTimesView(entry: $thisEntry) })
         }
+        Spacer()
     }
 }
