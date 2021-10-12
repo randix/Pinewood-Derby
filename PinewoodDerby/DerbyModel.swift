@@ -62,11 +62,14 @@ class Derby: ObservableObject {
     @ObservedObject var settings = Settings.shared
     let rest = REST.shared
     
-    var minimumTime =  1.0
+    var minimumTime =  2.0
     var maximumTime = 20.0
     
-    var timer: Timer?
+    var simulationRunning = false
+    var simTimer: Timer?
     var nextHeat = 0
+    
+    var timesTimer: Timer?
     
     static let shared = Derby()
     private init() {}
@@ -100,7 +103,7 @@ class Derby: ObservableObject {
             var average = 0.0
             var count = 0
             for i in 0..<settings.trackCount {
-                if !entry.ignores[i] && entry.times[i] > 3.0 && entry.times[i] < 10.0 {
+                if !entry.ignores[i] && entry.times[i] > minimumTime && entry.times[i] < maximumTime {
                     count += 1
                     average += entry.times[i]
                 }
@@ -167,29 +170,85 @@ class Derby: ObservableObject {
     }
     
     func simulate() {
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(5), repeats: true) { timer in
+        simulationRunning = true
+        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let nextheatURL = docURL.appendingPathComponent(rest.nextheatName)
+        let timesURL = docURL.appendingPathComponent(rest.timesName)
+        
+        simTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(5), repeats: true) { timer in
             let heats = self.heats.filter { $0.hasRun == false }
             if heats.count == 0 {
-                self.timer?.invalidate()
-                self.timer = nil
+                self.simTimer?.invalidate()
+                self.simTimer = nil
+                self.simulationRunning = false
                 log("simulation done")
             } else {
                 let heat = heats[0]
-                var fileData = "\(heat.heat)"
+                var heatData = "\(heat.heat)"
+                var timesData = "\(heat.heat)"
                 for i in 0..<self.settings.trackCount {
-                    fileData += ",\(heat.tracks[i])"
+                    heatData += ",\(heat.tracks[i])"
+                    timesData += String(format: ",%d,%0.4f", heat.tracks[i], self.generateTime(heat.tracks[i]))
                 }
-                log("simulated heat \(fileData)")
-                let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                let nextheatURL = docURL.appendingPathComponent(self.rest.nextheatName)
+                log("simulated heat \(heatData)")
+                log("simulated times \(timesData)")
+                heatData += "\n"
+                timesData += "\n"
+                
                 do {
-                    try fileData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
+                    try heatData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
+                    
+                    if FileManager.default.fileExists(atPath: timesURL.path) {
+                        if let fileHandle = try? FileHandle(forWritingTo: timesURL) {
+                            fileHandle.seekToEndOfFile()
+                            fileHandle.write(Data(timesData.utf8))
+                            fileHandle.closeFile()
+                        }
+                    } else {
+                        try? timesData.write(to: timesURL, atomically: true, encoding: .utf8)
+                    }
                 } catch {
                     log(error.localizedDescription)
                 }
-                heat.hasRun = true
+                
                 self.objectWillChange.send()
             }
+        }
+    }
+    
+    func readTimes() {
+        let name = Settings.shared.docDir.appendingPathComponent(rest.timesName)
+        timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(1), repeats: true) { timer in
+            var data: String?
+            do {
+                data = try String(contentsOf: name)
+            } catch {
+                log("error: \(error.localizedDescription)")
+                data = ""
+            }
+            let lines = data!.components(separatedBy: .newlines)
+            for line in lines {
+                log(line)
+                let values = line.split(separator: ",", omittingEmptySubsequences: false)
+                if values.count < (1 + 2 * self.settings.trackCount) {
+                    continue
+                }
+                for i in 0..<self.settings.trackCount {
+                    let heat = Int(values[0])!
+                    let carNumber = Int(values[2*i+1])
+                    let time = Double(values[2*i+2])!
+                    let entry = self.entries.filter { $0.carNumber == carNumber }[0]
+                    if entry.times[i] == 0.0 || time < entry.times[i] {
+                        entry.times[i] = time
+                        entry.ignores[i] = false
+                    }
+                }
+            }
+            heat.hasRun = true
+            
+            
+            self.calculateRankings()
+            self.objectWillChange.send()
         }
     }
     
@@ -245,7 +304,11 @@ class Derby: ObservableObject {
         objectWillChange.send()
     }
     
-    func generateTestTimes() {
+    func generateTime(_ carNumber: Int) -> Double {
+        return 0.0
+    }
+    
+    func generateTimes() {
         log(#function)
         for entry in entries {
             entry.times[0] = Double.random(in: 4..<6.3)

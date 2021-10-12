@@ -193,7 +193,7 @@ struct SettingsView: View {
                 }
                 
                 Text("------Tests------").font(.system(size:18))
-                Spacer().frame(height:10)
+                Spacer().frame(height:20)
                 Group {
                     Button(action: {
                         // TODO: alert!
@@ -206,22 +206,22 @@ struct SettingsView: View {
                 Group {
                     Button(action: {
                         // TODO: Alert!
-                        derby.generateTestTimes()
+                        derby.generateTimes()
                     }) {
                         Text("Generate Test Times").font(.system(size: 18))
                     }
                     Spacer().frame(height:10)
                 }
-                .alert(isPresented: self.$showAlert) {
-                    Alert(title: Text("Reset All Timing Data"),
-                          message: Text("Are you sure?"),
-                          primaryButton: .cancel(),
-                          secondaryButton: .destructive(Text("Go")) { derby.startRacing() }
-                    )
-                }
             }
-            
+               
             Spacer()
+        }
+        .alert(isPresented: self.$showAlert) {
+            Alert(title: Text("Reset All Timing Data"),
+                  message: Text("Are you sure?"),
+                  primaryButton: .cancel(),
+                  secondaryButton: .destructive(Text("Go")) { derby.startRacing() }
+            )
         }
         .onDisappear(perform: {
             settings.saveSettings()

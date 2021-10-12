@@ -33,7 +33,8 @@ class REST {
     private init() {}
     
     func pollServer() {
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(3), repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(2), repeats: true) { timer in
+
             self.checkServerForUpdates()
         }
     }
@@ -125,6 +126,7 @@ class REST {
     }
     
     func findTimer() {
+        log(#function)
         let ipParts = ipAddress.components(separatedBy: ".")
         let network = "\(ipParts[0]).\(ipParts[1]).\(ipParts[2])."
         
