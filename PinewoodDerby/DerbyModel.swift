@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class DerbyEntry: Identifiable {
     init(number: Int, carName: String, firstName: String, lastName: String, age: Int, group: String) {
@@ -46,26 +47,22 @@ class HeatsEntry: Identifiable {
     var hasRun: Bool
 }
 
+
 class Derby: ObservableObject {
     
     @Published var entries: [DerbyEntry] = []
     @Published var heats: [HeatsEntry] = []
-    
-    @Published var isMaster = false
-    var pin: String = "1234"
-    var trackCount = 4
     
     // list of groups
     let girls = "girls"
     let boys = "boys"
     let overall = "overall"
     
+    @ObservedObject var settings = Settings.shared
     let rest = REST.shared
-    
     
     var minimumTime =  1.0
     var maximumTime = 20.0
-    
     
     static let shared = Derby()
     private init() {}
@@ -81,6 +78,7 @@ class Derby: ObservableObject {
         print("delete \(entry.carNumber)")
         entries.remove(at: idx)
         // TODO: if heats were generated, this will affect them
+        heats = []
         saveHeatsData()
         self.objectWillChange.send()
     }
@@ -90,31 +88,24 @@ class Derby: ObservableObject {
         archiveData()
         
         heats = []
-        // TODO: archive
         // TODO: clear all timing data
+        // TODO: if less members of a group than tracks, need to artificially add members
         
         let boysEntries = entries.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
-        let boysToAdd = boysCars.count % trackCount != 0 ? trackCount - boysCars.count % trackCount : 0
-        for _ in 0..<boysToAdd {
-            boysCars.append(0)
-        }
+        
         boysCars.sort { $0 < $1 }
         boysCars.shuffle()
-        let boysOffset = boysCars.count / trackCount
-        log("boys count=\(boysCars.count) boys added=\(boysToAdd) boys offset=\(boysOffset)")
+        let boysOffset = boysCars.count / settings.trackCount
+        log("boys count=\(boysCars.count) boys offset=\(boysOffset)")
         
         let girlsEntries = entries.filter { $0.group == girls }
         var girlsCars = girlsEntries.map { $0.carNumber }
         
-        let girlsToAdd = girlsCars.count % trackCount != 0 ? trackCount - girlsCars.count % trackCount : 0
-        for _ in 0..<girlsToAdd {
-            girlsCars.append(0)
-        }
         girlsCars.sort { $0 < $1 }
         girlsCars.shuffle()
-        let girlsOffset = girlsCars.count / trackCount
-        log("girls count=\(girlsCars.count) girls added=\(girlsToAdd) girls offset=\(girlsOffset)")
+        let girlsOffset = girlsCars.count / settings.trackCount
+        log("girls count=\(girlsCars.count)  girls offset=\(girlsOffset)")
         
         var boysHeats: [HeatsEntry] = []
         var girlsHeats: [HeatsEntry] = []
@@ -122,7 +113,7 @@ class Derby: ObservableObject {
         // generate the boys heats
         for i in 0..<boysCars.count {
             var tracks: [Int] = []
-            for j in 0..<trackCount {
+            for j in 0..<settings.trackCount {
                 var idx = j*boysOffset + i
                 if idx >= boysCars.count {
                     idx -= boysCars.count
@@ -135,7 +126,7 @@ class Derby: ObservableObject {
         // generate the girls heats
         for i in 0..<girlsCars.count {
             var tracks: [Int] = []
-            for j in 0..<trackCount {
+            for j in 0..<settings.trackCount {
                 var idx = j*girlsOffset + i
                 if idx >= girlsCars.count {
                     idx -= girlsCars.count
@@ -185,7 +176,7 @@ class Derby: ObservableObject {
         do {
             data = try String(contentsOf: name)
         } catch {
-            log("error: \(error)")
+            log("error: \(error.localizedDescription)")
             data = ""
         }
         let lines = data!.components(separatedBy: .newlines)
@@ -204,27 +195,26 @@ class Derby: ObservableObject {
                                group: String(values[5]))
             d.times[0] = Double(values[6])!
             d.times[1] = Double(values[7])!
-            if trackCount > 2 && values.count > 8 {
+            if settings.trackCount > 2 && values.count > 8 {
                 d.times[2] = Double(values[8])!
-                if trackCount > 3 && values.count > 9 {
+                if settings.trackCount > 3 && values.count > 9 {
                     d.times[3] = Double(values[9])!
-                    if trackCount > 4 && values.count > 10 {
+                    if settings.trackCount > 4 && values.count > 10 {
                         d.times[4] = Double(values[10])!
-                        if trackCount > 5 && values.count > 11 {
+                        if settings.trackCount > 5 && values.count > 11 {
                             d.times[5] = Double(values[11])!
                         }
                     }
                 }
             }
             entries.append(d)
-            print("entries.count: ", entries.count)
         }
         calculateRankingss()
-        print("entries.count: ", entries.count)
     }
     
     func saveDerbyData() {
-        log(#function)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
+        log("\(#function) \(name)")
         var list = [String]()
         for entry in entries {
             let car = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group),"
@@ -232,9 +222,12 @@ class Derby: ObservableObject {
                                entry.times[0], entry.times[1], entry.times[2], entry.times[3])
             list.append(car + times)
         }
-        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
-        let fileData = list.joined(separator: "\n")
-        try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        let fileData = list.joined(separator: "\n") + "\n"
+        do {
+            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        } catch {
+            log("error: \(error.localizedDescription)")
+        }
     }
     
     func readHeatsData() {
@@ -246,7 +239,7 @@ class Derby: ObservableObject {
             for line in lines {
                 log(line)
                 let values = line.split(separator: ",", omittingEmptySubsequences: false)
-                if values.count < trackCount {
+                if values.count < settings.trackCount {
                     continue
                 }
                 let heat = Int(values[0])!
@@ -292,13 +285,17 @@ class Derby: ObservableObject {
         for entry in entries {
             entry.average = 0.0
             var count = 0
-            for i in 0..<trackCount {
+            for i in 0..<settings.trackCount {
                 if entry.times[i] > 3.0 && entry.times[i] < 10.0 {
                     count += 1
                     entry.average += entry.times[i]
                 }
             }
+            if count > 0 {
             entry.average = entry.average / Double(count)
+            } else {
+                entry.average = 0.0
+            }
         }
         // calculate girls rankings
         let g = entries.filter { $0.group == girls }
@@ -354,7 +351,7 @@ class Derby: ObservableObject {
                 log(error.localizedDescription)
             }
         }
-        let files = [rest.derbyName, rest.heatsName, rest.configName, rest.timesName]
+        let files = [rest.derbyName, rest.heatsName, rest.settingsName, rest.timesName]
         for f in files {
             let srcURL = docURL.appendingPathComponent(f)
             let dstURL = archive.appendingPathComponent(f)
@@ -385,12 +382,12 @@ class Derby: ObservableObject {
         for entry in entries {
             entry.times[0] = Double.random(in: 4..<6.3)
             let t = entry.times[0]
-            for i in 1..<trackCount {
+            for i in 1..<settings.trackCount {
                 entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
             }
         }
         for entry in entries {
-            for i in 0..<trackCount {
+            for i in 0..<settings.trackCount {
                 print(entry.times[i], terminator: "")
             }
             print("")

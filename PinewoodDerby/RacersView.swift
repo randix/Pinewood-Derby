@@ -11,7 +11,7 @@ struct RacersView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
-    let settings = Settings.shared
+    @ObservedObject var settings = Settings.shared
     
     @State var thisEntry: DerbyEntry?
     @State var showEditModal = false
@@ -25,7 +25,7 @@ struct RacersView: View {
             // Title row - with Rankings and Add buttons
             HStack {
                 Spacer().frame(width:35)
-                if derby.isMaster {
+                if settings.isMaster {
                     Button(action: {
                         log("add")
                         thisEntry = nil
@@ -62,26 +62,6 @@ struct RacersView: View {
             // Header row buttons for sorting ----------------------------------------
             HStack(spacing: 2) {
                 Spacer().frame(width:30)
-                //                Button(action: {
-                //                    derby.entries.sort { $0.group + String(format: "%03d", $0.rankGroup) < $1.group + String(format: "%03d", $1.rankGroup) }
-                //                    derby.saveDerbyData()
-                //                }) {
-                //                    VStack {
-                //                        Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 13))
-                //                        Text("Group").bold().frame(width: 42, alignment: .center).font(.system(size: 13))
-                //                    }
-                //                    .background(.yellow)
-                //                }
-                //                Button(action: {
-                //                    derby.entries.sort { $0.rankOverall < $1.rankOverall }
-                //                    derby.saveDerbyData()
-                //                }) {
-                //                    VStack {
-                //                        Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 13))
-                //                        Text("Overall").bold().frame(width: 46, alignment: .center).font(.system(size: 13))
-                //                    }
-                //                    .background(.yellow)
-                //                }
                 Button(action: {
                     derby.entries.sort { $0.carNumber < $1.carNumber }
                     derby.saveDerbyData()

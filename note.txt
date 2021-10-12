@@ -1,6 +1,5 @@
 heats view: colorize heats that have run, run management
 heats view: add special heats and car selection
-
 times view: be able to toggle in/out individual times
 
 Settings: manage testing

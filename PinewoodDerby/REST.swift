@@ -13,7 +13,7 @@ class REST {
     
     // TODO: Apple requires https
     var webProtocol = "http://"
-    var ipAddress = ""
+    var ipAddress = "192.168.12.125"
     var serverIpAddress: String?
     let port = "8080"
     var timerUrl: URL?
@@ -25,7 +25,7 @@ class REST {
     
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
-    let configName = "config.txt"
+    let settingsName = "settings.txt"
     let timesName = "times.csv"
     
     static let shared = REST()
@@ -109,7 +109,7 @@ class REST {
             with: request,
             completionHandler: { data, response, error in
                 print("data", data ?? "nil")
-                print("response: ", response)
+                print("response: ", response ?? "nil")
 //                for k in response.keys {
 //                    print(k)
 //                }

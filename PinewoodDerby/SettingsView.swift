@@ -15,7 +15,6 @@ struct SettingsView: View {
     let derby = Derby.shared
     let rest = REST.shared
     
-  
     var body: some View {
         VStack {
             
@@ -84,7 +83,9 @@ struct SettingsView: View {
                             .foregroundColor(.red)
                     }
                     Spacer().frame(width: 20)
-                    Button(action: {}) {
+                    Button(action: {
+                        rest.findTimer()
+                    }) {
                         Text("Rescan")
                             .font(.system(size: 18))
                             .frame(width:70)
@@ -105,10 +106,8 @@ struct SettingsView: View {
                     }
                     Spacer().frame(height:30)
                 }
-            }
             
             // --------------- Server Data pull and master stuff ---------------
-            if !settings.isMaster {
                 HStack {
                     Spacer()
                     Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
@@ -122,7 +121,7 @@ struct SettingsView: View {
                     Button(action: {
                         settings.isMaster = settings.pin == settings.masterPin
                         settings.pin = ""
-                        if derby.isMaster == false {
+                        if settings.isMaster == false {
                             presentationMode.wrappedValue.dismiss()
                         } else {
                             derby.objectWillChange.send()
@@ -169,6 +168,16 @@ struct SettingsView: View {
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
+                        .onChange(of: settings.tracks, perform: { value in
+                            // TODO: validate int between 2-6
+                            if let t = Int(value) {
+                                if t < 2 || t > 6 {
+                                    // TODO: alert
+                                }
+                            } else {
+                                // TODO: alert
+                            }
+                        })
                 }
                 Spacer().frame(height:20)
                 Group {
@@ -182,6 +191,7 @@ struct SettingsView: View {
                 Group {
                     Button(action: {
                         rest.saveFilesToServer()
+                        derby.generateHeats()
                         // TODO: alert are you sure?
                         // prepare racing
                     })  {
@@ -230,8 +240,7 @@ struct SettingsView: View {
 
 class Settings: ObservableObject {
     
-    var isMaster = false
-    let derby = Derby.shared
+    @Published var isMaster = false
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
@@ -250,7 +259,7 @@ class Settings: ObservableObject {
     @Published var title = ""
     @Published var event = ""
     @Published var tracks = ""
-    
+    @Published var trackCount = 0
     
     static let shared = Settings()
     private init() {}
@@ -266,6 +275,7 @@ class Settings: ObservableObject {
             title = "Pinewood Derby"
             event = "Event"
             tracks = "4"
+            trackCount = 4
             myIpAddress =  "192.168.12.125"
             serverIpAddress = "192.168.12.128"
             serverPort = "8080"
@@ -291,6 +301,14 @@ class Settings: ObservableObject {
                 log("event=\(event)")
             case "tracks":
                 tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                trackCount = 2
+                if let t = Int(tracks) {
+                    trackCount = t
+                }
+                if trackCount > 6 {
+                    trackCount = 6
+                    tracks = String(trackCount)
+                }
                 log("tracks=\(tracks)")
             case "myIpAddress":
                 myIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
@@ -314,6 +332,10 @@ class Settings: ObservableObject {
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
         list.append("tracks=\(tracks.trimmingCharacters(in: .whitespaces))")
+        trackCount = 2
+        if let t = Int(tracks) {
+            trackCount = t
+        }
         list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")
