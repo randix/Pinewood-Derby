@@ -10,6 +10,7 @@ import SwiftUI
 struct HeatsView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     @ObservedObject var derby = Derby.shared
     @ObservedObject var settings = Settings.shared
     
@@ -127,6 +128,8 @@ struct HeatsView: View {
                     }
                     Spacer()
                 }
+                // TODO: deal with environment color
+                .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
             }
             Spacer()
         }

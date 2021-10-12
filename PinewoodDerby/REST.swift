@@ -27,6 +27,7 @@ class REST {
     let heatsName = "heats.csv"
     let settingsName = "settings.txt"
     let timesName = "times.csv"
+    let nextheatName = "nextheat.csv"
     
     static let shared = REST()
     private init() {}

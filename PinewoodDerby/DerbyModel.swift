@@ -65,6 +65,9 @@ class Derby: ObservableObject {
     var minimumTime =  1.0
     var maximumTime = 20.0
     
+    var timer: Timer?
+    var nextHeat = 0
+    
     static let shared = Derby()
     private init() {}
     
@@ -163,6 +166,33 @@ class Derby: ObservableObject {
         // TODO: send next heat data
     }
     
+    func simulate() {
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(5), repeats: true) { timer in
+            let heats = self.heats.filter { $0.hasRun == false }
+            if heats.count == 0 {
+                self.timer?.invalidate()
+                self.timer = nil
+                log("simulation done")
+            } else {
+                let heat = heats[0]
+                var fileData = "\(heat.heat)"
+                for i in 0..<self.settings.trackCount {
+                    fileData += ",\(heat.tracks[i])"
+                }
+                log("simulated heat \(fileData)")
+                let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let nextheatURL = docURL.appendingPathComponent(self.rest.nextheatName)
+                do {
+                    try fileData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
+                } catch {
+                    log(error.localizedDescription)
+                }
+                heat.hasRun = true
+                self.objectWillChange.send()
+            }
+        }
+    }
+    
     func archiveData() {
         log(#function)
         
@@ -212,7 +242,7 @@ class Derby: ObservableObject {
         }
         
         saveDerbyData()
-        self.objectWillChange.send()
+        objectWillChange.send()
     }
     
     func generateTestTimes() {
@@ -420,6 +450,10 @@ class Derby: ObservableObject {
         }
         let name = Settings.shared.docDir.appendingPathComponent(rest.heatsName)
         let fileData = list.joined(separator: "\n")
-        try! fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        do {
+            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        } catch {
+            log(error.localizedDescription)
+        }
     }
 }

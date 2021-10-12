@@ -196,7 +196,8 @@ struct SettingsView: View {
                 Spacer().frame(height:10)
                 Group {
                     Button(action: {
-                        // TODO: start simulation timer
+                        // TODO: alert!
+                        derby.simulate()
                     })  {
                         Text("Start Simulation").font(.system(size:18))
                     }
@@ -204,6 +205,7 @@ struct SettingsView: View {
                 }
                 Group {
                     Button(action: {
+                        // TODO: Alert!
                         derby.generateTestTimes()
                     }) {
                         Text("Generate Test Times").font(.system(size: 18))
