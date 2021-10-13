@@ -14,17 +14,42 @@ struct HeatsView: View {
     @ObservedObject var derby = Derby.shared
     @ObservedObject var settings = Settings.shared
     
-    @State var showAlert = false
+    @State var alertShow = false
+    @State var alertTitle = ""
+    @State var alertMessage = ""
+    
+    @State var nextHeat = 0
+    @State var cars = [Int]()
+    
+    @State var showHeatModal = false
     
     var body: some View {
         VStack {
             HStack {
                 Spacer().frame(width:30)
                 
+                if settings.isMaster {
+                    Button(action: {
+                        showHeatModal = true
+                        print("special heat")
+                    }) {
+                        VStack {
+                            Image(systemName: "flag.2.crossed").font(.system(size: 14))
+                            Text("Special").font(.system(size: 14))
+                        }
+                    }
+                    .frame(width:50)
+                    //.background(.red)
+                    Spacer().frame(width:5)
+                } else {
+                    Spacer().frame(width: 55)
+                }
+                
                 Spacer()
                 Text("Heats").font(.system(size: 20)).bold()
                 Spacer()
                
+                Spacer().frame(width:55)
                 Spacer().frame(width:30)
             }
             Spacer().frame(height:10)
@@ -128,11 +153,43 @@ struct HeatsView: View {
                     }
                     Spacer()
                 }
+                .onTapGesture(perform: {
+                    if settings.isMaster {
+                        print(heat.heat)
+                        nextHeat = heat.heat
+                        cars = heat.tracks
+                        alertTitle = "Run Heat \(heat.heat)"
+                        alertMessage = "Check cars ready:\n"
+                        for i in 0..<settings.trackCount {
+                            alertMessage += "\(heat.tracks[i])"
+                            if i < settings.trackCount {
+                                alertMessage += " "
+                            }
+                        }
+                        alertShow = true
+                    }
+                })
+                .alert(isPresented: self.$alertShow) {
+                    Alert(title: Text(self.alertTitle),
+                          message: Text(self.alertMessage),
+                          primaryButton: .cancel(),
+                          secondaryButton: .destructive(Text("Start")) {
+                        derby.startHeat(nextHeat, cars)
+                        print("Start")
+                        
+                    })
+                }
                 // TODO: deal with environment color
                 .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
             }
+           
             Spacer()
+            if settings.isMaster {
+                Text("Tap on heat to start.")
+                Spacer().frame(height: 10)
+            }
         }
+        //.sheet
     }
     
     func timeForCar(_ carNumber: Int, _ track: Int) -> String {

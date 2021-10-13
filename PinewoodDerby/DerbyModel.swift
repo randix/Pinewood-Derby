@@ -28,6 +28,7 @@ class DerbyEntry: Identifiable {
     
     var times = [Double](repeating: 0.0, count: 6)  // the times for each track
     var ignores = [Bool](repeating: false, count: 6)
+    var firstSim = 0                // track number of first simulated time
     var average: Double = 0.0
     var rankOverall: Int = 0
     var rankGroup: Int = 0
@@ -66,16 +67,16 @@ class Derby: ObservableObject {
     var maximumTime = 20.0
     
     var simulationRunning = false
-    var simTimer: Timer?
-    var nextHeat = 0
-    
     var timesTimer: Timer?
-    
+    let timesTimerInterval = 1
+    var nextHeat = 0
+
     static let shared = Derby()
     private init() {}
     
     // MARK: Delete single entry
     
+    // called from RacersView to delete an entry
     func delete(_ entry: DerbyEntry) {
         archiveData()
         var idx = 0
@@ -93,7 +94,118 @@ class Derby: ObservableObject {
         self.objectWillChange.send()
     }
     
-   // MARK: Calculations per time
+    // MARK: Racing
+    
+    func startRacing() {
+        archiveData()
+        clearTimes()
+        generateHeats()
+        rest.saveFilesToServer()
+    }
+    
+    func startHeat(_ heat: Int, _ cars: [Int]) {
+        timesTimer?.invalidate()
+        readTimes()
+        var heatData = "\(heat)"
+        for i in 0..<settings.trackCount {
+            heatData += ",\(cars[i])"
+        }
+        do {
+            let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let nextheatURL = docURL.appendingPathComponent(rest.nextheatName)
+            try heatData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
+        } catch {
+            log(error.localizedDescription)
+            return
+        }
+        if simulationRunning {
+            simulateHeat()
+        }
+    }
+    
+    func simulate() {
+        simulationRunning = true
+        startRacing()
+    }
+    
+    func simulateHeat() {
+        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let nextheatURL = docURL.appendingPathComponent(rest.nextheatName)
+        let timesURL = docURL.appendingPathComponent(rest.timesName)
+        
+        do {
+            let line = try String(contentsOf: nextheatURL)
+            log(line)
+            let values = line.split(separator: ",", omittingEmptySubsequences: false)
+            if values.count < settings.trackCount + 1 {
+                log("invalid heats data")
+                return
+            }
+            let heat = Int(values[0])!
+            let cCnt = values.count - 1
+            var cars: [Int] = [Int](repeating: 0, count: cCnt)
+            for i in 0..<cCnt {
+                cars[i] = Int(values[i+1])!
+            }
+            var timesData = "\(heat)"
+            for i in 0..<self.settings.trackCount {
+                timesData += String(format: ",%d,%0.4f", cars[i], generateTime(i, cars[i]))
+            }
+            log("simulated times \(timesData)")
+            timesData += "\n"
+            if FileManager.default.fileExists(atPath: timesURL.path) {
+                if let fileHandle = try? FileHandle(forWritingTo: timesURL) {
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(Data(timesData.utf8))
+                    fileHandle.closeFile()
+                }
+            } else {
+                try? timesData.write(to: timesURL, atomically: true, encoding: .utf8)
+            }
+        } catch {
+            log(error.localizedDescription)
+        }
+    }
+    
+    // prepare to start racing (or simulation)
+    func clearTimes() {
+        log(#function)
+        let times = [Double](repeating: 0.0, count: 6)
+        let ignores = [Bool](repeating: false, count: 6)
+        for entry in entries {
+            entry.times = times
+            entry.ignores = ignores
+            entry.firstSim = 0
+            entry.average = 0.0
+            entry.rankGroup = 0
+            entry.rankOverall = 0
+        }
+        removeFile(rest.timesName)
+        
+        saveDerbyData()
+        objectWillChange.send()
+    }
+    
+    /// This is for the simulator
+    func generateTime(_ track: Int, _ carNumber: Int) -> Double {
+        let e = entries.filter { carNumber == $0.carNumber }
+        if e.count == 1 {
+            let entry = e[0]
+            if entry.firstSim == 0 {        // this is the first time for this car, it will be stored in firstSim track
+                entry.firstSim = track
+                let time = Double.random(in: 4..<6.3)
+                print(carNumber, track, time)
+                return(time)
+            }
+            let base = entry.times[entry.firstSim]
+            let time = Double.random(in: (base-0.2)..<(base+0.2))
+            print(carNumber, track, time)
+            return(time)
+        }
+        return 0.0
+    }
+    
+    // MARK: Calculations per time
     
     func calculateRankings() {
         log(#function)
@@ -157,169 +269,6 @@ class Derby: ObservableObject {
             saveDerbyData()
             objectWillChange.send()
         }
-    }
-    
-    // MARK: Racing Data
-    
-    func startRacing() {
-        archiveData()
-        clearTimes()
-        generateHeats()
-        rest.saveFilesToServer()
-        // TODO: send next heat data
-    }
-    
-    func simulate() {
-        simulationRunning = true
-        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let nextheatURL = docURL.appendingPathComponent(rest.nextheatName)
-        let timesURL = docURL.appendingPathComponent(rest.timesName)
-        
-        simTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(5), repeats: true) { timer in
-            let heats = self.heats.filter { $0.hasRun == false }
-            if heats.count == 0 {
-                self.simTimer?.invalidate()
-                self.simTimer = nil
-                self.simulationRunning = false
-                log("simulation done")
-            } else {
-                let heat = heats[0]
-                var heatData = "\(heat.heat)"
-                var timesData = "\(heat.heat)"
-                for i in 0..<self.settings.trackCount {
-                    heatData += ",\(heat.tracks[i])"
-                    timesData += String(format: ",%d,%0.4f", heat.tracks[i], self.generateTime(heat.tracks[i]))
-                }
-                log("simulated heat \(heatData)")
-                log("simulated times \(timesData)")
-                heatData += "\n"
-                timesData += "\n"
-                
-                do {
-                    try heatData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
-                    
-                    if FileManager.default.fileExists(atPath: timesURL.path) {
-                        if let fileHandle = try? FileHandle(forWritingTo: timesURL) {
-                            fileHandle.seekToEndOfFile()
-                            fileHandle.write(Data(timesData.utf8))
-                            fileHandle.closeFile()
-                        }
-                    } else {
-                        try? timesData.write(to: timesURL, atomically: true, encoding: .utf8)
-                    }
-                } catch {
-                    log(error.localizedDescription)
-                }
-                
-                self.objectWillChange.send()
-            }
-        }
-    }
-    
-    func readTimes() {
-        let name = Settings.shared.docDir.appendingPathComponent(rest.timesName)
-        timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(1), repeats: true) { timer in
-            var data: String?
-            do {
-                data = try String(contentsOf: name)
-            } catch {
-                log("error: \(error.localizedDescription)")
-                data = ""
-            }
-            let lines = data!.components(separatedBy: .newlines)
-            for line in lines {
-                log(line)
-                let values = line.split(separator: ",", omittingEmptySubsequences: false)
-                if values.count < (1 + 2 * self.settings.trackCount) {
-                    continue
-                }
-                for i in 0..<self.settings.trackCount {
-                    let heat = Int(values[0])!
-                    let carNumber = Int(values[2*i+1])
-                    let time = Double(values[2*i+2])!
-                    let entry = self.entries.filter { $0.carNumber == carNumber }[0]
-                    if entry.times[i] == 0.0 || time < entry.times[i] {
-                        entry.times[i] = time
-                        entry.ignores[i] = false
-                    }
-                }
-            }
-            heat.hasRun = true
-            
-            
-            self.calculateRankings()
-            self.objectWillChange.send()
-        }
-    }
-    
-    func archiveData() {
-        log(#function)
-        
-        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let archiveURL = docURL.appendingPathComponent("archive")
-        if !FileManager.default.fileExists(atPath: archiveURL.path) {
-            do {
-                try FileManager.default.createDirectory(atPath: archiveURL.path, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                log(error.localizedDescription)
-            }
-        }
-        let now = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd-HH-mm"
-        let archiveName = formatter.string(from: now)
-        let archive = archiveURL.appendingPathComponent(archiveName)
-        if !FileManager.default.fileExists(atPath: archive.path) {
-            do {
-                try FileManager.default.createDirectory(atPath: archive.path, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                log(error.localizedDescription)
-            }
-        }
-        let files = [rest.derbyName, rest.heatsName, rest.settingsName, rest.timesName]
-        for f in files {
-            let srcURL = docURL.appendingPathComponent(f)
-            let dstURL = archive.appendingPathComponent(f)
-            do {
-                try FileManager.default.copyItem(at: srcURL, to: dstURL)
-            } catch (let error) {
-                log(error.localizedDescription)
-            }
-        }
-    }
-    
-    func clearTimes() {
-        log(#function)
-        let times = [Double](repeating: 0.0, count: 6)
-        let ignores = [Bool](repeating: false, count: 6)
-        for entry in entries {
-            entry.times = times
-            entry.ignores = ignores
-            entry.average = 0.0
-            entry.rankGroup = 0
-            entry.rankOverall = 0
-        }
-        
-        saveDerbyData()
-        objectWillChange.send()
-    }
-    
-    func generateTime(_ carNumber: Int) -> Double {
-        return 0.0
-    }
-    
-    func generateTimes() {
-        log(#function)
-        for entry in entries {
-            entry.times[0] = Double.random(in: 4..<6.3)
-            let t = entry.times[0]
-            for i in 1..<settings.trackCount {
-                entry.times[i] = Double.random(in: (t-0.2)..<(t+0.2))
-            }
-        }
-        calculateRankings()
-        saveDerbyData()
-        self.objectWillChange.send()
     }
     
     func generateHeats() {
@@ -410,10 +359,62 @@ class Derby: ObservableObject {
         self.objectWillChange.send()
     }
     
-    // MARK: read and save data
+    // MARK: Files
+    
+    func removeFile(_ name: String) {
+        let nameUrl = settings.docDir.appendingPathComponent(name)
+        if !FileManager.default.fileExists(atPath: nameUrl.path) {
+            do {
+                try FileManager.default.removeItem(atPath: nameUrl.path)
+                log("remove \(nameUrl)")
+            } catch {
+                log(error.localizedDescription)
+            }
+        }
+    }
+    
+    // TODO: turn off timer at the end of the race (when not waiting)
+    func readTimes() {
+        let name = settings.docDir.appendingPathComponent(rest.timesName)
+        timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timesTimerInterval), repeats: true) { timer in
+            var data: String?
+            do {
+                data = try String(contentsOf: name)
+            } catch {
+                log("error: \(error.localizedDescription)")
+                data = ""
+            }
+            let lines = data!.components(separatedBy: .newlines)
+            for line in lines {
+                log(line)
+                let values = line.split(separator: ",", omittingEmptySubsequences: false)
+                if values.count < (1 + 2 * self.settings.trackCount) {
+                    continue
+                }
+                var heat: Int = 0
+                for i in 0..<self.settings.trackCount {
+                    heat = Int(values[0])!
+                    let carNumber = Int(values[2*i+1])
+                    let time = Double(values[2*i+2])!
+                    let entry = self.entries.filter { $0.carNumber == carNumber }[0]
+                    if entry.times[i] == 0.0 || time < entry.times[i] {
+                        entry.times[i] = time
+                        entry.ignores[i] = false
+                    }
+                    print("time", heat, carNumber!, entry.times[0], entry.times[1], entry.times[2], entry.times[3])
+                }
+                self.heats[heat].hasRun = true
+            }
+            
+            self.calculateRankings()
+            self.saveHeatsData()
+            self.objectWillChange.send()
+            self.timesTimer?.invalidate()
+        }
+    }
     
     func readDerbyData() {
-        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
+        let name = settings.docDir.appendingPathComponent(rest.derbyName)
         log("\(#function) \(name)")
         var data: String?
         do {
@@ -450,7 +451,7 @@ class Derby: ObservableObject {
     }
     
     func saveDerbyData() {
-        let name = Settings.shared.docDir.appendingPathComponent(rest.derbyName)
+        let name = settings.docDir.appendingPathComponent(rest.derbyName)
         log("\(#function) \(name)")
         var list = [String]()
         for entry in entries {
@@ -470,7 +471,7 @@ class Derby: ObservableObject {
     }
     
     func readHeatsData() {
-        let name = Settings.shared.docDir.appendingPathComponent(rest.heatsName)
+        let name = settings.docDir.appendingPathComponent(rest.heatsName)
         log("\(#function) \(name)")
         do {
             let data = try String(contentsOf: name)
@@ -511,12 +512,48 @@ class Derby: ObservableObject {
             heat.append("\(entry.hasRun)")
             list.append(heat)
         }
-        let name = Settings.shared.docDir.appendingPathComponent(rest.heatsName)
+        let name = settings.docDir.appendingPathComponent(rest.heatsName)
         let fileData = list.joined(separator: "\n")
         do {
             try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
         } catch {
             log(error.localizedDescription)
+        }
+    }
+    
+    func archiveData() {
+        log(#function)
+        
+        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let archiveURL = docURL.appendingPathComponent("archive")
+        if !FileManager.default.fileExists(atPath: archiveURL.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: archiveURL.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                log(error.localizedDescription)
+            }
+        }
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH-mm"
+        let archiveName = formatter.string(from: now)
+        let archive = archiveURL.appendingPathComponent(archiveName)
+        if !FileManager.default.fileExists(atPath: archive.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: archive.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                log(error.localizedDescription)
+            }
+        }
+        let files = [rest.derbyName, rest.heatsName, rest.settingsName, rest.timesName]
+        for f in files {
+            let srcURL = docURL.appendingPathComponent(f)
+            let dstURL = archive.appendingPathComponent(f)
+            do {
+                try FileManager.default.copyItem(at: srcURL, to: dstURL)
+            } catch (let error) {
+                log(error.localizedDescription)
+            }
         }
     }
 }

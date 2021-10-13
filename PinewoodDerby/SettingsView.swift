@@ -15,6 +15,7 @@ struct SettingsView: View {
     let derby = Derby.shared
     let rest = REST.shared
     
+    @State var simButton = 0
     @State var showAlert = false
     
     var body: some View {
@@ -192,25 +193,20 @@ struct SettingsView: View {
                     Spacer().frame(height:20)
                 }
                 
-                Text("------Tests------").font(.system(size:18))
-                Spacer().frame(height:20)
+
                 Group {
                     Button(action: {
+                        simButton += 1
+                        print("sim button \(simButton)")
                         // TODO: alert!
-                        derby.simulate()
+                        if simButton == 5 {
+                            derby.simulate()
+                        }
                     })  {
-                        Text("Start Simulation").font(.system(size:18))
+                        Spacer()
+                            .frame(width: 200, height: 100)
+                            .background(.yellow)
                     }
-                    Spacer().frame(height:10)
-                }
-                Group {
-                    Button(action: {
-                        // TODO: Alert!
-                        derby.generateTimes()
-                    }) {
-                        Text("Generate Test Times").font(.system(size: 18))
-                    }
-                    Spacer().frame(height:10)
                 }
             }
                
@@ -223,6 +219,9 @@ struct SettingsView: View {
                   secondaryButton: .destructive(Text("Go")) { derby.startRacing() }
             )
         }
+        .onAppear(perform: {
+            simButton = 0
+        })
         .onDisappear(perform: {
             settings.saveSettings()
         })

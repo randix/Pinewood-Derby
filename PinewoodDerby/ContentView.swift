@@ -28,6 +28,7 @@ struct ContentView: View {
             }
         }
         
+        // TODO: the tabview doesn't work any better than the previous navigation view....
         TabView {
             RacersView()
                 .tabItem {

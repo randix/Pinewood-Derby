@@ -140,21 +140,23 @@ struct RacersView: View {
                     }
                 }
                 .swipeActions {
-                    Button {
-                        thisEntry = entry
-                        showEditModal = true
-                    } label: {
-                        Label("Edit", systemImage: "square.and.pencil")
+                    if settings.isMaster {
+                        Button {
+                            thisEntry = entry
+                            showEditModal = true
+                        } label: {
+                            Label("Edit", systemImage: "square.and.pencil")
+                        }
+                        .tint(.yellow)
+                        
+                        Button {
+                            thisEntry = entry
+                            alertShow = true
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .tint(.red)
                     }
-                    .tint(.yellow)
-                    
-                    Button {
-                        thisEntry = entry
-                        alertShow = true
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                    .tint(.red)
                 }
                 .alert(isPresented: self.$alertShow) {
                     Alert(title: Text("Delete Car Number \(thisEntry!.carNumber)"),
@@ -168,6 +170,10 @@ struct RacersView: View {
             .sheet(isPresented: $showEditModal, content: { AddRacerView(entry: $thisEntry) })
             
             Spacer()
+            if settings.isMaster {
+                Text("Swipe left on racer to edit.")
+                Spacer().frame(height: 10)
+            }
         }
     }
 }
