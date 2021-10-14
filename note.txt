@@ -1,18 +1,15 @@
-RESTView:
-  change to https
+Server:
+  add simulate
+  connect to timer and read and parse - save raw and timeslog.csv
+  server: add cert for https
+  serve pin.txt
 
 HeatsView: add special heats and car selection
 
 Check all todos
 
-Server:
-  add test run generator
-    simulate
-  connect to timer and read and parse - save raw and times.csv
-  add functionality to take manual heats
-  interaction between master iOS and individual heats?
-  server: add cert for https
-  serve pin.txt
+RESTView:
+  change to https
 
 TestFlight:
     add background photo

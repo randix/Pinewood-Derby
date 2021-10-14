@@ -237,6 +237,7 @@ struct SettingsView: View {
                 } else {
                     derby.simulate()
                 }
+                derby.tabSelection = Tab.heats.rawValue
                 self.presentationMode.wrappedValue.dismiss()
             })
         }
@@ -337,7 +338,7 @@ class Settings: ObservableObject {
     }
     
     func saveSettings() {
-        log(#function)
+        log("\(#function) \(rest.settingsName)")
         var list = [String]()
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
@@ -349,7 +350,7 @@ class Settings: ObservableObject {
         list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")
-        let name = Settings.shared.docDir.appendingPathComponent(rest.settingsName)
+        let name = docDir.appendingPathComponent(rest.settingsName)
         let fileData = list.joined(separator: "\n") + "\n"
         
         do {

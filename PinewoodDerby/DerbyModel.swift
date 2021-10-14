@@ -66,6 +66,7 @@ class Derby: ObservableObject {
     var minimumTime =  2.0
     var maximumTime = 20.0
     
+    @Published var tabSelection = Tab.racers.rawValue
     @Published var simulationRunning = false
     var timesTimer: Timer?
     let timesTimerInterval = 1

@@ -7,15 +7,24 @@
 
 import SwiftUI
 
+enum Tab: Int  {
+    case racers
+    case heats
+    case times
+    case rankings
+    case results
+}
+
 struct ContentView: View {
 
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var settings = Settings.shared
+    @ObservedObject var derby = Derby.shared
+    
     @State var showSettings = false
     
     var body: some View {
-        
         
         HStack {
             Spacer().frame(width:75)
@@ -50,12 +59,17 @@ struct ContentView: View {
         }
         
         // TODO: the tabview doesn't work any better than the previous navigation view....
-        TabView {
+        TabView(selection: $derby.tabSelection) {
             RacersView()  .tabItem { Label("Racers",   systemImage: "car.2") }
+            .tag(Tab.racers.rawValue)
             HeatsView()   .tabItem { Label("Heats",    systemImage: "flag.2.crossed") }
+            .tag(Tab.heats.rawValue)
             TimesView()   .tabItem { Label("Times",    systemImage: "timer") }
+            .tag(Tab.times.rawValue)
             RankingsView().tabItem { Label("Rankings", systemImage: "arrow.up.arrow.down") }
+            .tag(Tab.rankings.rawValue)
             ResultsView() .tabItem {Label("Results",   systemImage: "tablecells") }
+            .tag(Tab.results.rawValue)
         }
         .sheet(isPresented: $showSettings, content: { SettingsView() })
     }
