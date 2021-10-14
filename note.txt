@@ -4,14 +4,11 @@ REST:
   change to https
   
 Settings:
-  manage testing
   simulate
     push heat to server
     remove "hasRun" setting
 
-  
 heats view: add special heats and car selection
-
 
 Check all todos
 

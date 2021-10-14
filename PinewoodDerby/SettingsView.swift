@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum AlertAction {
+    case startRace
+    case startSimulation
+}
+
 struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -15,8 +20,8 @@ struct SettingsView: View {
     let derby = Derby.shared
     let rest = REST.shared
     
-    @State var simButton = 0
     @State var showAlert = false
+    @State var alertAction = AlertAction.startRace
     
     var body: some View {
         VStack {
@@ -191,35 +196,27 @@ struct SettingsView: View {
                             }
                         })
                 }
-                Spacer().frame(height:20)
+                Spacer().frame(height:50)
                 Group {
                     Button(action: {
-                        showAlert = true
                         // TODO: alert if timer not connected!!
+                        alertAction = .startRace
+                        showAlert = true
                     })  {
-                        Text("Start Racing").font(.system(size:20)).bold()
+                        Text("Start Racing").font(.system(size:22)).bold()
                     }
-                    Spacer().frame(height:20)
+                    Spacer().frame(height:40)
                 }
-                
-
                 Group {
                     Button(action: {
-                        simButton += 1
-                        print("sim button \(simButton)")
-                        // TODO: alert!
-                        if simButton == 5 {
-                            derby.simulate()
-                            self.presentationMode.wrappedValue.dismiss()
-                        }
+                        alertAction = .startSimulation
+                        showAlert = true
                     })  {
-                        Spacer()
-                            .frame(width: 300, height: 200)
-                            //.background(.yellow)
+                        Text("Start Simulation").font(.system(size:18)).bold()
                     }
                 }
             }
-               
+            
             Spacer()
         }
         .alert(isPresented: self.$showAlert) {
@@ -227,22 +224,19 @@ struct SettingsView: View {
                   message: Text("Are you sure?"),
                   primaryButton: .cancel(),
                   secondaryButton: .destructive(Text("Go")) {
-                derby.startRacing()
+                if alertAction == .startRace {
+                    derby.startRacing()
+                } else {
+                    derby.simulate()
+                }
                 self.presentationMode.wrappedValue.dismiss()
-            }
-            )
+            })
         }
-        .onAppear(perform: {
-            simButton = 0
-        })
         .onDisappear(perform: {
             settings.saveSettings()
         })
     }
 }
-
-// TODO: Start Races times (archive and "Are you sure?")
-// TODO: archive before generate heats (archive)
 
 class Settings: ObservableObject {
     
@@ -271,7 +265,7 @@ class Settings: ObservableObject {
     private init() {}
     
     func readSettings() {
-        log(#function)
+        log("\(#function) \(settingsName)")
         let name = docDir.appendingPathComponent(settingsName)
         var config: String
         do {
@@ -292,6 +286,9 @@ class Settings: ObservableObject {
         
         let lines = config.components(separatedBy: "\n")
         for i in 0..<lines.count {
+            if lines.count == 0 {
+                continue
+            }
             let keyValue = lines[i].components(separatedBy: "=")
             if keyValue.count < 2 {
                 log("\(settingsName): format error")

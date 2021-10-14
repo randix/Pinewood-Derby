@@ -28,10 +28,11 @@ struct TimesView: View {
                 Spacer().frame(width:30)
             }
             Spacer().frame(height:10)
-            
+
+            // Headings -------------------------------------
             HStack(spacing: 3) {
                 Spacer().frame(width:30)
-                
+
                 Text("Car").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
                 //.background(.yellow)
                 Text("T1").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
@@ -58,19 +59,19 @@ struct TimesView: View {
             }
             HStack(spacing: 3) {
                 Spacer().frame(width:285)
-                
+
                 Text("Average").bold().frame(width: 70).font(.system(size: 16))
                 //.background(.yellow)
                 Spacer()
             }
-            
+
             // ---------------------------------------------------
             List(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
                 HStack(spacing: 3) {
                     Text(String(entry.carNumber))
                         .frame(width:30, alignment:.center).font(.system(size: 18))
                     //.background(.yellow)
-                    
+
                     Text(entry.times[0] == 0.0 ? "-" : String(format: "%0.4f", entry.times[0]))
                         .frame(width:48, alignment:.center).font(.system(size: 14))
                         .foregroundColor(entry.ignores[0] ? .red : colorScheme == .dark ? Color.white : Color.black)
@@ -114,19 +115,24 @@ struct TimesView: View {
                     }
                     .tint(.blue)
                 }
-                
+
                 HStack(spacing: 3) {
                     Spacer().frame(width:253)
-                    
+
                     Text(entry.average == 0.0 ? "-" : String(format: "%0.4f", entry.average))
                         .frame(width:70, alignment:.center).font(.system(size: 14))
                     //.background(.yellow)
-                    
+
                     Spacer()
                 }
             }
             .sheet(isPresented: $showEditModal, content: { EditTimesView(entry: $thisEntry) })
+            
+            Spacer()
+            if settings.isMaster {
+                Text("Swipe left on car times to edit.")
+                Spacer().frame(height: 10)
+            }
         }
-        Spacer()
     }
 }

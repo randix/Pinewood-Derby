@@ -44,8 +44,8 @@ struct RankingsView: View {
                     derby.saveDerbyData()
                 }) {
                     VStack {
-                        Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 13))
-                        Text("Group").bold().frame(width: 42, alignment: .center).font(.system(size: 13))
+                        Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 12))
+                        Text("Group").bold().frame(width: 42, alignment: .center).font(.system(size: 12))
                     }
                     //.background(.yellow)
                 }
@@ -54,8 +54,8 @@ struct RankingsView: View {
                     derby.saveDerbyData()
                 }) {
                     VStack {
-                        Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 13))
-                        Text("Overall").bold().frame(width: 46, alignment: .center).font(.system(size: 13))
+                        Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 12))
+                        Text("Overall").bold().frame(width: 46, alignment: .center).font(.system(size: 12))
                     }
                     //.background(.yellow)
                 }

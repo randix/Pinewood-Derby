@@ -155,7 +155,7 @@ struct HeatsView: View {
                 }
                 .onTapGesture(perform: {
                     if settings.isMaster {
-                        print(heat.heat)
+                        // TODO: only allow, rerun, next heat or special heat
                         nextHeat = heat.heat
                         cars = heat.tracks
                         alertTitle = "Run Heat \(heat.heat)"
@@ -175,21 +175,19 @@ struct HeatsView: View {
                           primaryButton: .cancel(),
                           secondaryButton: .destructive(Text("Start")) {
                         derby.startHeat(nextHeat, cars)
-                        print("Start")
-                        
                     })
                 }
                 // TODO: deal with environment color
                 .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
             }
-           
+            //.sheet
+            
             Spacer()
             if settings.isMaster {
                 Text("Tap on heat to start.")
                 Spacer().frame(height: 10)
             }
         }
-        //.sheet
     }
     
     func timeForCar(_ carNumber: Int, _ track: Int) -> String {

@@ -40,6 +40,7 @@ struct ContentView: View {
                 showSettings = true
             }) {
                 VStack {
+                    Spacer().frame(height:5)
                     Image(systemName: "gear").font(.system(size: 24))
                     Spacer().frame(height:3)
                     Text("Settings").font(.system(size: 12))
@@ -52,35 +53,11 @@ struct ContentView: View {
         
         // TODO: the tabview doesn't work any better than the previous navigation view....
         TabView {
-            RacersView()
-                .tabItem {
-                    Image(systemName: "car.2")
-                    Text("Racers")
-                }
-            //.background(Color(hue: 1.9500, saturation: 0.2, brightness: 1))
-            HeatsView()
-                .tabItem {
-                    Image(systemName: "flag.2.crossed")
-                    Text("Heats")
-                }
-            //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
-            TimesView()
-                .tabItem {
-                    Image(systemName: "timer")
-                    Text("Times")
-                }
-            //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
-            RankingsView()
-                .tabItem {
-                    Image(systemName: "arrow.up.arrow.down")
-                    Text("Rankings")
-                }
-            //.background(Color(hue: 0.1500, saturation: 0.2, brightness: 1))
-            ResultsView()
-                .tabItem {
-                    Image(systemName: "tablecells")
-                    Text("Results")
-                }
+            RacersView()  .tabItem { Label("Racers",   systemImage: "car.2") }
+            HeatsView()   .tabItem { Label("Heats",    systemImage: "flag.2.crossed") }
+            TimesView()   .tabItem { Label("Times",    systemImage: "timer") }
+            RankingsView().tabItem { Label("Rankings", systemImage: "arrow.up.arrow.down") }
+            ResultsView() .tabItem {Label("Results",   systemImage: "tablecells") }
         }
         .sheet(isPresented: $showSettings, content: { SettingsView() })
     }
