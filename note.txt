@@ -1,14 +1,7 @@
-REST:
-  polling
-    update times and heats run
+RESTView:
   change to https
-  
-Settings:
-  simulate
-    push heat to server
-    remove "hasRun" setting
 
-heats view: add special heats and car selection
+HeatsView: add special heats and car selection
 
 Check all todos
 
@@ -21,5 +14,6 @@ Server:
   server: add cert for https
   serve pin.txt
 
-add background photo
-everything for the app store
+TestFlight:
+    add background photo
+    everything for the app store

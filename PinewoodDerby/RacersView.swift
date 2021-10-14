@@ -147,7 +147,7 @@ struct RacersView: View {
                         } label: {
                             Label("Edit", systemImage: "square.and.pencil")
                         }
-                        .tint(.yellow)
+                        .tint(.teal)
                         
                         Button {
                             thisEntry = entry

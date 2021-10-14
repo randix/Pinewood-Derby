@@ -113,7 +113,7 @@ struct TimesView: View {
                     } label: {
                         Label("Edit", systemImage: "square.and.pencil")
                     }
-                    .tint(.blue)
+                    .tint(.teal)
                 }
 
                 HStack(spacing: 3) {

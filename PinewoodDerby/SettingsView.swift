@@ -17,8 +17,8 @@ struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var settings = Settings.shared
-    let derby = Derby.shared
-    let rest = REST.shared
+    let derby = Derby.shared    // do not make this an ObservedObject
+    @ObservedObject var rest = REST.shared
     
     @State var showAlert = false
     @State var alertAction = AlertAction.startRace
@@ -196,10 +196,18 @@ struct SettingsView: View {
                             }
                         })
                 }
+                Spacer().frame(height:10)
+                Group {
+                    Button(action: {
+                        rest.saveFilesToServer()
+                    })  {
+                        Text("Send Configuration To Server").font(.system(size:18))
+                    }
+                }
                 Spacer().frame(height:50)
                 Group {
                     Button(action: {
-                        // TODO: alert if timer not connected!!
+                        // TODO: alert if timer server not connected!!
                         alertAction = .startRace
                         showAlert = true
                     })  {
@@ -244,10 +252,10 @@ class Settings: ObservableObject {
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
+    let rest = REST.shared
+    
     var appName = ""
     var appVersion = ""
-    
-    let settingsName = "settings.txt"
     
     @Published var myIpAddress: String = "192.168.12.125"
     @Published var serverIpAddress: String = "192.168.12.128"
@@ -265,8 +273,8 @@ class Settings: ObservableObject {
     private init() {}
     
     func readSettings() {
-        log("\(#function) \(settingsName)")
-        let name = docDir.appendingPathComponent(settingsName)
+        log("\(#function) \(rest.settingsName)")
+        let name = docDir.appendingPathComponent(rest.settingsName)
         var config: String
         do {
             config = try String(contentsOf: name)
@@ -291,7 +299,7 @@ class Settings: ObservableObject {
             }
             let keyValue = lines[i].components(separatedBy: "=")
             if keyValue.count < 2 {
-                log("\(settingsName): format error")
+                log("\(rest.settingsName): format error")
                 continue
             }
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
@@ -341,7 +349,7 @@ class Settings: ObservableObject {
         list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")
-        let name = Settings.shared.docDir.appendingPathComponent(settingsName)
+        let name = Settings.shared.docDir.appendingPathComponent(rest.settingsName)
         let fileData = list.joined(separator: "\n") + "\n"
         
         do {

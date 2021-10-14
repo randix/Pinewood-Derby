@@ -118,7 +118,6 @@ class Derby: ObservableObject {
         archiveData()
         clearTimes()
         removeFile(rest.timesLogName)
-        removeFile(rest.nextHeatName)
         generateHeats()
         rest.saveFilesToServer()
     }
@@ -358,7 +357,7 @@ class Derby: ObservableObject {
     
     func removeFile(_ name: String) {
         let nameUrl = settings.docDir.appendingPathComponent(name)
-        if !FileManager.default.fileExists(atPath: nameUrl.path) {
+        if FileManager.default.fileExists(atPath: nameUrl.path) {
             do {
                 try FileManager.default.removeItem(atPath: nameUrl.path)
                 log("remove \(name)")
@@ -383,13 +382,14 @@ class Derby: ObservableObject {
                 log("heat: read times: \(times)")
                 // append to times log
                 do {
+                    let line = times + "\n"
                     if FileManager.default.fileExists(atPath: timesLogUrl.path) {
                         let fileHandle = try FileHandle(forWritingTo: timesLogUrl)
                         fileHandle.seekToEndOfFile()
-                        fileHandle.write(Data(times.utf8))
+                        fileHandle.write(Data(line.utf8))
                         fileHandle.closeFile()
                     } else {
-                        try times.write(to: timesLogUrl, atomically: true, encoding: .utf8)
+                        try line.write(to: timesLogUrl, atomically: true, encoding: .utf8)
                     }
                     log("heat times appended \(self.rest.timesLogName)")
                 } catch {
@@ -558,7 +558,7 @@ class Derby: ObservableObject {
                 log(error.localizedDescription)
             }
         }
-        let files = [settings.settingsName, rest.derbyName, rest.heatsName, rest.timesLogName]
+        let files = [rest.settingsName, rest.derbyName, rest.heatsName, rest.timesLogName]
         for f in files {
             log("copy \(f) to \(archiveName + "/" + f)")
             let srcURL = docURL.appendingPathComponent(f)

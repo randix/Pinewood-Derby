@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    // TODO: background colors need to be complementary to the light/dark background styles
-    // TODO: think about background photos...
+
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var settings = Settings.shared

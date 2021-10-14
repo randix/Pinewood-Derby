@@ -7,14 +7,14 @@
 
 import Foundation
 
-class REST {
+class REST: ObservableObject {
     
     var timer: Timer?
     
     // TODO: Apple requires https
     var webProtocol = "http://"
     var ipAddress = "192.168.12.125"
-    var serverIpAddress: String?
+    @Published var serverIpAddress: String?
     let port = "8080"
     var timerUrl: URL?
     
@@ -23,6 +23,7 @@ class REST {
     var heatsUpdated = false
     var configUpdated = false
     
+    let settingsName = "settings.txt"
     let derbyName = "derby.csv"
     let heatsName = "heats.csv"
     let timesName = "times.csv"
@@ -44,13 +45,12 @@ class REST {
         if timesUpdated {
             readFileFromServer(timesName)
         }
-        
     }
     
     func readFileFromServer(_ name: String) {
         guard timerUrl != nil else { return }
         let url = timerUrl!.appendingPathComponent(name)
-        log("fetch: \(url)")
+        log("fetch: \(name)")
         let task = URLSession.shared.downloadTask(with: url) {
             (tempURL, response, error) in
             guard let tempURL = tempURL else {
@@ -58,16 +58,12 @@ class REST {
                 return
             }
             do {
-                // Remove any existing document at name
                 let file =  Settings.shared.docDir.appendingPathComponent(name)
-                // TODO: only try to remove it file exists
                 if FileManager.default.fileExists(atPath: file.path) {
                     try FileManager.default.removeItem(at: file)
                 }
-                
-                // Copy the tempURL to name
                 try FileManager.default.copyItem(at: tempURL, to: file)
-                log("success")
+                log("success fetched: \(name)")
             }
             catch {
                 log(error.localizedDescription)
@@ -77,11 +73,10 @@ class REST {
     }
     
     func readFilesFromServer() {
-        readFileFromServer(timesName)
-        // config.txt
-        // derby.csv
-        // heats.csv
-        // times.csv
+        readFileFromServer(settingsName)
+        readFileFromServer(derbyName)
+        readFileFromServer(heatsName)
+        readFileFromServer(timesLogName)
     }
     
     func saveFileToServer(_ name: String) {
@@ -114,15 +109,17 @@ class REST {
 //                    print(k)
 //                }
                 //print(response?.value(forKey: "Status Code"))
-                print("error", error ?? "nil")
+                if let error = error {
+                    log(error.localizedDescription)
+                }
             })
         task.resume()
     }
     
     func saveFilesToServer() {
+        saveFileToServer(settingsName)
         saveFileToServer(derbyName)
-        
-        
+        saveFileToServer(heatsName)
     }
     
     func findTimer() {
@@ -146,6 +143,7 @@ class REST {
                         self.serverIpAddress = network + String(addr)
                         self.timerUrl = URL(string: "http://" + self.serverIpAddress! + ":" + self.port + "/")
                         log("PDServer: \(self.timerUrl!)")
+                        self.objectWillChange.send()
                     }
                     .resume()
             }
