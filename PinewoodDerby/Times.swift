@@ -11,7 +11,7 @@ struct TimesView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
-    let settings = Settings.shared
+    @ObservedObject var settings = Settings.shared
     
     @State var thisEntry: DerbyEntry?
     @State var showEditModal = false
@@ -124,9 +124,7 @@ struct TimesView: View {
                     
                     Spacer()
                 }
-                //.frame(height: 18)
             }
-            //.environment(\.defaultMinListRowHeight, 10)
             .sheet(isPresented: $showEditModal, content: { EditTimesView(entry: $thisEntry) })
         }
         Spacer()

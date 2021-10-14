@@ -20,6 +20,15 @@ struct SettingsView: View {
     
     var body: some View {
         VStack {
+            Spacer().frame(height: 20)
+            
+            // chevron down
+            HStack {
+                Spacer().frame(minWidth: 0)
+                Image(systemName: "chevron.compact.down").resizable().frame(width: 35, height: 12).opacity(0.3)
+                Spacer().frame(minWidth: 0)
+            }
+            Spacer().frame(height: 20)
             
             Group {
                 HStack {
@@ -201,11 +210,12 @@ struct SettingsView: View {
                         // TODO: alert!
                         if simButton == 5 {
                             derby.simulate()
+                            self.presentationMode.wrappedValue.dismiss()
                         }
                     })  {
                         Spacer()
-                            .frame(width: 200, height: 100)
-                            .background(.yellow)
+                            .frame(width: 300, height: 200)
+                            //.background(.yellow)
                     }
                 }
             }
@@ -216,7 +226,10 @@ struct SettingsView: View {
             Alert(title: Text("Reset All Timing Data"),
                   message: Text("Are you sure?"),
                   primaryButton: .cancel(),
-                  secondaryButton: .destructive(Text("Go")) { derby.startRacing() }
+                  secondaryButton: .destructive(Text("Go")) {
+                derby.startRacing()
+                self.presentationMode.wrappedValue.dismiss()
+            }
             )
         }
         .onAppear(perform: {
