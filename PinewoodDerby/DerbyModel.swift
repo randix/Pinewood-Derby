@@ -26,8 +26,8 @@ class DerbyEntry: Identifiable {
     var age: Int
     var group: String
     
-    var times = [Double](repeating: 0.0, count: 6)  // the times for each track
-    var ignores = [Bool](repeating: false, count: 6)
+    var times = [Double](repeating: 0.0, count: Settings.maxTracks)  // the times for each track
+    var ignores = [Bool](repeating: false, count: Settings.maxTracks)
     var firstSim = 0                // track number of first simulated time
     var average: Double = 0.0
     var rankOverall: Int = 0
@@ -98,8 +98,8 @@ class Derby: ObservableObject {
     // prepare to start racing (or simulation)
     func clearTimes() {
         log(#function)
-        let times = [Double](repeating: 0.0, count: 6)
-        let ignores = [Bool](repeating: false, count: 6)
+        let times = [Double](repeating: 0.0, count: Settings.maxTracks)
+        let ignores = [Bool](repeating: false, count: Settings.maxTracks)
         for entry in entries {
             entry.times = times
             entry.ignores = ignores
@@ -116,6 +116,7 @@ class Derby: ObservableObject {
     // MARK: Racing
     
     func startRacing() {
+        log(#function)
         archiveData()
         clearTimes()
         removeFile(rest.timesLogName)
@@ -149,6 +150,7 @@ class Derby: ObservableObject {
     // MARK: Simulator
     
     func simulate() {
+        log(#function)
         simulationRunning = true
         startRacing()
     }
@@ -437,7 +439,7 @@ class Derby: ObservableObject {
             }
             log(line)
             let values = line.split(separator: ",", omittingEmptySubsequences: false)
-            if values.count < 6 {
+            if values.count < Settings.maxTracks {
                 continue
             }
             let d = DerbyEntry(number:Int(values[0])!,
@@ -447,7 +449,7 @@ class Derby: ObservableObject {
                                age: Int(values[4])!,
                                group: String(values[5]))
             for i in 0..<settings.trackCount {
-                let iv = i*2 + 6
+                let iv = i*2 + Settings.maxTracks
                 if values.count > iv {
                     d.times[i] = Double(values[iv])!
                     d.ignores[i] = values[iv+1] != "1" ? false : true

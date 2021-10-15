@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EditTimesView: View {
+struct TimesEditView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var entry: DerbyEntry?

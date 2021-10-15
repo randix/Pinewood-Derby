@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddRacerView: View {
+struct RacerAddView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var entry: DerbyEntry?

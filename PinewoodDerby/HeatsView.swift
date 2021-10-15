@@ -159,11 +159,11 @@ struct HeatsView: View {
                         nextHeat = heat.heat
                         cars = heat.tracks
                         alertTitle = "Run Heat \(heat.heat)"
-                        alertMessage = "Check cars ready:\n"
+                        alertMessage = "\nCheck cars ready:\n"
                         for i in 0..<settings.trackCount {
-                            alertMessage += "\(heat.tracks[i])"
+                            alertMessage += "Track \(i+1): \(String(format: "%2d", heat.tracks[i]))"
                             if i < settings.trackCount {
-                                alertMessage += " "
+                                alertMessage += "\n "
                             }
                         }
                         alertShow = true
@@ -180,7 +180,7 @@ struct HeatsView: View {
                 // TODO: deal with environment color
                 .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
             }
-            //.sheet
+            .sheet(isPresented: $showHeatModal, content: { HeatsSpecialView() })
             
             Spacer()
             if settings.isMaster {

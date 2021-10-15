@@ -4,8 +4,6 @@ Server:
   server: add cert for https
   serve pin.txt
 
-HeatsView: add special heats and car selection
-
 Check all todos
 
 RESTView:

@@ -58,7 +58,6 @@ struct ContentView: View {
             Spacer().frame(width:20)
         }
         
-        // TODO: the tabview doesn't work any better than the previous navigation view....
         TabView(selection: $derby.tabSelection) {
             RacersView()  .tabItem { Label("Racers",   systemImage: "car.2") }
             .tag(Tab.racers.rawValue)

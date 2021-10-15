@@ -126,7 +126,7 @@ struct TimesView: View {
                     Spacer()
                 }
             }
-            .sheet(isPresented: $showEditModal, content: { EditTimesView(entry: $thisEntry) })
+            .sheet(isPresented: $showEditModal, content: { TimesEditView(entry: $thisEntry) })
             
             Spacer()
             if settings.isMaster {

@@ -186,13 +186,13 @@ struct SettingsView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
                         .onChange(of: settings.tracks, perform: { value in
-                            // TODO: validate int between 2-6
+                            // TODO: validate int between 2-Settings.maxTracks
                             if let t = Int(value) {
-                                if t < 2 || t > 6 {
-                                    // TODO: alert
+                                if t < 2 || t > Settings.maxTracks {
+                                    
                                 }
                             } else {
-                                // TODO: alert
+                               
                             }
                         })
                 }
@@ -270,6 +270,8 @@ class Settings: ObservableObject {
     @Published var tracks = ""
     @Published var trackCount = 0
     
+    static let maxTracks = 6
+    
     static let shared = Settings()
     private init() {}
     
@@ -316,8 +318,8 @@ class Settings: ObservableObject {
                 if let t = Int(tracks) {
                     trackCount = t
                 }
-                if trackCount > 6 {
-                    trackCount = 6
+                if trackCount > Settings.maxTracks {
+                    trackCount = Settings.maxTracks
                     tracks = String(trackCount)
                 }
                 log("tracks=\(tracks)")
