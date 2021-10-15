@@ -63,8 +63,8 @@ struct RankingsView: View {
                     derby.entries.sort { $0.carNumber < $1.carNumber }
                     derby.saveDerbyData()
                 }) {
-                    Text(" # ").bold()
-                        .frame(width: 40, alignment: .leading)
+                    Text(" Car#").bold()
+                        .frame(width: 42, alignment: .leading)
                         .font(.system(size: 16))
                         //.background(.yellow)
                 }
@@ -96,9 +96,9 @@ struct RankingsView: View {
                             .font(.system(size:16))
                             .frame(width: 46, alignment: .center)
                             //.background(.yellow)
-                        Text(String(format: "#%-2d", entry.carNumber))
+                        Text(String(format: "%d", entry.carNumber))
                             .font(.system(size:16))
-                            .frame(width: 40, alignment: .center)
+                            .frame(width: 42, alignment: .center)
                             //.background(.yellow)
                         Text(entry.firstName + " " + entry.lastName)
                             .font(.system(size:16))
