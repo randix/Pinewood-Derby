@@ -12,6 +12,7 @@
 		A464555E27146E0600886AA2 /* Rankings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555D27146E0600886AA2 /* Rankings.swift */; };
 		A464556027154A9E00886AA2 /* TImesEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555F27154A9E00886AA2 /* TImesEditView.swift */; };
 		A464556227190DD400886AA2 /* HeatsSpecialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464556127190DD400886AA2 /* HeatsSpecialView.swift */; };
+		A46455642719477300886AA2 /* PinewoodDerby.pages in Resources */ = {isa = PBXBuildFile; fileRef = A46455632719477300886AA2 /* PinewoodDerby.pages */; };
 		A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */; };
 		A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1A6270564C8008E3880 /* ContentView.swift */; };
 		A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4E0B1A8270564C9008E3880 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 		A464555D27146E0600886AA2 /* Rankings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rankings.swift; sourceTree = "<group>"; };
 		A464555F27154A9E00886AA2 /* TImesEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TImesEditView.swift; sourceTree = "<group>"; };
 		A464556127190DD400886AA2 /* HeatsSpecialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsSpecialView.swift; sourceTree = "<group>"; };
+		A46455632719477300886AA2 /* PinewoodDerby.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = PinewoodDerby.pages; sourceTree = "<group>"; };
 		A4E0B1A1270564C8008E3880 /* PinewoodDerby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinewoodDerby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinewoodDerbyApp.swift; sourceTree = "<group>"; };
 		A4E0B1A6270564C8008E3880 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		A4E0B198270564C8008E3880 = {
 			isa = PBXGroup;
 			children = (
+				A46455632719477300886AA2 /* PinewoodDerby.pages */,
 				A4E0B1C4270AAE83008E3880 /* note.txt */,
 				A4E0B1A3270564C8008E3880 /* PinewoodDerby */,
 				A4E0B1A2270564C8008E3880 /* Products */,
@@ -168,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
+				A46455642719477300886AA2 /* PinewoodDerby.pages in Resources */,
 				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
