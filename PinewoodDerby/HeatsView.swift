@@ -155,7 +155,6 @@ struct HeatsView: View {
                 }
                 .onTapGesture(perform: {
                     if settings.isMaster {
-                        // TODO: only allow, rerun, next heat or special heat
                         nextHeat = heat.heat
                         cars = heat.tracks
                         alertTitle = "Run Heat \(heat.heat)"
@@ -177,7 +176,6 @@ struct HeatsView: View {
                         derby.startHeat(nextHeat, cars)
                     })
                 }
-                // TODO: deal with environment color
                 .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
             }
             .sheet(isPresented: $showHeatModal, content: { HeatsSpecialView() })

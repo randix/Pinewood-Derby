@@ -6,6 +6,12 @@ Server:
 
 Check all todos
 
+number of racers must at least be the same as the number of tracks
+validate sll inputs, file read or textfirls
+document
+include manual into release
+
+
 RESTView:
   change to https
 

@@ -20,34 +20,41 @@ struct SettingsView: View {
     let derby = Derby.shared    // do not make this an ObservedObject
     @ObservedObject var rest = REST.shared
     
+    var possibleTracks = ["2", "3", "4", "5", "6"]
+    @State var tracksSelector = 2
+    
     @State var showAlert = false
     @State var alertAction = AlertAction.startRace
+    @State var alertTitle = ""
+    @State var alertMessage = ""
+    @State var alertButton = ""
     
     var body: some View {
         VStack {
-            Spacer().frame(height: 20)
-            
-            // chevron down
-            HStack {
-                Spacer().frame(minWidth: 0)
-                Image(systemName: "chevron.compact.down").resizable().frame(width: 35, height: 12).opacity(0.3)
-                Spacer().frame(minWidth: 0)
-            }
-            Spacer().frame(height: 20)
-            
             Group {
-                HStack {
-                    Spacer()
-                    Text("Settings").font(.system(size: 20)).bold()
-                    Spacer()
-                }
-                Spacer().frame(height:20)
+                Spacer().frame(height: 20)
                 
-                Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
-                    .font(.system(size: 14))
-                Spacer().frame(height:20)
+                // chevron down
+                HStack {
+                    Spacer().frame(minWidth: 0)
+                    Image(systemName: "chevron.compact.down").resizable().frame(width: 35, height: 12).opacity(0.3)
+                    Spacer().frame(minWidth: 0)
+                }
+                Spacer().frame(height: 20)
+                
+                Group {
+                    HStack {
+                        Spacer()
+                        Text("Settings").font(.system(size: 20)).bold()
+                        Spacer()
+                    }
+                    Spacer().frame(height:20)
+                    
+                    Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
+                        .font(.system(size: 14))
+                    Spacer().frame(height:20)
+                }
             }
-            
             // --------------- Server Connection ---------------
             VStack(spacing: 0) {
                 HStack {
@@ -112,7 +119,6 @@ struct SettingsView: View {
                 }
                 Spacer().frame(height:30)
             }
-            
             // --------------- Server Data pull ---------------
             if !settings.isMaster {
                 Group {
@@ -123,8 +129,6 @@ struct SettingsView: View {
                     }
                     Spacer().frame(height:30)
                 }
-                
-                // --------------- Server Data pull and master stuff ---------------
                 HStack {
                     Spacer()
                     Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
@@ -149,7 +153,7 @@ struct SettingsView: View {
                     Spacer()
                 }
             } else {
-                
+                // --------------- Server Data push and master stuff ---------------
                 HStack {
                     Text("Title:")
                         .font(.system(size: 18))
@@ -179,26 +183,21 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:70, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("#", text: $settings.tracks)
-                        .font(.system(size: 18))
-                        .frame(width:40)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
-                        .onChange(of: settings.tracks, perform: { value in
-                            // TODO: validate int between 2-Settings.maxTracks
-                            if let t = Int(value) {
-                                if t < 2 || t > Settings.maxTracks {
-                                    
-                                }
-                            } else {
-                               
-                            }
-                        })
+                    Picker("Names", selection: $tracksSelector) {
+                             ForEach(0 ..< possibleTracks.count) {
+                                 Text(self.possibleTracks[$0])
+                             }
+                    }.pickerStyle(SegmentedPickerStyle())
+                        .frame(width: 160)
+                        .onChange(of: tracksSelector) { _ in
+                            derby.heats = []
+                            settings.trackCount = tracksSelector + 2
+                        }
                 }
-                Spacer().frame(height:10)
+                Spacer().frame(height:30)
                 Group {
                     Button(action: {
+                        settings.saveSettings()
                         rest.saveFilesToServer()
                     })  {
                         Text("Send Configuration To Server").font(.system(size:18))
@@ -209,6 +208,9 @@ struct SettingsView: View {
                     Button(action: {
                         // TODO: alert if timer server not connected!!
                         alertAction = .startRace
+                        alertTitle = "Reset All Timing Data"
+                        alertMessage = "Are you sure?"
+                        alertButton = "Go"
                         showAlert = true
                     })  {
                         Text("Start Racing").font(.system(size:22)).bold()
@@ -218,6 +220,9 @@ struct SettingsView: View {
                 Group {
                     Button(action: {
                         alertAction = .startSimulation
+                        alertTitle = "Reset All Timing Data"
+                        alertMessage = "Are you sure?"
+                        alertButton = "Go"
                         showAlert = true
                     })  {
                         Text("Start Simulation").font(.system(size:18)).bold()
@@ -228,10 +233,11 @@ struct SettingsView: View {
             Spacer()
         }
         .alert(isPresented: self.$showAlert) {
-            Alert(title: Text("Reset All Timing Data"),
-                  message: Text("Are you sure?"),
+            Alert(title: Text(alertTitle),
+                  message: Text(alertMessage),
                   primaryButton: .cancel(),
-                  secondaryButton: .destructive(Text("Go")) {
+                  secondaryButton: .destructive(Text(alertButton)) {
+                settings.saveSettings()
                 if alertAction == .startRace {
                     derby.startRacing()
                 } else {
@@ -241,6 +247,9 @@ struct SettingsView: View {
                 self.presentationMode.wrappedValue.dismiss()
             })
         }
+        .onAppear(perform: {
+            tracksSelector = settings.trackCount - 2
+        })
         .onDisappear(perform: {
             settings.saveSettings()
         })
@@ -267,7 +276,6 @@ class Settings: ObservableObject {
     
     @Published var title = ""
     @Published var event = ""
-    @Published var tracks = ""
     @Published var trackCount = 0
     
     static let maxTracks = 6
@@ -285,7 +293,6 @@ class Settings: ObservableObject {
             log("error: \(error.localizedDescription)")
             title = "Pinewood Derby"
             event = "Event"
-            tracks = "4"
             trackCount = 4
             myIpAddress =  "192.168.12.125"
             serverIpAddress = "192.168.12.128"
@@ -313,16 +320,18 @@ class Settings: ObservableObject {
                 event = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
                 log("event=\(event)")
             case "tracks":
-                tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                let tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
                 trackCount = 2
                 if let t = Int(tracks) {
                     trackCount = t
                 }
+                if trackCount < 2 {
+                    trackCount = 2
+                }
                 if trackCount > Settings.maxTracks {
                     trackCount = Settings.maxTracks
-                    tracks = String(trackCount)
                 }
-                log("tracks=\(tracks)")
+                log("tracks=\(String(trackCount))")
             case "myIpAddress":
                 myIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
                 log("myIpAddress=\(myIpAddress)")
@@ -344,11 +353,7 @@ class Settings: ObservableObject {
         var list = [String]()
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
-        list.append("tracks=\(tracks.trimmingCharacters(in: .whitespaces))")
-        trackCount = 2
-        if let t = Int(tracks) {
-            trackCount = t
-        }
+        list.append("tracks=\(String(trackCount))")
         list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
         list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")

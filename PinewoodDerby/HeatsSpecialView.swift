@@ -151,8 +151,17 @@ struct HeatsSpecialView: View {
                 Button(action: {
                     var carNumbers = [Int](repeating: 0, count: Settings.maxTracks)
                     for i in 0..<settings.trackCount {
-                        // TODO: alert if car not in derby.racers
-                        carNumbers[i] = Int(cars[i])!
+                        if let c = Int(cars[i]) {
+                            let car = derby.entries.filter { c == $0.carNumber }
+                            if car.count != 1 {
+                                alertTitle = "Invalid Car Number"
+                                alertMessage = "Car number \(c) is not found in the racer entries."
+                                alertButton = "Ok"
+                                alertShow = true
+                                return
+                            }
+                            carNumbers[i] = Int(cars[i])!
+                        }
                     }
                     derby.heats.append(HeatsEntry(heat: derby.heats.count+1, group: group, tracks: carNumbers, hasRun: false) )
                     derby.startHeat(derby.heats.count, carNumbers)
