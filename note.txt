@@ -6,11 +6,12 @@ Server:
 
 Check all todos
 
+pop up for adding groups
+menu for selecting them
+
 generateheats: number of racers must at least be the same as the number of tracks
-validate sll inputs, file read or textfirls
 document
 include manual into release
-
 
 RESTView:
   change to https

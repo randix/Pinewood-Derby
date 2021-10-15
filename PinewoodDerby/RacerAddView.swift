@@ -61,7 +61,6 @@ struct RacerAddView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
                     //.background(.red)
-                    // TODO: validate integer between 1-99
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -98,11 +97,10 @@ struct RacerAddView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
                     //.background(.red)
-                    // TODO: validate integer between 1-99
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    //TODO: add many groups (future)
+                    
                     Text("Group: ").font(.system(size: fontSize))
                     Group {
                         if group == derby.girls {
@@ -126,6 +124,17 @@ struct RacerAddView: View {
                     }
                     .onTapGesture {
                         group = derby.boys
+                    }
+                    Spacer().frame(width:20)
+                    // add group
+                    Button(action: {
+                        print("add group")
+                        //TODO: add many groups (future)
+                    }) {
+                        VStack {
+                            Image(systemName: "plus").font(.system(size: 14))
+                            Text("Add Group").font(.system(size: 11))
+                        }
                     }
                 }
                 
@@ -195,11 +204,27 @@ struct RacerAddView: View {
                 age = String(entry.age)
             }
         })
+        // TODO: add pop up to edit/add a group
+        //.sheet(
     }
     
     func updateDerby() -> Bool {
         if let number = Int(carNumber) {
+            if number < 1 || number > 99 {
+                alertTitle = "Car Number Out Of Range"
+                alertMessage = "Car number must be between 1 and 99."
+                alertButton = "OK"
+                alertShow = true
+                return false
+            }
             if let ageInt = Int(age) {
+                if ageInt < 1 || ageInt > 99 {
+                    alertTitle = "Age Out Of Range"
+                    alertMessage = "Age must be between 1 and 99."
+                    alertButton = "OK"
+                    alertShow = true
+                    return false
+                }
                 // check that the number has not been changed to overlap another entry
                 let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
                 if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
@@ -209,6 +234,9 @@ struct RacerAddView: View {
                     alertButton = "OK"
                     alertShow = true
                     return false
+                }
+                if carName == "" {
+                    carName = "--"
                 }
                 if firstName == "" || lastName == "" {
                     alertTitle = "Missing Name"
@@ -223,9 +251,6 @@ struct RacerAddView: View {
                     alertButton = "OK"
                     alertShow = true
                     return false
-                }
-                if carName == "" {
-                    carName = "--"
                 }
                 // find the entry in the array....
                 if let index = derby.entries.firstIndex(where: { $0.id == id}) {

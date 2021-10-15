@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum AlertAction {
+    case serverNotConnected
     case startRace
     case startSimulation
 }
@@ -206,7 +207,14 @@ struct SettingsView: View {
                 Spacer().frame(height:50)
                 Group {
                     Button(action: {
-                        // TODO: alert if timer server not connected!!
+                        if settings.serverIpAddress != rest.serverIpAddress {
+                            alertAction = .serverNotConnected
+                            alertTitle = "Timer Is Not Reachable"
+                            alertMessage = "Cannot get the times from the timer until it is connected."
+                            alertButton = "Acknowlege"
+                            showAlert = true
+                            return
+                        }
                         alertAction = .startRace
                         alertTitle = "Reset All Timing Data"
                         alertMessage = "Are you sure?"
@@ -237,6 +245,9 @@ struct SettingsView: View {
                   message: Text(alertMessage),
                   primaryButton: .cancel(),
                   secondaryButton: .destructive(Text(alertButton)) {
+                if alertAction == .serverNotConnected {
+                    return
+                }
                 settings.saveSettings()
                 if alertAction == .startRace {
                     derby.startRacing()

@@ -27,7 +27,6 @@ struct RacersView: View {
                 Spacer().frame(width:35)
                 if settings.isMaster {
                     Button(action: {
-                        log("add")
                         thisEntry = nil
                         showEditModal = true
                     }) {
