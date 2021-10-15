@@ -1,12 +1,12 @@
 Server:
   add simulate
-  connect to timer and read and parse - save raw and timeslog.csv
+  connect to timer and read and parse - save raw and servertimeslog.csv
   server: add cert for https
   serve pin.txt
 
 Check all todos
 
-number of racers must at least be the same as the number of tracks
+generateheats: number of racers must at least be the same as the number of tracks
 validate sll inputs, file read or textfirls
 document
 include manual into release

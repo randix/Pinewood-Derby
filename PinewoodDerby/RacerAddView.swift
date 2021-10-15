@@ -61,6 +61,7 @@ struct RacerAddView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
                     //.background(.red)
+                    // TODO: validate integer between 1-99
                 }
                 HStack {
                     Spacer().frame(width: 20)
@@ -97,10 +98,11 @@ struct RacerAddView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
                     //.background(.red)
+                    // TODO: validate integer between 1-99
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    //Image(systemName: "person.3").font(.system(size: fontSize))
+                    //TODO: add many groups (future)
                     Text("Group: ").font(.system(size: fontSize))
                     Group {
                         if group == derby.girls {
