@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A42C9D89271B02FF00B58F25 /* RacerGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */; };
 		A464555A27114A8B00886AA2 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555927114A8B00886AA2 /* REST.swift */; };
 		A464555C271319A300886AA2 /* TimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555B271319A300886AA2 /* TimesView.swift */; };
 		A464555E27146E0600886AA2 /* Rankings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555D27146E0600886AA2 /* Rankings.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacerGroupView.swift; sourceTree = "<group>"; };
 		A464555927114A8B00886AA2 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		A464555B271319A300886AA2 /* TimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesView.swift; sourceTree = "<group>"; };
 		A464555D27146E0600886AA2 /* Rankings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rankings.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				A4E0B1B627074B05008E3880 /* SettingsView.swift */,
 				A4E0B1B227074994008E3880 /* RacersView.swift */,
 				A4E0B1BA27074BBD008E3880 /* RacerAddView.swift */,
+				A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */,
 				A4E0B1B427074A64008E3880 /* HeatsView.swift */,
 				A464556127190DD400886AA2 /* HeatsSpecialView.swift */,
 				A464555B271319A300886AA2 /* TimesView.swift */,
@@ -187,6 +190,7 @@
 				A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */,
 				A4E0B1B327074994008E3880 /* RacersView.swift in Sources */,
 				A4E0B1BB27074BBD008E3880 /* RacerAddView.swift in Sources */,
+				A42C9D89271B02FF00B58F25 /* RacerGroupView.swift in Sources */,
 				A4E0B1A7270564C8008E3880 /* ContentView.swift in Sources */,
 				A4E0B1B527074A64008E3880 /* HeatsView.swift in Sources */,
 				A464555E27146E0600886AA2 /* Rankings.swift in Sources */,

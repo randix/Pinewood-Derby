@@ -6,8 +6,7 @@ Server:
 
 Check all todos
 
-pop up for adding groups
-menu for selecting them
+menu for selecting them (especiall in results)
 
 generateheats: number of racers must at least be the same as the number of tracks
 document

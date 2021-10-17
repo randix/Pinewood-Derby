@@ -13,7 +13,7 @@ struct TimesView: View {
     @ObservedObject var derby = Derby.shared
     @ObservedObject var settings = Settings.shared
     
-    @State var thisEntry: DerbyEntry?
+    @State var thisEntry: RacerEntry?
     @State var showEditModal = false
     
     var body: some View {
@@ -66,7 +66,7 @@ struct TimesView: View {
             }
 
             // ---------------------------------------------------
-            List(derby.entries.sorted { $0.carNumber < $1.carNumber } ) { entry in
+            List(derby.racers.sorted { $0.carNumber < $1.carNumber } ) { entry in
                 HStack(spacing: 3) {
                     Text(String(entry.carNumber))
                         .frame(width:30, alignment:.center).font(.system(size: 18))

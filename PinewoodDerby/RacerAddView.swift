@@ -10,7 +10,7 @@ import SwiftUI
 struct RacerAddView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var entry: DerbyEntry?
+    @Binding var entry: RacerEntry?
     
     @State var id = UUID()
     @State var carNumber = ""
@@ -25,10 +25,14 @@ struct RacerAddView: View {
     @State var alertMessage = ""
     @State var alertButton = ""
     
-    let derby = Derby.shared
+    @State var showPopover = false
+    
+    @ObservedObject var derby = Derby.shared
     
     let fontSize = CGFloat(18)
     let circleSize = CGFloat(14)
+    
+    @State var showGroupModal = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -100,45 +104,54 @@ struct RacerAddView: View {
                 }
                 HStack {
                     Spacer().frame(width: 20)
-                    
+             
                     Text("Group: ").font(.system(size: fontSize))
-                    Group {
-                        if group == derby.girls {
-                            Image(systemName: "circle.fill").font(.system(size: circleSize))
-                        } else {
-                            Image(systemName: "circle").font(.system(size: circleSize))
+                    if derby.groups.count == 2 {
+                        Group {
+                            if group == derby.groups[0].group {
+                                Image(systemName: "circle.fill").font(.system(size: circleSize))
+                            } else {
+                                Image(systemName: "circle").font(.system(size: circleSize))
+                            }
+                            Text(derby.groups[0].group).font(.system(size: fontSize))
                         }
-                        Text(derby.girls).font(.system(size: fontSize))
-                    }
-                    .onTapGesture {
-                        group = derby.girls
+                        .onTapGesture {
+                            group = derby.groups[0].group
+                        }
+                        Spacer().frame(width:20)
+                        Group {
+                            if group == derby.groups[1].group {
+                                Image(systemName: "circle.fill").font(.system(size: circleSize))
+                            } else {
+                                Image(systemName: "circle").font(.system(size: circleSize))
+                            }
+                            Text(derby.groups[1].group).font(.system(size: fontSize))
+                        }
+                        .onTapGesture {
+                            group = derby.groups[1].group
+                        }
+                    } else {
+                        // TODO:
+                        Button(action: {
+                            showPopover = true
+                        }) {
+                            Text("Popover")
+                        }
                     }
                     Spacer().frame(width:20)
-                    Group {
-                        if group == derby.boys {
-                            Image(systemName: "circle.fill").font(.system(size: circleSize))
-                        } else {
-                            Image(systemName: "circle").font(.system(size: circleSize))
-                        }
-                        Text(derby.boys).font(.system(size: fontSize))
-                    }
-                    .onTapGesture {
-                        group = derby.boys
-                    }
-                    Spacer().frame(width:20)
+                    
                     // add group
                     Button(action: {
-                        print("add group")
-                        //TODO: add many groups (future)
+                        showGroupModal = true
                     }) {
                         VStack {
                             Image(systemName: "plus").font(.system(size: 14))
-                            Text("Add Group").font(.system(size: 11))
+                            Text("Groups").font(.system(size: 11))
                         }
                     }
                 }
                 
-                Spacer().frame(height: 20)
+                Spacer().frame(height: 40)
                 
                 HStack {
                     Spacer()
@@ -146,7 +159,7 @@ struct RacerAddView: View {
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
-                        Text("Cancel")
+                        Text("Dismiss")
                             .font(.system(size: 18))
                     }
                     
@@ -193,6 +206,11 @@ struct RacerAddView: View {
                                           action: { })
             )
         }
+        .popover(isPresented: $showPopover) {
+                    Text("Popover is Presented")
+                        .font(.largeTitle)
+                        .frame(width: 500, height: 500)
+                }
         .onAppear(perform: {
             if let entry = entry {
                 self.id = entry.id
@@ -204,8 +222,7 @@ struct RacerAddView: View {
                 age = String(entry.age)
             }
         })
-        // TODO: add pop up to edit/add a group
-        //.sheet(
+        .sheet(isPresented: $showGroupModal, content: { RacerGroupView() })
     }
     
     func updateDerby() -> Bool {
@@ -226,8 +243,8 @@ struct RacerAddView: View {
                     return false
                 }
                 // check that the number has not been changed to overlap another entry
-                let entriesNumberCheck = derby.entries.filter { number == $0.carNumber }
-                if entriesNumberCheck.count == 1 && entriesNumberCheck[0].id != id {
+                let racersNumberCheck = derby.racers.filter { number == $0.carNumber }
+                if racersNumberCheck.count == 1 && racersNumberCheck[0].id != id {
                     // another id has the same carNumber
                     alertTitle = "Duplicate"
                     alertMessage = "Duplicate car number"
@@ -253,18 +270,18 @@ struct RacerAddView: View {
                     return false
                 }
                 // find the entry in the array....
-                if let index = derby.entries.firstIndex(where: { $0.id == id}) {
-                    derby.entries[index].carNumber = number
-                    derby.entries[index].carName = carName
-                    derby.entries[index].firstName = firstName
-                    derby.entries[index].lastName = lastName
-                    derby.entries[index].age = ageInt
-                    derby.entries[index].group = group
+                if let index = derby.racers.firstIndex(where: { $0.id == id}) {
+                    derby.racers[index].carNumber = number
+                    derby.racers[index].carName = carName
+                    derby.racers[index].firstName = firstName
+                    derby.racers[index].lastName = lastName
+                    derby.racers[index].age = ageInt
+                    derby.racers[index].group = group
                 } else {
-                    let d = DerbyEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: ageInt, group: group)
-                    derby.entries.append(d)
+                    let d = RacerEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: ageInt, group: group)
+                    derby.racers.append(d)
                 }
-                derby.saveDerbyData()
+                derby.saveRacers()
                 derby.objectWillChange.send()
                 return true
             } else {

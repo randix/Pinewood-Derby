@@ -31,8 +31,8 @@ struct RankingsView: View {
             HStack(spacing: 2) {
                 Spacer().frame(width:30)
                 Button(action: {
-                    derby.entries.sort { $0.group < $1.group }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.group < $1.group }
+                    derby.saveRacers()
                 }) {
                     Text("Group").bold()
                         .frame(width: 44, alignment: .leading)
@@ -40,8 +40,8 @@ struct RankingsView: View {
                         //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.group + String(format: "%03d", $0.rankGroup) < $1.group + String(format: "%03d", $1.rankGroup) }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.group + String(format: "%03d", $0.rankGroup) < $1.group + String(format: "%03d", $1.rankGroup) }
+                    derby.saveRacers()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 12))
@@ -50,8 +50,8 @@ struct RankingsView: View {
                     //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.rankOverall < $1.rankOverall }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.rankOverall < $1.rankOverall }
+                    derby.saveRacers()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 12))
@@ -60,8 +60,8 @@ struct RankingsView: View {
                     //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.carNumber < $1.carNumber }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.carNumber < $1.carNumber }
+                    derby.saveRacers()
                 }) {
                     Text(" Car#").bold()
                         .frame(width: 42, alignment: .leading)
@@ -69,8 +69,8 @@ struct RankingsView: View {
                         //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
+                    derby.saveRacers()
                 }) {
                     Text("Name").bold()
                         .frame(width: 150, alignment: .leading)
@@ -80,8 +80,8 @@ struct RankingsView: View {
                 Spacer()
             }
             
-            // Derby entries --------------------------------------------
-            List (derby.entries) { entry in
+            // Derby racers --------------------------------------------
+            List (derby.racers) { entry in
                 VStack(alignment:.leading) {
                     HStack(spacing: 2) {
                         Text(entry.group)

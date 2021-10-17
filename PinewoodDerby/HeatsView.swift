@@ -190,7 +190,7 @@ struct HeatsView: View {
     
     func timeForCar(_ carNumber: Int, _ track: Int) -> String {
         if carNumber == 0 { return "" }
-        let entry = derby.entries.filter { $0.carNumber == carNumber }
+        let entry = derby.racers.filter { $0.carNumber == carNumber }
         let time = entry[0].times[track]
         if time == 0.0 { return "-" }
         return String(format: "%0.4f", time)

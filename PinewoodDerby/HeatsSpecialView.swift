@@ -111,34 +111,6 @@ struct HeatsSpecialView: View {
                 Spacer().frame(height:10)
             }
             
-            HStack {
-                Spacer().frame(width: 20)
-                Text("Group: ").font(.system(size: 18))
-                Group {
-                    if group == derby.girls {
-                        Image(systemName: "circle.fill").font(.system(size: 14))
-                    } else {
-                        Image(systemName: "circle").font(.system(size: 14))
-                    }
-                    Text(derby.girls).font(.system(size: 18))
-                }
-                .onTapGesture {
-                    group = derby.girls
-                }
-                Spacer().frame(width:20)
-                Group {
-                    if group == derby.boys {
-                        Image(systemName: "circle.fill").font(.system(size: 14))
-                    } else {
-                        Image(systemName: "circle").font(.system(size: 14))
-                    }
-                    Text(derby.boys).font(.system(size: 18))
-                }
-                .onTapGesture {
-                    group = derby.boys
-                }
-            }
-            
             Spacer().frame(height:30)
             HStack {
                 Button(action: {
@@ -152,10 +124,10 @@ struct HeatsSpecialView: View {
                     var carNumbers = [Int](repeating: 0, count: Settings.maxTracks)
                     for i in 0..<settings.trackCount {
                         if let c = Int(cars[i]) {
-                            let car = derby.entries.filter { c == $0.carNumber }
+                            let car = derby.racers.filter { c == $0.carNumber }
                             if car.count != 1 {
                                 alertTitle = "Invalid Car Number"
-                                alertMessage = "Car number \(c) is not found in the racer entries."
+                                alertMessage = "Car number \(c) is not found in the racers."
                                 alertButton = "Ok"
                                 alertShow = true
                                 return

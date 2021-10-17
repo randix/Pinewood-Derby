@@ -38,28 +38,28 @@ struct SingleView: View {
             }
         }
     }
-    
-    func getEntry(_ group: String, _ place: Int) -> DerbyEntry? {
+     
+    func getEntry(_ group: String, _ place: Int) -> RacerEntry? {
         var p = place
         if group == derby.overall {
             if place < 0 {
-                p = derby.entries.count + place + 1
+                p = derby.racers.count + place + 1
             }
-            let entries = derby.entries.filter { $0.rankOverall == p }
-            if entries.count == 0 {
+            let racers = derby.racers.filter { $0.rankOverall == p }
+            if racers.count == 0 {
                 return(nil)
             }
-            return(entries[0])
+            return(racers[0])
         } else {
-            let groupEntries = derby.entries.filter { $0.group == group }
+            let groupEntries = derby.racers.filter { $0.group == group }
             if place < 0 {
                 p = groupEntries.count + place + 1
             }
-            let entries = groupEntries.filter { $0.rankGroup == p }
-            if entries.count == 0 {
+            let racers = groupEntries.filter { $0.rankGroup == p }
+            if racers.count == 0 {
                 return(nil)
             }
-            return(entries[0])
+            return(racers[0])
         }
     }
     
@@ -67,12 +67,12 @@ struct SingleView: View {
         var p = place
         if group == derby.overall {
             if place < 0 {
-                p = derby.entries.count + place + 1
+                p = derby.racers.count + place + 1
             }
         } else {
-            let entries = derby.entries.filter { $0.group == group }
+            let racers = derby.racers.filter { $0.group == group }
             if place < 0 {
-                p = entries.count + place + 1
+                p = racers.count + place + 1
             }
         }
         return(String(p))
@@ -110,6 +110,10 @@ struct SingleView: View {
         }
     }
 }
+
+
+// TODO: this is a strange view with more than two groups.... have to select group....
+// if there are more than two groups, make the top a group selector and then similar to this.
 
 struct ResultsView: View {
     

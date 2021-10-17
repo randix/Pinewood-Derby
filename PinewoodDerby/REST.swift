@@ -24,7 +24,8 @@ class REST: ObservableObject {
     var configUpdated = false
     
     let settingsName = "settings.txt"
-    let derbyName = "derby.csv"
+    let racersName = "derby.csv"
+    let groupsName = "groups.csv"
     let heatsName = "heats.csv"
     let timesName = "times.csv"
     let timesLogName = "timeslog.csv"
@@ -74,7 +75,7 @@ class REST: ObservableObject {
     
     func readFilesFromServer() {
         readFileFromServer(settingsName)
-        readFileFromServer(derbyName)
+        readFileFromServer(racersName)
         readFileFromServer(heatsName)
         readFileFromServer(timesLogName)
     }
@@ -118,7 +119,7 @@ class REST: ObservableObject {
     
     func saveFilesToServer() {
         saveFileToServer(settingsName)
-        saveFileToServer(derbyName)
+        saveFileToServer(racersName)
         saveFileToServer(heatsName)
     }
     

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class DerbyEntry: Identifiable {
+class RacerEntry: Identifiable {
     init(number: Int, carName: String, firstName: String, lastName: String, age: Int, group: String) {
         self.carNumber = number
         self.carName = carName
@@ -49,15 +49,23 @@ class HeatsEntry: Identifiable {
     var hasRun: Bool
 }
 
+class GroupEntry: Identifiable {
+    init(group: String) {
+        self.group = group
+    }
+    let id = UUID()
+    var group: String
+}
 
 class Derby: ObservableObject {
     
-    @Published var entries: [DerbyEntry] = []
+    @Published var racers: [RacerEntry] = []
     @Published var heats: [HeatsEntry] = []
+    @Published var groups: [GroupEntry] = []
     
-    // list of groups
     let girls = "girls"
     let boys = "boys"
+    
     let overall = "overall"
     
     @ObservedObject var settings = Settings.shared
@@ -78,17 +86,17 @@ class Derby: ObservableObject {
     // MARK: Delete single entry
     
     // called from RacersView to delete an entry
-    func delete(_ entry: DerbyEntry) {
+    func delete(_ entry: RacerEntry) {
         archiveData()
         var idx = 0
-        for i in 0..<entries.count {
-            if entry.id == entries[i].id {
+        for i in 0..<racers.count {
+            if entry.id == racers[i].id {
                 idx = i
                 break
             }
         }
         log("\(#function) \(entry.carNumber)")
-        entries.remove(at: idx)
+        racers.remove(at: idx)
         
         clearTimes()
         generateHeats()
@@ -100,7 +108,7 @@ class Derby: ObservableObject {
         log(#function)
         let times = [Double](repeating: 0.0, count: Settings.maxTracks)
         let ignores = [Bool](repeating: false, count: Settings.maxTracks)
-        for entry in entries {
+        for entry in racers {
             entry.times = times
             entry.ignores = ignores
             entry.firstSim = 0
@@ -110,7 +118,7 @@ class Derby: ObservableObject {
         }
         removeFile(rest.timesName)
         
-        saveDerbyData()
+        saveRacers()
         objectWillChange.send()
     }
     // MARK: Racing
@@ -187,7 +195,7 @@ class Derby: ObservableObject {
     
     /// This is for the simulator
     func generateTime(_ track: Int, _ carNumber: Int) -> Double {
-        let e = entries.filter { carNumber == $0.carNumber }
+        let e = racers.filter { carNumber == $0.carNumber }
         if e.count == 1 {
             let entry = e[0]
             if entry.firstSim == 0 {        // this is the first time for this car, it will be stored in firstSim track
@@ -208,7 +216,7 @@ class Derby: ObservableObject {
         log(#function)
         var changed = false
         // calculate averages
-        for entry in entries {
+        for entry in racers {
             var average = 0.0
             var count = 0
             for i in 0..<settings.trackCount {
@@ -226,11 +234,11 @@ class Derby: ObservableObject {
             }
         }
         // calculate girls rankings
-        let g = entries.filter { $0.group == girls }
+        let g = racers.filter { $0.group == girls }
         let gRank = g.sorted { $0.average < $1.average }
         var rank = 1
         for gEntry in gRank {
-            let entry = entries.filter { $0.carNumber == gEntry.carNumber }[0]
+            let entry = racers.filter { $0.carNumber == gEntry.carNumber }[0]
             if entry.average > 0.0 {
                 entry.rankGroup = rank
                 changed = true
@@ -238,11 +246,11 @@ class Derby: ObservableObject {
             }
         }
         // calculate boys rankings
-        let b = entries.filter { $0.group == boys }
+        let b = racers.filter { $0.group == boys }
         let bRank = b.sorted { $0.average < $1.average }
         rank = 1
         for bEntry in bRank {
-            let entry = entries.filter { $0.carNumber == bEntry.carNumber }[0]
+            let entry = racers.filter { $0.carNumber == bEntry.carNumber }[0]
             if entry.average > 0.0 {
                 entry.rankGroup = rank
                 changed = true
@@ -250,11 +258,11 @@ class Derby: ObservableObject {
             }
         }
         // calcuates overall rankings
-        let a = entries
+        let a = racers
         let aRank = a.sorted { $0.average < $1.average }
         rank = 1
         for aEntry in aRank {
-            let entry = entries.filter { $0.carNumber == aEntry.carNumber }[0]
+            let entry = racers.filter { $0.carNumber == aEntry.carNumber }[0]
             if entry.average > 0.0 {
                 entry.rankOverall = rank
                 changed = true
@@ -263,7 +271,7 @@ class Derby: ObservableObject {
         }
         
         if changed {
-            saveDerbyData()
+            saveRacers()
             objectWillChange.send()
         }
     }
@@ -271,7 +279,7 @@ class Derby: ObservableObject {
     func generateHeats() {
         log(#function)
         heats = []
-        let boysEntries = entries.filter { $0.group == boys }
+        let boysEntries = racers.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
         
         if boysEntries.count < settings.trackCount {
@@ -283,7 +291,7 @@ class Derby: ObservableObject {
         let boysOffset = boysCars.count / settings.trackCount
         log("boys count=\(boysCars.count) boys offset=\(boysOffset)")
         
-        let girlsEntries = entries.filter { $0.group == girls }
+        let girlsEntries = racers.filter { $0.group == girls }
         var girlsCars = girlsEntries.map { $0.carNumber }
         if girlsEntries.count < settings.trackCount {
             // TODO: if less members of a group than tracks, need to artificially add members
@@ -352,7 +360,7 @@ class Derby: ObservableObject {
             log(heat)
         }
         
-        saveHeatsData()
+        saveHeats()
         self.objectWillChange.send()
     }
     
@@ -407,7 +415,7 @@ class Derby: ObservableObject {
                     heat = Int(values[0])!
                     let carNumber = Int(values[2*i+1])
                     let time = Double(values[2*i+2])!
-                    let entry = self.entries.filter { $0.carNumber == carNumber }[0]
+                    let entry = self.racers.filter { $0.carNumber == carNumber }[0]
                     if entry.times[i] == 0.0 || time < entry.times[i] {
                         entry.times[i] = time
                         entry.ignores[i] = false
@@ -415,16 +423,56 @@ class Derby: ObservableObject {
                 }
                 self.heats[heat-1].hasRun = true
             }
+            self.removeFile(self.rest.timesName)
             self.calculateRankings()
-            self.saveHeatsData()
+            self.saveHeats()
             self.objectWillChange.send()
             self.timesTimer?.invalidate()
         }
     }
+    
+    func readGroups() {
+        let name = settings.docDir.appendingPathComponent(rest.groupsName)
+        log("\(#function) \(rest.groupsName)")
+        var data: String?
+        do {
+            data = try String(contentsOf: name)
+        } catch {
+            log("error: \(error.localizedDescription)")
+            data = ""
+        }
+        groups = []
+        let lines = data!.components(separatedBy: .newlines)
+        for line in lines {
+            if line.count == 0 {
+                continue
+            }
+            let group = line.trimmingCharacters(in: .whitespaces)
+            log(group)
+            groups.append(GroupEntry(group: group))
+        }
+        objectWillChange.send()
+    }
+    
+    func saveGroups() {
+        let name = settings.docDir.appendingPathComponent(rest.groupsName)
+        log("\(#function) \(rest.groupsName)")
+        var list = [String]()
+        for entry in groups {
+            let csv = "\(entry.group)"
+            list.append(csv)
+        }
+        let fileData = list.joined(separator: "\n") + "\n"
+        do {
+            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
+        } catch {
+            log("error: \(error.localizedDescription)")
+        }
+    }
 
-    func readDerbyData() {
-        let name = settings.docDir.appendingPathComponent(rest.derbyName)
-        log("\(#function) \(rest.derbyName)")
+    func readRacers() {
+        let name = settings.docDir.appendingPathComponent(rest.racersName)
+        log("\(#function) \(rest.racersName)")
         var data: String?
         do {
             data = try String(contentsOf: name)
@@ -442,7 +490,7 @@ class Derby: ObservableObject {
             if values.count < Settings.maxTracks {
                 continue
             }
-            let d = DerbyEntry(number:Int(values[0])!,
+            let d = RacerEntry(number:Int(values[0])!,
                                carName: String(values[1]),
                                firstName: String(values[2]),
                                lastName: String(values[3]),
@@ -455,18 +503,18 @@ class Derby: ObservableObject {
                     d.ignores[i] = values[iv+1] != "1" ? false : true
                 }
             }
-            entries.append(d)
+            racers.append(d)
         }
         
         calculateRankings()
         objectWillChange.send()
     }
     
-    func saveDerbyData() {
-        let name = settings.docDir.appendingPathComponent(rest.derbyName)
-        log("\(#function) \(rest.derbyName)")
+    func saveRacers() {
+        let name = settings.docDir.appendingPathComponent(rest.racersName)
+        log("\(#function) \(rest.racersName)")
         var list = [String]()
-        for entry in entries {
+        for entry in racers {
             let csv = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group)"
             var times = ""
             for i in 0..<settings.trackCount {
@@ -482,7 +530,7 @@ class Derby: ObservableObject {
         }
     }
     
-    func readHeatsData() {
+    func readHeats() {
         let name = settings.docDir.appendingPathComponent(rest.heatsName)
         log("\(#function) \(rest.heatsName)")
         do {
@@ -516,7 +564,7 @@ class Derby: ObservableObject {
         objectWillChange.send()
     }
     
-    func saveHeatsData() {
+    func saveHeats() {
         log("\(#function) \(rest.heatsName)")
         var list = [String]()
         for entry in heats {
@@ -561,7 +609,7 @@ class Derby: ObservableObject {
                 log(error.localizedDescription)
             }
         }
-        let files = [rest.settingsName, rest.derbyName, rest.heatsName, rest.timesLogName]
+        let files = [rest.settingsName, rest.racersName, rest.heatsName, rest.timesLogName]
         for f in files {
             log("copy \(f) to \(archiveName + "/" + f)")
             let srcURL = docURL.appendingPathComponent(f)

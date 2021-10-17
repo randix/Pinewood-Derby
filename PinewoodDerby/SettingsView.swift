@@ -225,7 +225,9 @@ struct SettingsView: View {
                     }
                     Spacer().frame(height:40)
                 }
-                Group {
+                HStack {
+                    Spacer()
+                    Text("Simulation Testing:").font(.system(size:16)).bold()
                     Button(action: {
                         alertAction = .startSimulation
                         alertTitle = "Reset All Timing Data"
@@ -233,9 +235,24 @@ struct SettingsView: View {
                         alertButton = "Go"
                         showAlert = true
                     })  {
-                        Text("Start Simulation").font(.system(size:18)).bold()
+                        Text("Start").font(.system(size:16)).bold()
                     }
+                    Spacer().frame(width:20)
+                    Button(action: {
+                        derby.simulationRunning = true
+                        derby.tabSelection = Tab.heats.rawValue
+                        self.presentationMode.wrappedValue.dismiss()
+                    })  {
+                        Text("Resume").font(.system(size:16)).bold()
+                    }
+                    Spacer()
                 }
+            }
+            Spacer().frame(height:40)
+            Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            })  {
+                Text("Dismiss").font(.system(size:18)).bold()
             }
             
             Spacer()
@@ -309,16 +326,15 @@ class Settings: ObservableObject {
             serverIpAddress = "192.168.12.128"
             serverPort = "8080"
             saveSettings()
-            objectWillChange.send()
             return
         }
         
         let lines = config.components(separatedBy: "\n")
-        for i in 0..<lines.count {
-            if lines.count == 0 {
+        for line in lines {
+            if line.count == 0 {
                 continue
             }
-            let keyValue = lines[i].components(separatedBy: "=")
+            let keyValue = line.components(separatedBy: "=")
             if keyValue.count < 2 {
                 log("\(rest.settingsName): format error")
                 continue
@@ -356,7 +372,7 @@ class Settings: ObservableObject {
                 log("incorrect format: \(config)")
             }
         }
-        self.objectWillChange.send()
+        //self.objectWillChange.send()  Nothing to send it to yet
     }
     
     func saveSettings() {

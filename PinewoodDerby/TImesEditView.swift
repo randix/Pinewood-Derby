@@ -10,7 +10,7 @@ import SwiftUI
 struct TimesEditView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var entry: DerbyEntry?
+    @Binding var entry: RacerEntry?
     
     @ObservedObject var settings = Settings.shared
     @ObservedObject var derby = Derby.shared
@@ -218,10 +218,10 @@ struct TimesEditView: View {
     
     func updateTimes() -> Bool {
         // find the entry in the array....
-        if let index = derby.entries.firstIndex(where: { $0.id == id}) {
-            derby.entries[index].ignores = ignores
+        if let index = derby.racers.firstIndex(where: { $0.id == id}) {
+            derby.racers[index].ignores = ignores
         }
-        derby.saveDerbyData()
+        derby.saveRacers()
         derby.objectWillChange.send()
         return true
     }

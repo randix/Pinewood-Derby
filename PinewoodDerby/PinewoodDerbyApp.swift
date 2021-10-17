@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct PinewoodDerbyApp: App {
     
+    let derby = Derby.shared
+    
     init() {
         let dictionary = Bundle.main.infoDictionary!
         Settings.shared.appName = dictionary["CFBundleName"] as! String
@@ -19,8 +21,9 @@ struct PinewoodDerbyApp: App {
         log("\(Settings.shared.appName) \(Settings.shared.appVersion)")
         
         Settings.shared.readSettings()
-        Derby.shared.readDerbyData()
-        Derby.shared.readHeatsData()
+        derby.readGroups()
+        derby.readRacers()
+        derby.readHeats()
         REST.shared.findTimer()
         
         //BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))

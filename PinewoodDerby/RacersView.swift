@@ -13,7 +13,7 @@ struct RacersView: View {
     @ObservedObject var derby = Derby.shared
     @ObservedObject var settings = Settings.shared
     
-    @State var thisEntry: DerbyEntry?
+    @State var thisEntry: RacerEntry?
     @State var showEditModal = false
     @State var showRankingsModal = false
     
@@ -37,9 +37,9 @@ struct RacersView: View {
                     }
                     .frame(width:30)
                     //.background(.red)
-                    Spacer().frame(width:5)
+                    Spacer().frame(width:25)
                 } else {
-                    Spacer().frame(width: 35)
+                    Spacer().frame(width: 55)
                 }
                 
                 Spacer()
@@ -48,11 +48,15 @@ struct RacersView: View {
                 //.background(.red)
                 Spacer()
                 
-                VStack(alignment: .leading) {
-                    Text("girls: \(derby.entries.filter { $0.group == derby.girls }.count)").font(.system(size: 14))
-                    Text("boys: \(derby.entries.filter { $0.group == derby.boys }.count)").font(.system(size: 14))
+                VStack(alignment: .trailing) {
+                    if derby.groups.count == 2 {
+                        Text("\(derby.groups[0].group): \(derby.racers.filter { $0.group == derby.groups[0].group }.count)")
+                            .font(.system(size: 14))
+                        Text("\(derby.groups[1].group): \(derby.racers.filter { $0.group == derby.groups[1].group }.count)")
+                            .font(.system(size: 14))
+                    }
                 }
-                .frame(width: 60)
+                .frame(width: 80)
                 //.background(.yellow)
                 Spacer().frame(width:10)
             }
@@ -62,8 +66,8 @@ struct RacersView: View {
             HStack(spacing: 2) {
                 Spacer().frame(width:30)
                 Button(action: {
-                    derby.entries.sort { $0.carNumber < $1.carNumber }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.carNumber < $1.carNumber }
+                    derby.saveRacers()
                 }) {
                     Text(" # Car").bold()
                         .frame(width: 110, alignment: .leading)
@@ -71,8 +75,8 @@ struct RacersView: View {
                         //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
+                    derby.saveRacers()
                 }) {
                     Text("Name").bold()
                         .frame(width: 150, alignment: .leading)
@@ -80,8 +84,8 @@ struct RacersView: View {
                         //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.group < $1.group }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.group < $1.group }
+                    derby.saveRacers()
                 }) {
                     Text("Group")
                         .bold()
@@ -90,8 +94,8 @@ struct RacersView: View {
                         //.background(.yellow)
                 }
                 Button(action: {
-                    derby.entries.sort { $0.age < $1.age }
-                    derby.saveDerbyData()
+                    derby.racers.sort { $0.age < $1.age }
+                    derby.saveRacers()
                 }) {
                     Text("Age").bold()
                         .frame(width: 34, alignment: .leading)
@@ -101,18 +105,10 @@ struct RacersView: View {
                 Spacer()
             }
             
-            // Derby entries --------------------------------------------
-            List (derby.entries) { entry in
+            // Derby racers --------------------------------------------
+            List (derby.racers) { entry in
                 VStack(alignment:.leading) {
                     HStack(spacing: 2) {
-                        //                        Text(entry.rankGroup == 0 ? "-" : String(entry.rankGroup))
-                        //                            .font(.system(size:18))
-                        //                            .frame(width: 42, alignment: .center)
-                        //                        .background(.yellow)
-                        //                        Text(entry.rankOverall == 0 ? "-" : String(entry.rankOverall))
-                        //                            .font(.system(size:18))
-                        //                            .frame(width: 46, alignment: .center)
-                        //                        .background(.yellow)
                         Text(String(format: "%2d", entry.carNumber))
                             .font(.system(size:16))
                             .frame(width: 24, alignment: .center)
@@ -147,7 +143,6 @@ struct RacersView: View {
                             Label("Edit", systemImage: "square.and.pencil")
                         }
                         .tint(.teal)
-                        
                         Button {
                             thisEntry = entry
                             alertShow = true
