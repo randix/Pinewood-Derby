@@ -20,6 +20,8 @@ struct RacerGroupView: View {
     
     @ObservedObject var derby = Derby.shared
     
+    @State var groups: [GroupEntry] = []
+    
     @State var editId: UUID?
     @State var newGroup = ""
     
@@ -47,6 +49,7 @@ struct RacerGroupView: View {
                 }
                 Spacer().frame(height:20)
             }
+            
             Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
@@ -58,47 +61,45 @@ struct RacerGroupView: View {
             
             HStack {
                 Spacer().frame(width:50)
-               
+                
                 Text("New group:")
                     .font(.system(size: 18))
                 TextField("group", text: $newGroup)
                     .font(.system(size: 18))
                 Button(action: {
+                    if newGroup == "" { return }
+                    alertTitle = "Group Already Exists"
+                    alertMessage = "Cannot have two groups with the same name."
+                    alertButton = "OK"
                     if editId != nil {
-                        let others = derby.groups.filter { $0.group == newGroup && $0.id != editId }
+                        let others = groups.filter { $0.group == newGroup && $0.id != editId }
                         if others.count > 0 {
-                            alertTitle = "Groups Already Exists"
-                            alertMessage = "Cannot have two groups with the same name."
-                            alertButton = "OK"
                             alertShow = true
                             return
                         }
-                        if newGroup != "" {
-                            let group = derby.groups.filter { editId == $0.id }
-                            let oldGroup = group[0].group
-                            for r in derby.racers {
-                                if r.group == oldGroup {
-                                    r.group = newGroup
-                                }
+                        let group = groups.filter { editId == $0.id }
+                        let oldGroup = group[0].group
+                        log("group change: from \(oldGroup) to \(newGroup)")
+                        group[0].group = newGroup
+                        for r in derby.racers {
+                            if r.group == oldGroup {
+                                r.group = newGroup
                             }
                         }
-                        derby.objectWillChange.send()
+                        derby.saveRacers()
                     } else {
-                        let others = derby.groups.filter { $0.group == newGroup }
+                        let others = groups.filter { $0.group == newGroup }
                         if others.count > 0 {
-                            alertTitle = "Groups Already Exists"
-                            alertMessage = "Cannot have two groups with the same name."
-                            alertButton = "OK"
                             alertShow = true
                             return
                         }
-                        if newGroup != "" {
-                            derby.groups.append(GroupEntry(group: newGroup))
-                        }
+                        log("group add: \(newGroup)")
+                        let nGroup = GroupEntry(group: newGroup)
+                        groups.append(nGroup)
                     }
                     newGroup = ""
                     editId = nil
-                    derby.saveGroups()
+                    updateDerby()
                 }) {
                     Text(editId == nil ? "New" : "Save")
                         .font(.system(size: 18))
@@ -108,7 +109,7 @@ struct RacerGroupView: View {
             }
             Spacer().frame(height:20)
             
-            List(derby.groups) { group in
+            List(groups) { group in
                 Text(group.group)
                     .font(.system(size: 16))
                     .swipeActions {
@@ -121,8 +122,21 @@ struct RacerGroupView: View {
                         }
                         .tint(.teal)
                         Button(action: {
-                            print("delete")
-                            // TODO: delete
+                            var oldName: String = ""
+                            for i in 0..<groups.count {
+                                if groups[i].id == group.id {
+                                    oldName = group.group
+                                    groups.remove(at: i)
+                                    break
+                                }
+                            }
+                            for r in derby.racers {
+                                if r.group == oldName {
+                                    r.group = ""
+                                }
+                            }
+                            derby.saveRacers()
+                            updateDerby()
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
@@ -133,6 +147,9 @@ struct RacerGroupView: View {
                                 
             Spacer()
         }
+        .onAppear(perform: {
+            groups = derby.groups
+        })
         .alert(isPresented: self.$alertShow) {
             Alert(title: Text(self.alertTitle),
                   message: Text(self.alertMessage),
@@ -140,5 +157,15 @@ struct RacerGroupView: View {
                                           action: { })
             )
         }
+    }
+    
+    func updateDerby() {
+        print(#function)
+        derby.groups = []
+        for i in 0..<groups.count {
+            derby.groups.append(groups[i])
+        }
+        derby.saveGroups()
+        derby.objectWillChange.send()
     }
 }

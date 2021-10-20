@@ -5,7 +5,6 @@
 //  Created by Rand Dow on 10/11/21.
 //
 
-
 import SwiftUI
 
 struct RankingsView: View {

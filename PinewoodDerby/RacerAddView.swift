@@ -25,9 +25,11 @@ struct RacerAddView: View {
     @State var alertMessage = ""
     @State var alertButton = ""
     
-    @State var showPopover = false
+    //@State var showPopover = false
     
     @ObservedObject var derby = Derby.shared
+    @State var groups: [GroupEntry] = []
+    @State var groupSelector = 0
     
     let fontSize = CGFloat(18)
     let circleSize = CGFloat(14)
@@ -104,7 +106,7 @@ struct RacerAddView: View {
                 }
                 HStack {
                     Spacer().frame(width: 20)
-             
+                    
                     Text("Group: ").font(.system(size: fontSize))
                     if derby.groups.count == 2 {
                         Group {
@@ -131,16 +133,19 @@ struct RacerAddView: View {
                             group = derby.groups[1].group
                         }
                     } else {
-                        // TODO:
-                        Button(action: {
-                            showPopover = true
-                        }) {
-                            Text("Popover")
-                        }
+                        Picker("Groups", selection: $groupSelector, content: {
+                            ForEach(0..<groups.count, id: \.self) {
+                                Text(groups[$0].group)
+                            }
+                        })
+                            .pickerStyle(MenuPickerStyle())
+                            .frame(width: 120)
+                            .onChange(of: groupSelector) { _ in
+                                print(groupSelector)
+                            }
                     }
                     Spacer().frame(width:20)
                     
-                    // add group
                     Button(action: {
                         showGroupModal = true
                     }) {
@@ -206,12 +211,10 @@ struct RacerAddView: View {
                                           action: { })
             )
         }
-        .popover(isPresented: $showPopover) {
-                    Text("Popover is Presented")
-                        .font(.largeTitle)
-                        .frame(width: 500, height: 500)
-                }
         .onAppear(perform: {
+            groups = []
+            groups.append(GroupEntry(group: "---"))
+            groups.append(contentsOf: derby.groups)
             if let entry = entry {
                 self.id = entry.id
                 carNumber = String(entry.carNumber)
@@ -220,6 +223,13 @@ struct RacerAddView: View {
                 lastName = entry.lastName
                 group = entry.group
                 age = String(entry.age)
+                for i in 0..<groups.count {
+                    print(group, i, groups[i].group)
+                    if group == groups[i].group {
+                        groupSelector = i
+                        break
+                    }
+                }
             }
         })
         .sheet(isPresented: $showGroupModal, content: { RacerGroupView() })
