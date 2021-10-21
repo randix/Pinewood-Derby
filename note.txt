@@ -1,14 +1,16 @@
+generateheats: number of racers must at least be the same as the number of tracks
+AND generate heats according to groups.
+
+add elimination styles:
+include position in derby.racers
+
+Check all todos
+
 Server:
   add simulate
   connect to timer and read and parse - save raw and servertimeslog.csv
   server: add cert for https
   serve pin.txt
-
-Check all todos
-
-menu for selecting groups in results, when more than 2 groups
-
-generateheats: number of racers must at least be the same as the number of tracks
 
 document
 include manual into release
@@ -19,3 +21,5 @@ RESTView:
 TestFlight:
     add background photo
     everything for the app store
+
+consider supporting 8 tracks (major mods to all views, or force landscape only usage on phone...)

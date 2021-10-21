@@ -28,6 +28,7 @@ class RacerEntry: Identifiable {
     
     var times = [Double](repeating: 0.0, count: Settings.maxTracks)  // the times for each track
     var ignores = [Bool](repeating: false, count: Settings.maxTracks)
+    var places = [Int](repeating: 0, count: Settings.maxTracks)     // the places for each track, assume 1 heat in each track exactly
     var firstSim = 0                // track number of first simulated time
     var average: Double = 0.0
     var rankOverall: Int = 0
