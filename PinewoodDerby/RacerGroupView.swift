@@ -121,6 +121,7 @@ struct RacerGroupView: View {
                             Label("Edit", systemImage: "square.and.pencil")
                         }
                         .tint(.teal)
+                        
                         Button(action: {
                             var oldName: String = ""
                             for i in 0..<groups.count {

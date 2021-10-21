@@ -19,26 +19,26 @@ struct SingleView: View {
             HStack(spacing:3) {
                 Spacer().frame(width:10)
                 Text(place(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                    //.background(.yellow)
+                //.background(.yellow)
                 Text(carForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                    //.background(.yellow)
+                //.background(.yellow)
                 Text(carNameForPlace(group, place)).font(.system(size: 16)).frame(width:100, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
+                //.background(.yellow)
                 Spacer()
             }
             HStack(spacing:3) {
                 Spacer().frame(width:43)
                 Text(nameForPlace(group, place)).font(.system(size: 16)).frame(width:115, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
+                //.background(.yellow)
                 Text(ageForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                    //.background(.yellow)
+                //.background(.yellow)
                 Spacer()
             }
         }
     }
-     
+    
     func getEntry(_ group: String, _ place: Int) -> RacerEntry? {
         var p = place
         if group == derby.overall {
@@ -85,7 +85,7 @@ struct SingleView: View {
             return("")
         }
     }
-
+    
     func carNameForPlace(_ group: String, _ place: Int) -> String {
         if let entry = getEntry(group, place) {
             return(String(entry.carName))
@@ -111,13 +111,10 @@ struct SingleView: View {
     }
 }
 
-
-// TODO: this is a strange view with more than two groups.... have to select group....
-// if there are more than two groups, make the top a group selector and then similar to this.
-
 struct ResultsView: View {
     
     @ObservedObject var derby = Derby.shared
+    @State var groupSelector = 0
     
     var body: some View {
         VStack {
@@ -128,73 +125,119 @@ struct ResultsView: View {
             }
             Spacer().frame(height:10)
             
-            Group {
-                HStack {
-                    Spacer().frame(width:10)
-                    Text("Girls Fastest").bold().font(.system(size: 16)).frame(width:170)
+            if derby.groups.count == 2 {
+                // for exactly 2 groups
+                Group {
+                    HStack {
+                        Spacer().frame(width:10)
+                        Text("\(derby.groups[0].group) fastest").bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
-                    Spacer()
-                    Text("Girls Slowest").bold().font(.system(size: 16)).frame(width:170)
+                        Spacer()
+                        Text("\(derby.groups[0].group) slowest").bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
-                    Spacer().frame(width:10)
+                        Spacer().frame(width:10)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[0].group, place: 1)
+                        SingleView(group: derby.groups[0].group, place: -1)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[0].group, place: 2)
+                        SingleView(group: derby.groups[0].group, place: -2)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[0].group, place: 3)
+                        SingleView(group: derby.groups[0].group, place: -3)
+                    }
                 }
-                //Spacer().frame(height:5)
+                Spacer().frame(height:15)
+                
+                Group {
+                    HStack {
+                        Spacer().frame(width:10)
+                        Text("\(derby.groups[1].group) fastest").bold().font(.system(size: 17)).frame(width:170)
+                        //.background(.yellow)
+                        Spacer()
+                        Text("\(derby.groups[1].group) slowest").bold().font(.system(size: 17)).frame(width:170)
+                        //.background(.yellow)
+                        
+                        Spacer().frame(width:10)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[1].group, place: 1)
+                        SingleView(group: derby.groups[1].group, place: -1)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[1].group, place: 2)
+                        SingleView(group: derby.groups[1].group, place: -2)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[1].group, place: 3)
+                        SingleView(group: derby.groups[1].group, place: -3)
+                    }
+                }
+                Spacer().frame(height:15)
+                
+            } else {
+                // show only 1 group and a group selector
+                Spacer().frame(height:15)
                 HStack {
-                    SingleView(group: derby.girls, place: 1)
-                    SingleView(group: derby.girls, place: -1)
+                    Text("Group:")
+                    Picker("Groups", selection: $groupSelector, content: {
+                        ForEach(0..<derby.groups.count, id: \.self) {
+                            Text(derby.groups[$0].group)
+                        }
+                    })
+                        .pickerStyle(MenuPickerStyle())
+                        .frame(width: 120)
                 }
-                //Spacer().frame(height:5)
-                HStack {
-                    SingleView(group: derby.girls, place: 2)
-                    SingleView(group: derby.girls, place: -2)
+                Spacer().frame(height:10)
+                Group {
+                    HStack {
+                        Spacer().frame(width:10)
+                        Text("\(derby.groups[groupSelector].group) fastest").bold().font(.system(size: 17)).frame(width:170)
+                        //.background(.yellow)
+                        Spacer()
+                        Text("\(derby.groups[groupSelector].group) slowest").bold().font(.system(size: 17)).frame(width:170)
+                        //.background(.yellow)
+                        
+                        Spacer().frame(width:10)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[groupSelector].group, place: 1)
+                        SingleView(group: derby.groups[groupSelector].group, place: -1)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[groupSelector].group, place: 2)
+                        SingleView(group: derby.groups[groupSelector].group, place: -2)
+                    }
+                    //Spacer().frame(height:5)
+                    HStack {
+                        SingleView(group: derby.groups[groupSelector].group, place: 3)
+                        SingleView(group: derby.groups[groupSelector].group, place: -3)
+                    }
                 }
-                //Spacer().frame(height:5)
-                HStack {
-                    SingleView(group: derby.girls, place: 3)
-                    SingleView(group: derby.girls, place: -3)
-                }
+                Spacer().frame(height:45)
             }
-            Spacer().frame(height:15)
             
             Group {
                 HStack {
                     Spacer().frame(width:10)
-                    Text("Boys Fastest").bold().font(.system(size: 16)).frame(width:170)
-                        //.background(.yellow)
+                    Text("overall fastest")
+                        .bold().font(.system(size: 17)).frame(width:170)
+                    //.background(.yellow)
                     Spacer()
-                    Text("Boys Slowest").bold().font(.system(size: 16)).frame(width:170)
-                        //.background(.yellow)
-                    
-                    Spacer().frame(width:10)
-                }
-                //Spacer().frame(height:5)
-                HStack {
-                    SingleView(group: derby.boys, place: 1)
-                    SingleView(group: derby.boys, place: -1)
-                }
-                //Spacer().frame(height:5)
-                HStack {
-                    SingleView(group: derby.boys, place: 2)
-                    SingleView(group: derby.boys, place: -2)
-                }
-                //Spacer().frame(height:5)
-                HStack {
-                    SingleView(group: derby.boys, place: 3)
-                    SingleView(group: derby.boys, place: -3)
-                }
-            }
-            Spacer().frame(height:15)
-            
-            Group {
-                HStack {
-                    Spacer().frame(width:10)
-                    Text("Overall Fastest")
-                        .bold().font(.system(size: 16)).frame(width:170)
-                        //.background(.yellow)
-                    Spacer()
-                    Text("Overall Slowest")
-                        .bold().font(.system(size: 16)).frame(width:170)
-                        //.background(.yellow)
+                    Text("overall slowest")
+                        .bold().font(.system(size: 17)).frame(width:170)
+                    //.background(.yellow)
                     
                     Spacer().frame(width:10)
                 }

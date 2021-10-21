@@ -27,8 +27,9 @@ class REST: ObservableObject {
     let racersName = "derby.csv"
     let groupsName = "groups.csv"
     let heatsName = "heats.csv"
-    let timesName = "times.csv"
     let timesLogName = "timeslog.csv"
+    
+    let timesName = "times.csv"
     let nextHeatName = "nextheat.csv"
     
     static let shared = REST()
@@ -77,6 +78,7 @@ class REST: ObservableObject {
         readFileFromServer(settingsName)
         readFileFromServer(racersName)
         readFileFromServer(heatsName)
+        readFileFromServer(groupsName)
         readFileFromServer(timesLogName)
     }
     
@@ -121,6 +123,7 @@ class REST: ObservableObject {
         saveFileToServer(settingsName)
         saveFileToServer(racersName)
         saveFileToServer(heatsName)
+        saveFileToServer(groupsName)
     }
     
     func findTimer() {

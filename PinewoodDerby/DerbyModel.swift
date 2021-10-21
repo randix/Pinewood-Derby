@@ -233,34 +233,24 @@ class Derby: ObservableObject {
                 changed = true
             }
         }
-        // calculate girls rankings
-        let g = racers.filter { $0.group == girls }
-        let gRank = g.sorted { $0.average < $1.average }
-        var rank = 1
-        for gEntry in gRank {
-            let entry = racers.filter { $0.carNumber == gEntry.carNumber }[0]
-            if entry.average > 0.0 {
-                entry.rankGroup = rank
-                changed = true
-                rank += 1
-            }
-        }
-        // calculate boys rankings
-        let b = racers.filter { $0.group == boys }
-        let bRank = b.sorted { $0.average < $1.average }
-        rank = 1
-        for bEntry in bRank {
-            let entry = racers.filter { $0.carNumber == bEntry.carNumber }[0]
-            if entry.average > 0.0 {
-                entry.rankGroup = rank
-                changed = true
-                rank += 1
+        for group in groups {
+            // calculate group rankings
+            let g = self.racers.filter { $0.group == group.group }
+            let gRank = g.sorted { $0.average < $1.average }
+            var rank = 1
+            for gEntry in gRank {
+                let entry = racers.filter { $0.carNumber == gEntry.carNumber }[0]
+                if entry.average > 0.0 {
+                    entry.rankGroup = rank
+                    changed = true
+                    rank += 1
+                }
             }
         }
         // calcuates overall rankings
         let a = racers
         let aRank = a.sorted { $0.average < $1.average }
-        rank = 1
+        var rank = 1
         for aEntry in aRank {
             let entry = racers.filter { $0.carNumber == aEntry.carNumber }[0]
             if entry.average > 0.0 {
@@ -279,6 +269,8 @@ class Derby: ObservableObject {
     func generateHeats() {
         log(#function)
         heats = []
+        // TODO: generate heats per group
+        
         let boysEntries = racers.filter { $0.group == boys }
         var boysCars = boysEntries.map { $0.carNumber }
         
@@ -609,7 +601,7 @@ class Derby: ObservableObject {
                 log(error.localizedDescription)
             }
         }
-        let files = [rest.settingsName, rest.racersName, rest.heatsName, rest.timesLogName]
+        let files = [rest.settingsName, rest.racersName, rest.heatsName, rest.groupsName, rest.timesLogName]
         for f in files {
             log("copy \(f) to \(archiveName + "/" + f)")
             let srcURL = docURL.appendingPathComponent(f)
