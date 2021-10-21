@@ -130,10 +130,10 @@ struct ResultsView: View {
                 Group {
                     HStack {
                         Spacer().frame(width:10)
-                        Text("\(derby.groups[0].group) fastest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[0].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         Spacer()
-                        Text("\(derby.groups[0].group) slowest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[0].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         Spacer().frame(width:10)
                     }
@@ -158,10 +158,10 @@ struct ResultsView: View {
                 Group {
                     HStack {
                         Spacer().frame(width:10)
-                        Text("\(derby.groups[1].group) fastest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[1].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         Spacer()
-                        Text("\(derby.groups[1].group) slowest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[1].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         
                         Spacer().frame(width:10)
@@ -201,10 +201,10 @@ struct ResultsView: View {
                 Group {
                     HStack {
                         Spacer().frame(width:10)
-                        Text("\(derby.groups[groupSelector].group) fastest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[groupSelector].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         Spacer()
-                        Text("\(derby.groups[groupSelector].group) slowest").bold().font(.system(size: 17)).frame(width:170)
+                        Text("\(derby.groups[groupSelector].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
                         //.background(.yellow)
                         
                         Spacer().frame(width:10)
@@ -231,11 +231,11 @@ struct ResultsView: View {
             Group {
                 HStack {
                     Spacer().frame(width:10)
-                    Text("overall fastest")
+                    Text("overall fastest".capitalized)
                         .bold().font(.system(size: 17)).frame(width:170)
                     //.background(.yellow)
                     Spacer()
-                    Text("overall slowest")
+                    Text("overall slowest".capitalized)
                         .bold().font(.system(size: 17)).frame(width:170)
                     //.background(.yellow)
                     
