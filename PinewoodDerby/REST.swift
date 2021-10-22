@@ -24,7 +24,7 @@ class REST: ObservableObject {
     var configUpdated = false
     
     let settingsName = "settings.txt"
-    let racersName = "derby.csv"
+    let racersName = "racers.csv"
     let groupsName = "groups.csv"
     let heatsName = "heats.csv"
     let timesLogName = "timeslog.csv"

@@ -20,8 +20,8 @@ struct RacerGroupView: View {
     
     @ObservedObject var derby = Derby.shared
     
-    @State var groups: [GroupEntry] = []
-    
+    @Binding var groups: [GroupEntry]
+  
     @State var editId: UUID?
     @State var newGroup = ""
     
@@ -94,12 +94,11 @@ struct RacerGroupView: View {
                             return
                         }
                         log("group add: \(newGroup)")
-                        let nGroup = GroupEntry(group: newGroup)
-                        groups.append(nGroup)
+                        groups.append(GroupEntry(group: newGroup))
                     }
                     newGroup = ""
                     editId = nil
-                    updateDerby()
+                    updateGroups()
                 }) {
                     Text(editId == nil ? "New" : "Save")
                         .font(.system(size: 18))
@@ -137,7 +136,7 @@ struct RacerGroupView: View {
                                 }
                             }
                             derby.saveRacers()
-                            updateDerby()
+                            updateGroups()
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
@@ -148,9 +147,6 @@ struct RacerGroupView: View {
                                 
             Spacer()
         }
-        .onAppear(perform: {
-            groups = derby.groups
-        })
         .alert(isPresented: self.$alertShow) {
             Alert(title: Text(self.alertTitle),
                   message: Text(self.alertMessage),
@@ -160,11 +156,13 @@ struct RacerGroupView: View {
         }
     }
     
-    func updateDerby() {
-        print(#function)
+    func updateGroups() {
         derby.groups = []
-        for i in 0..<groups.count {
-            derby.groups.append(groups[i])
+        for group in groups {
+            if group.group == "---" {
+                continue
+            }
+            derby.groups.append(group)
         }
         derby.saveGroups()
         derby.objectWillChange.send()

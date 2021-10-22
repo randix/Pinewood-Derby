@@ -1,6 +1,3 @@
-generateheats: number of racers must at least be the same as the number of tracks
-AND generate heats according to groups.
-
 add elimination styles:
 include position in derby.racers
 

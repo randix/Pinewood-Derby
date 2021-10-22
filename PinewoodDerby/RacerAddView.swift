@@ -25,9 +25,8 @@ struct RacerAddView: View {
     @State var alertMessage = ""
     @State var alertButton = ""
     
-    //@State var showPopover = false
-    
     @ObservedObject var derby = Derby.shared
+    
     @State var groups: [GroupEntry] = []
     @State var groupSelector = 0
     
@@ -141,7 +140,7 @@ struct RacerAddView: View {
                             .pickerStyle(MenuPickerStyle())
                             .frame(width: 120)
                             .onChange(of: groupSelector) { _ in
-                                print(groupSelector)
+                                group = groups[groupSelector].group
                             }
                     }
                     Spacer().frame(width:20)
@@ -224,7 +223,6 @@ struct RacerAddView: View {
                 group = entry.group
                 age = String(entry.age)
                 for i in 0..<groups.count {
-                    print(group, i, groups[i].group)
                     if group == groups[i].group {
                         groupSelector = i
                         break
@@ -232,7 +230,7 @@ struct RacerAddView: View {
                 }
             }
         })
-        .sheet(isPresented: $showGroupModal, content: { RacerGroupView() })
+        .sheet(isPresented: $showGroupModal, content: { RacerGroupView(groups: $groups) })
     }
     
     func updateDerby() -> Bool {
@@ -256,8 +254,8 @@ struct RacerAddView: View {
                 let racersNumberCheck = derby.racers.filter { number == $0.carNumber }
                 if racersNumberCheck.count == 1 && racersNumberCheck[0].id != id {
                     // another id has the same carNumber
-                    alertTitle = "Duplicate"
-                    alertMessage = "Duplicate car number"
+                    alertTitle = "Duplicate Car Number"
+                    alertMessage = "Duplicate car number, you cannot have two cars with the same number."
                     alertButton = "OK"
                     alertShow = true
                     return false
@@ -267,14 +265,14 @@ struct RacerAddView: View {
                 }
                 if firstName == "" || lastName == "" {
                     alertTitle = "Missing Name"
-                    alertMessage = "Please enter the full Name"
+                    alertMessage = "Please enter both a first and a last name."
                     alertButton = "OK"
                     alertShow = true
                     return false
                 }
                 if group == "" {
                     alertTitle = "Group Not Selected"
-                    alertMessage = "Please select a Group"
+                    alertMessage = "Please select a group."
                     alertButton = "OK"
                     alertShow = true
                     return false
@@ -296,14 +294,14 @@ struct RacerAddView: View {
                 return true
             } else {
                 alertTitle = "Age Missing"
-                alertMessage = "Please enter the Age"
+                alertMessage = "Please enter the age."
                 alertButton = "OK"
                 alertShow = true
                 return false
             }
         } else {
             alertTitle = "Car Number Missing"
-            alertMessage = "Please enter the Car Number"
+            alertMessage = "Please enter the car number."
             alertButton = "OK"
             alertShow = true
             return false

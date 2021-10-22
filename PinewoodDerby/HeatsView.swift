@@ -31,7 +31,6 @@ struct HeatsView: View {
                 if settings.isMaster {
                     Button(action: {
                         showHeatModal = true
-                        print("special heat")
                     }) {
                         VStack {
                             Image(systemName: "flag.2.crossed").font(.system(size: 14))

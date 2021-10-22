@@ -18,7 +18,7 @@ class RacerEntry: Identifiable {
         self.group = group
     }
     
-    let id = UUID()             // id for SwiftUI
+    let id = UUID()
     var carNumber: Int
     var carName: String
     var firstName: String
@@ -42,8 +42,7 @@ class HeatsEntry: Identifiable {
         self.tracks = tracks
         self.hasRun = hasRun
     }
-    
-    let id = UUID()             // id for SwiftUI
+    let id = UUID()
     var heat: Int
     var group: String
     var tracks: [Int]           // car number for each track
@@ -63,9 +62,6 @@ class Derby: ObservableObject {
     @Published var racers: [RacerEntry] = []
     @Published var heats: [HeatsEntry] = []
     @Published var groups: [GroupEntry] = []
-    
-    let girls = "girls"
-    let boys = "boys"
     
     let overall = "overall"
     
@@ -108,9 +104,11 @@ class Derby: ObservableObject {
     func clearTimes() {
         log(#function)
         let times = [Double](repeating: 0.0, count: Settings.maxTracks)
+        let places = [Int](repeating: 0, count: Settings.maxTracks)
         let ignores = [Bool](repeating: false, count: Settings.maxTracks)
         for entry in racers {
             entry.times = times
+            entry.places = places
             entry.ignores = ignores
             entry.firstSim = 0
             entry.average = 0.0
@@ -270,81 +268,67 @@ class Derby: ObservableObject {
     func generateHeats() {
         log(#function)
         heats = []
-        // TODO: generate heats per group
         
-        let boysEntries = racers.filter { $0.group == boys }
-        var boysCars = boysEntries.map { $0.carNumber }
+        var groupHeats: [[HeatsEntry]] = []
+        var hCount = 0
         
-        if boysEntries.count < settings.trackCount {
-            // TODO: if less members of a group than tracks, need to artificially add members
-            
-        }
-        boysCars.sort { $0 < $1 }
-        boysCars.shuffle()
-        let boysOffset = boysCars.count / settings.trackCount
-        log("boys count=\(boysCars.count) boys offset=\(boysOffset)")
-        
-        let girlsEntries = racers.filter { $0.group == girls }
-        var girlsCars = girlsEntries.map { $0.carNumber }
-        if girlsEntries.count < settings.trackCount {
-            // TODO: if less members of a group than tracks, need to artificially add members
-            
-        }
-        girlsCars.sort { $0 < $1 }
-        girlsCars.shuffle()
-        let girlsOffset = girlsCars.count / settings.trackCount
-        log("girls count=\(girlsCars.count)  girls offset=\(girlsOffset)")
-        
-        var boysHeats: [HeatsEntry] = []
-        var girlsHeats: [HeatsEntry] = []
-        
-        // generate the boys heats
-        for i in 0..<boysCars.count {
-            var tracks: [Int] = []
-            for j in 0..<settings.trackCount {
-                var idx = j*boysOffset + i
-                if idx >= boysCars.count {
-                    idx -= boysCars.count
-                }
-                tracks.append(boysCars[idx])
+        for group in groups {
+            let entries = racers.filter { $0.group == group.group }
+            var cars = entries.map { $0.carNumber }
+            if cars.count == 0 {
+                continue
             }
-            boysHeats.append(HeatsEntry(heat:0, group: boys, tracks: tracks, hasRun: false))
-        }
-        
-        // generate the girls heats
-        for i in 0..<girlsCars.count {
-            var tracks: [Int] = []
-            for j in 0..<settings.trackCount {
-                var idx = j*girlsOffset + i
-                if idx >= girlsCars.count {
-                    idx -= girlsCars.count
-                }
-                tracks.append(girlsCars[idx])
+            while cars.count < settings.trackCount {
+                cars.append(0)
             }
-            girlsHeats.append(HeatsEntry(heat:0, group: girls, tracks: tracks, hasRun: false))
+            cars.sort { $0 < $1 }
+            cars.shuffle()
+            let offset = cars.count / settings.trackCount
+            log("\(group.group) count=\(cars.count) offset=\(offset)")
+        
+            groupHeats.append([HeatsEntry]())
+            // generate the heats
+            for i in 0..<cars.count {
+                var tracks: [Int] = []
+                for j in 0..<settings.trackCount {
+                    var idx = j*offset + i
+                    if idx >= cars.count {
+                        idx -= cars.count
+                    }
+                    tracks.append(cars[idx])
+                }
+                groupHeats[hCount].append(HeatsEntry(heat:0, group: group.group, tracks: tracks, hasRun: false))
+            }
+            hCount += 1
         }
         
-        var b = 0
-        var g = 0
+        for i in 0..<hCount {
+            log("heat group \(i) \(groupHeats[i][0].group) count: \(groupHeats[i].count)")
+        }
+        
+        var idx = [Int](repeating: 0, count: hCount)
         var heat = 1
         while true {
-            if g < girlsHeats.count {
-                girlsHeats[g].heat = heat
-                heat += 1
-                heats.append(girlsHeats[g])
-                g += 1
+            for i in 0..<hCount {
+                if idx[i] < groupHeats[i].count {
+                    groupHeats[i][idx[i]].heat = heat
+                    heat += 1
+                    heats.append(groupHeats[i][idx[i]])
+                    idx[i] += 1
+                }
             }
-            if b < boysHeats.count {
-                boysHeats[b].heat = heat
-                heat += 1
-                heats.append(boysHeats[b])
-                b += 1
+        
+            var done = true
+            for i in 0..<hCount {
+                if idx[i] < groupHeats[i].count {
+                    done = false
+                }
             }
-            if b >= boysHeats.count && g >= girlsHeats.count {
+            if done {
                 break
             }
         }
-        
+
         for i in 0..<heats.count {
             var heat = "\(heats[i].heat) \(heats[i].group) "
             for j in 0..<heats[i].tracks.count {
