@@ -391,6 +391,9 @@ class Derby: ObservableObject {
                 for i in 0..<self.settings.trackCount {
                     heat = Int(values[0])!
                     let carNumber = Int(values[2*i+1])
+                    if carNumber == 0 {
+                        continue
+                    }
                     let time = Double(values[2*i+2])!
                     let entry = self.racers.filter { $0.carNumber == carNumber }[0]
                     if entry.times[i] == 0.0 || time < entry.times[i] {

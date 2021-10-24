@@ -159,7 +159,7 @@ struct HeatsView: View {
                         alertTitle = "Run Heat \(heat.heat)"
                         alertMessage = "\nCheck cars ready:\n"
                         for i in 0..<settings.trackCount {
-                            alertMessage += "Track \(i+1): \(String(format: "%2d", heat.tracks[i]))"
+                            alertMessage += "Track \(i+1): \(heat.tracks[i] == 0 ? "-" : String(format: "%2d", heat.tracks[i]))"
                             if i < settings.trackCount {
                                 alertMessage += "\n "
                             }
