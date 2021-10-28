@@ -50,6 +50,7 @@
 		A4E0B1C027075982008E3880 /* DerbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerbyModel.swift; sourceTree = "<group>"; };
 		A4E0B1C2270759FC008E3880 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A4E0B1C4270AAE83008E3880 /* note.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = note.txt; sourceTree = "<group>"; };
+		A4E696BA272AEC3C00623DA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +85,7 @@
 		A4E0B1A3270564C8008E3880 /* PinewoodDerby */ = {
 			isa = PBXGroup;
 			children = (
+				A4E696BA272AEC3C00623DA8 /* Info.plist */,
 				A4E0B1A4270564C8008E3880 /* PinewoodDerbyApp.swift */,
 				A4E0B1C2270759FC008E3880 /* Logger.swift */,
 				A4E0B1A6270564C8008E3880 /* ContentView.swift */,
@@ -331,11 +333,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinewoodDerby/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -365,11 +368,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PinewoodDerby/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

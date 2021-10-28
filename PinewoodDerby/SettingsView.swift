@@ -256,6 +256,16 @@ struct SettingsView: View {
             }
             
             Spacer()
+            Group {
+                Spacer().frame(height: 10)
+                Text("\(settings.appName) \(settings.appVersion)")
+                    .font(.system(size: 9))
+                Text("For info, see: Files App: On My " + (settings.iPad ? "iPad" : "iPhone") + " / Pinewood-Derby / Pinewood-Derby")
+                    .font(.system(size: 9))
+                Text("Copyright © 2021 Randix LLC. All rights reserved.")
+                    .font(.system(size: 9))
+                Spacer().frame(height: 10)
+            }
         }
         .alert(isPresented: self.$showAlert) {
             Alert(title: Text(alertTitle),
@@ -294,6 +304,7 @@ class Settings: ObservableObject {
     
     var appName = ""
     var appVersion = ""
+    let iPad = UIScreen.main.bounds.width > 600
     
     @Published var myIpAddress: String = "192.168.12.125"
     @Published var serverIpAddress: String = "192.168.12.128"

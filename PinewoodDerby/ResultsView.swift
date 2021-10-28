@@ -184,7 +184,7 @@ struct ResultsView: View {
                 }
                 Spacer().frame(height:15)
                 
-            } else {
+            } else if derby.groups.count > 1 {
                 // show only 1 group and a group selector
                 Spacer().frame(height:15)
                 HStack {
