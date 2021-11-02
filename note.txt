@@ -1,6 +1,8 @@
 add elimination styles:
 include position in derby.racers
 
+password mode for pin entry
+
 Check all todos
 
 Server:
