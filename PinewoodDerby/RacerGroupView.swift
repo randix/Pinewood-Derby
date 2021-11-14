@@ -5,13 +5,6 @@
 //  Created by Rand Dow on 10/16/21.
 //
 
-//
-//  DerbyEditView.swift
-//  Pinewood Derby
-//
-//  Created by Rand Dow on 9/24/21.
-//
-
 import SwiftUI
 
 struct RacerGroupView: View {

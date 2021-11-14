@@ -134,23 +134,12 @@ struct SettingsView: View {
                     Spacer()
                     Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
                     Text("Pin: ").font(.system(size: 18))
-                    TextField("0000", text: $settings.pin).font(.system(size: 18))
+                    
+                    SecureField("pin", text: $settings.pin)
+                        .font(.system(size: 18))
                         .frame(width:70)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .keyboardType(.numberPad)
-                    //.background(.red)
-                    Button(action: {
-                        settings.isMaster = settings.pin == settings.masterPin
-                        settings.pin = ""
-                        if settings.isMaster == false {
-                            presentationMode.wrappedValue.dismiss()
-                        } else {
-                            derby.objectWillChange.send()
-                        }
-                    }) {
-                        Image(systemName: "checkmark").font(.system(size: 18)).frame(width: 30)
-                    }
                     Spacer()
                 }
             } else {
