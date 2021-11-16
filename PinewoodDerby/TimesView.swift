@@ -110,13 +110,15 @@ struct TimesView: View {
                     Spacer()
                 }
                 .swipeActions {
-                    Button {
-                        thisEntry = entry
-                        showEditModal = true
-                    } label: {
-                        Label("Edit", systemImage: "square.and.pencil")
+                    if settings.isMaster {
+                        Button {
+                            thisEntry = entry
+                            showEditModal = true
+                        } label: {
+                            Label("Edit", systemImage: "square.and.pencil")
+                        }
+                        .tint(.teal)
                     }
-                    .tint(.teal)
                 }
                 
                 HStack(spacing: 3) {
