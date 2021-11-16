@@ -7,6 +7,44 @@
 
 import SwiftUI
 
+struct Times: View {
+    
+    @ObservedObject var derby = Derby.shared
+    
+    let heat: Int
+    let track: Int
+    
+    var body: some View {
+        VStack {
+            if heat < derby.heats.count {
+                Text(derby.heats[heat].tracks[track] == 0 ? "-" : String(derby.heats[heat].tracks[track]))
+                Text(timeForCar(derby.heats[heat].tracks[track], track))
+                    .font(.system(size: 12))
+                Text(placeForCar(derby.heats[heat].tracks[track], track))
+                    .font(.system(size: 12))
+            }
+        }
+        .frame(width: 43)
+        //.background(.yellow)
+    }
+    
+    func timeForCar(_ carNumber: Int, _ track: Int) -> String {
+        if carNumber == 0 { return "" }
+        let entry = derby.racers.filter { $0.carNumber == carNumber }
+        let time = entry[0].times[track]
+        if time == 0.0 { return "-" }
+        return String(format: "%0.4f", time)
+    }
+    
+    func placeForCar(_ carNumber: Int, _ track: Int) -> String {
+        if carNumber == 0 { return "" }
+        let entry = derby.racers.filter { $0.carNumber == carNumber }
+        let place = entry[0].places[track]
+        if place == 0 { return "-" }
+        return String(format: "%d", place)
+    }
+}
+
 struct HeatsView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -47,30 +85,31 @@ struct HeatsView: View {
                 Spacer()
                 Text("Heats").font(.system(size: 20)).bold()
                 Spacer()
-               
+                
                 Spacer().frame(width:55)
                 Spacer().frame(width:30)
             }
             Spacer().frame(height:10)
             
-            HStack {
-                Spacer().frame(width:115)
+            // MARK: Header
+            HStack(spacing: 1) {
+                Spacer().frame(width:90)
                 
-                Text("T1").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
-                //.background(.yellow)
-                Text("T2").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
-                //.background(.yellow)
-                if settings.trackCount > 2 {
-                    Text("T3").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
+                Text("T1").bold().frame(width: 43).font(.system(size: 18))
                     //.background(.yellow)
-                    if settings.trackCount > 3 {
-                        Text("T4").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
+                Text("T2").bold().frame(width: 43).font(.system(size: 18))
+                    //.background(.yellow)
+                if settings.trackCount > 2 {
+                    Text("T3").bold().frame(width: 43).font(.system(size: 18))
                         //.background(.yellow)
+                    if settings.trackCount > 3 {
+                        Text("T4").bold().frame(width: 43).font(.system(size: 18))
+                            //.background(.yellow)
                         if settings.trackCount > 4 {
-                            Text("T5").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
+                            Text("T5").bold().frame(width: 43).font(.system(size: 18))
                             //.background(.yellow)
                             if settings.trackCount > 5 {
-                                Text("T6").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
+                                Text("T6").bold().frame(width: 43).font(.system(size: 18))
                                 //.background(.yellow)
                             }
                         }
@@ -78,105 +117,64 @@ struct HeatsView: View {
                 }
                 Spacer()
             }
-            List(derby.heats) { heat in
-                VStack(alignment: .leading) {
-                    HStack(spacing: 3) {
+            
+            // MARK: List
+            List {
+                ForEach(derby.heats) { heat in
+                    HStack(alignment: .top, spacing: 1) {
                         Text(String(heat.heat))
-                            .frame(width:25, alignment:.center).font(.system(size: 18))
+                            .frame(width:25, alignment:.center)
                             //.background(.yellow)
                         Text(heat.group)
-                            .frame(width:42, alignment:.center).font(.system(size: 18))
+                            .frame(width:42, alignment:.center)
                             //.background(.yellow)
-                        Text(heat.tracks[0] == 0 ? "-" : String(heat.tracks[0]))
-                            .frame(width:38, alignment:.center).font(.system(size: 18))
-                            //.background(.yellow)
-                        Text(heat.tracks[1] == 0 ? "-" : String(heat.tracks[1]))
-                            .frame(width:38, alignment:.center).font(.system(size: 18))
-                            //.background(.yellow)
+                        Times(heat: heat.heat-1, track: 0)
+                        Times(heat: heat.heat-1, track: 1)
                         if settings.trackCount > 2 {
-                            Text(heat.tracks[2] == 0 ? "-" : String(heat.tracks[2]))
-                                .frame(width:38, alignment:.center).font(.system(size: 18))
-                                //.background(.yellow)
+                            Times(heat: heat.heat-1, track: 2)
                             if settings.trackCount > 3 {
-                                Text(heat.tracks[3] == 0 ? "-" : String(heat.tracks[3]))
-                                    .frame(width:38, alignment:.center).font(.system(size: 18))
-                                    //.background(.yellow)
+                                Times(heat: heat.heat-1, track: 3)
                                 if settings.trackCount > 4 {
-                                    Text(heat.tracks[4] == 0 ? "-" : String(heat.tracks[4]))
-                                        .frame(width:38, alignment:.center).font(.system(size: 18))
-                                        //.background(.yellow)
+                                    Times(heat: heat.heat-1, track: 4)
                                     if settings.trackCount > 5 {
-                                        Text(heat.tracks[5] == 0 ? "-" : String(heat.tracks[5]))
-                                            .frame(width:38, alignment:.center).font(.system(size: 18))
-                                            //.background(.yellow)
+                                        Times(heat: heat.heat-1, track: 5)
                                     }
                                 }
                             }
                         }
                         Spacer()
                     }
-                    HStack(spacing: 3) {
-                        Spacer().frame(width: 70)
-                        Text(timeForCar(heat.tracks[0], 0))
-                            .frame(width:38, alignment:.center).font(.system(size: 12))
-                            .lineLimit(1).minimumScaleFactor(0.4)
-                            //.background(.yellow)
-                        Text(timeForCar(heat.tracks[1], 1))
-                            .frame(width:38, alignment:.center).font(.system(size: 12))
-                            .lineLimit(1).minimumScaleFactor(0.4)
-                            //.background(.yellow)
-                        if settings.trackCount > 2 {
-                            Text(timeForCar(heat.tracks[2], 2))
-                                .frame(width:38, alignment:.center).font(.system(size: 12))
-                                .lineLimit(1).minimumScaleFactor(0.4)
-                                //.background(.yellow)
-                            if settings.trackCount > 3 {
-                                Text(timeForCar(heat.tracks[3], 3))
-                                    .frame(width:38, alignment:.center).font(.system(size: 12))
-                                    .lineLimit(1).minimumScaleFactor(0.4)
-                                    //.background(.yellow)
-                                if settings.trackCount > 4 {
-                                    Text(timeForCar(heat.tracks[4], 4))
-                                        .frame(width:38, alignment:.center).font(.system(size: 12))
-                                        .lineLimit(1).minimumScaleFactor(0.4)
-                                        //.background(.yellow)
-                                    if settings.trackCount > 5 {
-                                        Text(timeForCar(heat.tracks[5], 5))
-                                            .frame(width:38, alignment:.center).font(.system(size: 12))
-                                            .lineLimit(1).minimumScaleFactor(0.4)
-                                            //.background(.yellow)
-                                    }
+                    .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
+                    
+                    .onTapGesture(perform: {
+                        if settings.isMaster {
+                            nextHeat = heat.heat
+                            cars = heat.tracks
+                            alertTitle = "Run Heat \(heat.heat)"
+                            alertMessage = "\nCheck cars ready:\n"
+                            for i in 0..<settings.trackCount {
+                                alertMessage += "Track \(i+1): \(heat.tracks[i] == 0 ? "-" : String(format: "%2d", heat.tracks[i]))"
+                                if i < settings.trackCount {
+                                    alertMessage += "\n "
                                 }
                             }
+                            alertShow = true
                         }
-                    }
-                    Spacer()
-                }
-                .onTapGesture(perform: {
-                    if settings.isMaster {
-                        nextHeat = heat.heat
-                        cars = heat.tracks
-                        alertTitle = "Run Heat \(heat.heat)"
-                        alertMessage = "\nCheck cars ready:\n"
-                        for i in 0..<settings.trackCount {
-                            alertMessage += "Track \(i+1): \(heat.tracks[i] == 0 ? "-" : String(format: "%2d", heat.tracks[i]))"
-                            if i < settings.trackCount {
-                                alertMessage += "\n "
-                            }
-                        }
-                        alertShow = true
-                    }
-                })
-                .alert(isPresented: self.$alertShow) {
-                    Alert(title: Text(self.alertTitle),
-                          message: Text(self.alertMessage),
-                          primaryButton: .cancel(),
-                          secondaryButton: .destructive(Text("Start")) {
-                        derby.startHeat(nextHeat, cars)
                     })
+                    
+                    .alert(isPresented: self.$alertShow) {
+                        Alert(title: Text(self.alertTitle),
+                              message: Text(self.alertMessage),
+                              primaryButton: .cancel(),
+                              secondaryButton: .destructive(Text("Start")) {
+                            derby.startHeat(nextHeat, cars)
+                        })
+                    }
                 }
-                .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
+                //.border(.green)
+                .listRowInsets(.init())
             }
+            //.border(.red)
             .sheet(isPresented: $showHeatModal, content: { HeatsSpecialView() })
             
             Spacer()
@@ -185,13 +183,5 @@ struct HeatsView: View {
                 Spacer().frame(height: 10)
             }
         }
-    }
-    
-    func timeForCar(_ carNumber: Int, _ track: Int) -> String {
-        if carNumber == 0 { return "" }
-        let entry = derby.racers.filter { $0.carNumber == carNumber }
-        let time = entry[0].times[track]
-        if time == 0.0 { return "-" }
-        return String(format: "%0.4f", time)
     }
 }

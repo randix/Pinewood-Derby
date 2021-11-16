@@ -20,6 +20,8 @@ struct PinewoodDerbyApp: App {
         Settings.shared.appVersion = "\(version).\(build)"
         log("\(Settings.shared.appName) \(Settings.shared.appVersion)")
         
+        log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
+        
         Settings.shared.readSettings()
         derby.readGroups()
         derby.readRacers()

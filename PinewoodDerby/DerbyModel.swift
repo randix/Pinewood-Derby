@@ -30,6 +30,7 @@ class RacerEntry: Identifiable {
     var ignores = [Bool](repeating: false, count: Settings.maxTracks)
     var places = [Int](repeating: 0, count: Settings.maxTracks)     // the places for each track, assume 1 heat in each track exactly
     var firstSim = 0                // track number of first simulated time
+    var points: Int = 0
     var average: Double = 0.0
     var rankOverall: Int = 0
     var rankGroup: Int = 0
@@ -116,6 +117,7 @@ class Derby: ObservableObject {
             entry.rankOverall = 0
         }
         removeFile(rest.timesName)
+        calculateRankings()
         
         saveRacers()
         objectWillChange.send()
@@ -141,6 +143,7 @@ class Derby: ObservableObject {
             heatData += ",\(cars[i])"
         }
         log("Heat: \(heatData)")
+        heatData += "\n"
         do {
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let nextheatURL = docURL.appendingPathComponent(rest.nextHeatName)
@@ -178,14 +181,44 @@ class Derby: ObservableObject {
             let cCnt = values.count - 1
             var cars: [Int] = [Int](repeating: 0, count: cCnt)
             for i in 0..<cCnt {
-                cars[i] = Int(values[i+1])!
+                cars[i] = Int(values[i+1].trimmingCharacters(in: .whitespacesAndNewlines))!
             }
+            
+            // add places
+            struct One {
+                let track: Int
+                let car: Int
+                var place: Int
+                let time: Double
+            }
+            var data = [One]()
+            for i in 0..<self.settings.trackCount {
+                let time = generateTime(i, cars[i])
+                data.append(One(track: i, car: cars[i], place: 0, time: time))
+            }
+for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
+print()
+            data.sort { $0.time < $1.time }
+            var place = 1
+            for i in 0..<self.settings.trackCount {
+                if data[i].time > 0.0 {
+                    data[i].place = place
+                    place += 1
+                }
+            }
+for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
+print()
+            data.sort { $0.track < $1.track }
+for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
+print()
+            
             var timesData = "\(heat)"
             for i in 0..<self.settings.trackCount {
-                timesData += String(format: ",%d,%0.4f", cars[i], generateTime(i, cars[i]))
+                timesData += String(format: ",%d,%d,%0.4f", data[i].car, data[i].place, data[i].time)
             }
             log("simulated times \(timesData)")
             timesData += "\n"
+            
             try timesData.write(to: timesURL, atomically: true, encoding: .utf8)
         } catch {
             log(error.localizedDescription)
@@ -218,12 +251,19 @@ class Derby: ObservableObject {
         for entry in racers {
             var average = 0.0
             var count = 0
+            var points = 0
+            var pointsCount = 0
             for i in 0..<settings.trackCount {
                 if !entry.ignores[i] && entry.times[i] > minimumTime && entry.times[i] < maximumTime {
                     count += 1
                     average += entry.times[i]
                 }
+                if !entry.ignores[i] && entry.places[i] > 0 {
+                    pointsCount += 1
+                    points += entry.places[i]
+                }
             }
+            entry.points = points
             if count > 0 {
                 average = average / Double(count)
             }
@@ -359,13 +399,13 @@ class Derby: ObservableObject {
         let timesUrl = settings.docDir.appendingPathComponent(rest.timesName)
         let timesLogUrl = settings.docDir.appendingPathComponent(rest.timesLogName)
         timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timesTimerInterval), repeats: true) { timer in
-            // attempt to read the times file
             var data: String?
             do {
                 data = try String(contentsOf: timesUrl)
             } catch {
                 return
             }
+            
             if let times = data?.trimmingCharacters(in: .whitespacesAndNewlines) {
                 log("heat: read times: \(times)")
                 // append to times log
@@ -383,20 +423,22 @@ class Derby: ObservableObject {
                 } catch {
                     log(error.localizedDescription)
                 }
+                
                 let values = times.split(separator: ",", omittingEmptySubsequences: false)
-                if values.count < (1 + 2 * self.settings.trackCount) {
+                if values.count < (1 + 3 * self.settings.trackCount) {
                     return
                 }
-                var heat: Int = 0
+                let heat = Int(values[0])!
                 for i in 0..<self.settings.trackCount {
-                    heat = Int(values[0])!
-                    let carNumber = Int(values[2*i+1])
+                    let carNumber = Int(values[3*i+1])
                     if carNumber == 0 {
                         continue
                     }
-                    let time = Double(values[2*i+2])!
+                    let place = Int(values[3*i+2])!
+                    let time = Double(values[3*i+3])!
                     let entry = self.racers.filter { $0.carNumber == carNumber }[0]
                     if entry.times[i] == 0.0 || time < entry.times[i] {
+                        entry.places[i] = place
                         entry.times[i] = time
                         entry.ignores[i] = false
                     }
@@ -477,10 +519,11 @@ class Derby: ObservableObject {
                                age: Int(values[4])!,
                                group: String(values[5]))
             for i in 0..<settings.trackCount {
-                let iv = i*2 + Settings.maxTracks
+                let iv = i*3 + Settings.maxTracks
                 if values.count > iv {
                     d.times[i] = Double(values[iv])!
-                    d.ignores[i] = values[iv+1] != "1" ? false : true
+                    d.places[i] = Int(values[iv+1])!
+                    d.ignores[i] = values[iv+2] != "1" ? false : true
                 }
             }
             racers.append(d)
@@ -498,7 +541,7 @@ class Derby: ObservableObject {
             let csv = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group)"
             var times = ""
             for i in 0..<settings.trackCount {
-                times += String(format: ",%0.4f,%d", entry.times[i], entry.ignores[i] ? 1 : 0)
+                times += String(format: ",%0.4f,%d,%d", entry.times[i], entry.places[i], entry.ignores[i] ? 1 : 0)
             }
             list.append(csv+times)
         }
@@ -556,7 +599,7 @@ class Derby: ObservableObject {
             list.append(heat)
         }
         let name = settings.docDir.appendingPathComponent(rest.heatsName)
-        let fileData = list.joined(separator: "\n")
+        let fileData = list.joined(separator: "\n") + "\n"
         do {
             try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
         } catch {

@@ -18,7 +18,7 @@ struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var settings = Settings.shared
-    let derby = Derby.shared    // do not make this an ObservedObject
+    @ObservedObject var derby = Derby.shared
     @ObservedObject var rest = REST.shared
     
     var possibleTracks = ["2", "3", "4", "5", "6"]
@@ -56,7 +56,7 @@ struct SettingsView: View {
                     Spacer().frame(height:20)
                 }
             }
-            // --------------- Server Connection ---------------
+            // MARK: --------------- Server Connection ---------------
             VStack(spacing: 0) {
                 HStack {
                     Text("My IP Address:")
@@ -120,7 +120,7 @@ struct SettingsView: View {
                 }
                 Spacer().frame(height:30)
             }
-            // --------------- Server Data pull ---------------
+            // MARK: --------------- Server Data pull ---------------
             if !settings.isMaster {
                 Group {
                     Button(action: {
@@ -140,10 +140,18 @@ struct SettingsView: View {
                         .frame(width:70)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        .onChange(of: settings.pin, perform: { _ in
+                            if !settings.isMaster {
+                                settings.isMaster = settings.pin == settings.masterPin
+                                if settings.isMaster {
+                                    settings.pin = ""
+                                }
+                            }
+                        })
                     Spacer()
                 }
             } else {
-                // --------------- Server Data push and master stuff ---------------
+                // MARK: --------------- Server Data push and master stuff ---------------
                 HStack {
                     Text("Title:")
                         .font(.system(size: 18))
@@ -313,6 +321,7 @@ class Settings: ObservableObject {
     
     func readSettings() {
         log("\(#function) \(rest.settingsName)")
+        print(docDir)
         let name = docDir.appendingPathComponent(rest.settingsName)
         var config: String
         do {

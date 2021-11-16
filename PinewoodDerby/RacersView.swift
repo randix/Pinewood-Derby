@@ -70,7 +70,7 @@ struct RacersView: View {
                     derby.saveRacers()
                 }) {
                     Text(" # Car").bold()
-                        .frame(width: 110, alignment: .leading)
+                        .frame(width: 105, alignment: .leading)
                         .font(.system(size: 16))
                         //.background(.yellow)
                 }
@@ -79,7 +79,7 @@ struct RacersView: View {
                     derby.saveRacers()
                 }) {
                     Text("Name").bold()
-                        .frame(width: 150, alignment: .leading)
+                        .frame(width: 145, alignment: .leading)
                         .font(.system(size: 16))
                         //.background(.yellow)
                 }
@@ -116,11 +116,11 @@ struct RacersView: View {
                         Text(entry.carName)
                             .font(.system(size:16))
                             .lineLimit(1).minimumScaleFactor(0.4)
-                            .frame(width: 83, alignment: .leading)
+                            .frame(width: 75, alignment: .leading)
                             //.background(.yellow)
                         Text(entry.firstName + " " + entry.lastName)
                             .font(.system(size:16))
-                            .frame(width: 150, alignment: .leading)
+                            .frame(width: 145, alignment: .leading)
                             .lineLimit(1).minimumScaleFactor(0.4)
                             //.background(.yellow)
                         Text(entry.group)
