@@ -1,6 +1,3 @@
-add elimination styles:
-include position in derby.racers
-
 Check all todos
 
 Server:
@@ -19,4 +16,4 @@ TestFlight:
     add background photo
     everything for the app store
 
-consider supporting 8 tracks (major mods to all views, or force landscape only usage on phone...)
+consider - supporting 8 tracks (major mods to all views, or force landscape only usage on phone...)
