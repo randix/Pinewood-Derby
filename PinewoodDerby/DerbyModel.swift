@@ -196,8 +196,6 @@ class Derby: ObservableObject {
                 let time = generateTime(i, cars[i])
                 data.append(One(track: i, car: cars[i], place: 0, time: time))
             }
-for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
-print()
             data.sort { $0.time < $1.time }
             var place = 1
             for i in 0..<self.settings.trackCount {
@@ -206,12 +204,7 @@ print()
                     place += 1
                 }
             }
-for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
-print()
             data.sort { $0.track < $1.track }
-for i in 0..<self.settings.trackCount { print(data[i].track, data[i].car, data[i].place, data[i].time, terminator: "") }
-print()
-            
             var timesData = "\(heat)"
             for i in 0..<self.settings.trackCount {
                 timesData += String(format: ",%d,%d,%0.4f", data[i].car, data[i].place, data[i].time)
@@ -504,12 +497,14 @@ print()
         }
         let lines = data!.components(separatedBy: .newlines)
         for line in lines {
-            if line.count == 0 {
+            let ln = line.trimmingCharacters(in: .whitespaces)
+            if ln.count == 0 {
                 continue
             }
             log(line)
-            let values = line.split(separator: ",", omittingEmptySubsequences: false)
-            if values.count < Settings.maxTracks {
+            let values = ln.split(separator: ",", omittingEmptySubsequences: false)
+            let racerDetails = 6    // number, carName, firstName, lastName, age, group
+            if values.count < racerDetails {
                 continue
             }
             let d = RacerEntry(number:Int(values[0])!,
@@ -518,9 +513,10 @@ print()
                                lastName: String(values[3]),
                                age: Int(values[4])!,
                                group: String(values[5]))
-            for i in 0..<settings.trackCount {
-                let iv = i*3 + Settings.maxTracks
-                if values.count > iv {
+            // add in times and places
+            if values.count >= (racerDetails + settings.trackCount * 3) {
+                for i in 0..<settings.trackCount {
+                    let iv = i*3 + racerDetails
                     d.times[i] = Double(values[iv])!
                     d.places[i] = Int(values[iv+1])!
                     d.ignores[i] = values[iv+2] != "1" ? false : true
