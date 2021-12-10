@@ -1,5 +1,11 @@
 Check all todos
 
+issues
+  not archiving every time?
+  not updating title / event
+  not getting times from racers
+  should we pull the timelog: yes, after archiving the old one (that way we can jump strait to numbers/excel)
+
 Server:
   add simulate
   connect to timer and read and parse - save raw and servertimeslog.csv

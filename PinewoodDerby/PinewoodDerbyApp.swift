@@ -23,6 +23,7 @@ struct PinewoodDerbyApp: App {
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
         Settings.shared.readSettings()
+        derby.readPin()
         derby.readGroups()
         derby.readRacers()
         derby.readHeats()

@@ -381,7 +381,7 @@ class Settings: ObservableObject {
                 log("incorrect format: \(config)")
             }
         }
-        //self.objectWillChange.send()  Nothing to send it to yet
+        self.objectWillChange.send()
     }
     
     func saveSettings() {

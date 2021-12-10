@@ -58,6 +58,9 @@ class GroupEntry: Identifiable {
     var group: String
 }
 
+
+// MARK: DerbyModel
+
 class Derby: ObservableObject {
     
     @Published var racers: [RacerEntry] = []
@@ -81,7 +84,7 @@ class Derby: ObservableObject {
     static let shared = Derby()
     private init() {}
     
-    // MARK: Delete single entry
+    // MARK: Delete single racer entry
     
     // called from RacersView to delete an entry
     func delete(_ entry: RacerEntry) {
@@ -101,7 +104,7 @@ class Derby: ObservableObject {
         self.objectWillChange.send()
     }
     
-    // prepare to start racing (or simulation)
+    // MARK: prepare to start racing (or simulation)
     func clearTimes() {
         log(#function)
         let times = [Double](repeating: 0.0, count: Settings.maxTracks)
@@ -444,6 +447,21 @@ class Derby: ObservableObject {
             self.objectWillChange.send()
             self.timesTimer?.invalidate()
         }
+    }
+    
+    // MARK: Configuration files
+    
+    func readPin() {
+        let name = settings.docDir.appendingPathComponent(rest.pinName)
+        log("\(#function) \(rest.pinName)")
+        var data: String
+        do {
+            data = try String(contentsOf: name)
+        } catch {
+            log("error: \(error.localizedDescription)")
+            data = ""
+        }
+        settings.masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     func readGroups() {
