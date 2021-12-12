@@ -157,6 +157,8 @@ class Derby: ObservableObject {
         }
         if simulationRunning {
             simulateHeat()
+        } else {
+            rest.saveFileToServer(rest.nextHeatName)
         }
     }
     

@@ -1,0 +1,6 @@
+title=Grand Prix
+event=2022 EBC AWANA
+tracks=4
+myIpAddress=192.168.12.125
+serverIpAddress=192.168.12.128
+serverPort=8080
