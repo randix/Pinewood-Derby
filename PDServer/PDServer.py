@@ -56,7 +56,7 @@ class SimpleHttpRequestHandler(http.server.BaseHTTPRequestHandler):
     #Eresponse.write(body)
     self.wfile.write(response.getvalue())
 
-#-------------------------------------------------------------------
+#---------------------------------------
 
 httpd = http.server.HTTPServer(('', PORT), SimpleHttpRequestHandler)
 httpd.serve_forever()
