@@ -78,7 +78,7 @@ class Derby: ObservableObject {
     @Published var tabSelection = Tab.racers.rawValue
     @Published var simulationRunning = false
     var timesTimer: Timer?
-    let timesTimerInterval = 1
+    let timesTimerInterval = 0.5
     var nextHeat = 0
 
     static let shared = Derby()
@@ -239,7 +239,6 @@ class Derby: ObservableObject {
         }
         return 0.0
     }
-    
     // MARK: Calculations per time
     
     func calculateRankings() {
