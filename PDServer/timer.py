@@ -84,12 +84,13 @@ def output():
         out += ',%s,%d,%0.4f' % (trackCars[i], result[j][1], result[j][2])
   print(out)
   out += '\n'
-  f = open(times, 'w')
+  f = open(times+".tmp", 'w')
   f.write(out)
   f.close()
   f = open(timeslog, 'a')
   f.write(out)
   f.close
+  os.rename(times+".tmp", times)
 
 # ------------------------------
 

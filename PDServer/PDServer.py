@@ -25,11 +25,9 @@ class SimpleHttpRequestHandler(http.server.BaseHTTPRequestHandler):
 
   def do_GET(self):
     fname = self.path.strip('/')
-    print(fname)
     try:
       f = open(fname, 'r')
       filedata = str.encode(f.read())
-      print(filedata)
       f.close()
       self.send_response(200)
       self.end_headers()
