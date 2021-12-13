@@ -321,7 +321,7 @@ class Settings: ObservableObject {
     
     func readSettings() {
         log("\(#function) \(rest.settingsName)")
-        print(docDir)
+        log(docDir)
         let name = docDir.appendingPathComponent(rest.settingsName)
         var config: String
         do {

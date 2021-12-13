@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import http.server
-import socketserver
 import io
+import http.server
+import os
+import socketserver
 
 PORT = 8080
 
@@ -13,48 +14,45 @@ class SimpleHttpRequestHandler(http.server.BaseHTTPRequestHandler):
     self.send_response(200)
     self.end_headers()
 
-  # GET files only
-  def do_GET(self):
-    h = "User-Agent"
-    print(h, self.headers[h])
+  def do_DELETE(self):
     fname = self.path.strip('/')
+    if os.path.exists(fname):
+      os.remove(fname)
+      self.send_response(200)
+    else:
+      self.send_response(404)
+    self.end_headers()
+
+  def do_GET(self):
+    fname = self.path.strip('/')
+    print(fname)
     try:
       f = open(fname, 'r')
       filedata = str.encode(f.read())
+      print(filedata)
       f.close()
+      self.send_response(200)
+      self.end_headers()
+      self.wfile.write(filedata)
     except:
       self.send_response(404)
       self.end_headers()
-      #self.wfile.write("404")
-      return
-    self.send_response(200)
-    self.end_headers()
-    self.wfile.write(filedata)
 
-  # POST files only
   def do_POST(self):
-    h = "User-Agent"
-    print(h, self.headers[h])
     content_length = int(self.headers['Content-Length'])
-    print(self.path)
     body = self.rfile.read(content_length)
-    #print(body)
     fname = self.path.strip('/')
+    response = io.BytesIO()
     try:
       f = open(fname, 'w')
       f.write(body.decode())
       f.close()
+      self.wfile.write(response.getvalue())
+      response.write(b'Saved file. ')
+      self.send_response(200)
     except:
       self.send_response(404)
-      self.end_headers()
-      return
-    self.send_response(200)
     self.end_headers()
-    response = io.BytesIO()
-    response.write(b'Saved file. ')
-    #response.write(b'Received: ')
-    #Eresponse.write(body)
-    self.wfile.write(response.getvalue())
 
 #---------------------------------------
 

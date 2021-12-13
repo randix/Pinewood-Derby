@@ -70,6 +70,7 @@ def simulate():
   result = sorted(result, key=lambda result: result[2])
   for i in range(len(result)):
     result[i][1] = i+1
+  time.sleep(3)
   output()
 
 def output():

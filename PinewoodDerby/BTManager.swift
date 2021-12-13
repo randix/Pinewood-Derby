@@ -88,19 +88,9 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     internal func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-//        for i in advertisementData.keys {
-//            switch i {
-//            default:
-//                log(" --\(i): \(String(describing: advertisementData[i]))")
-//            }
-//        }
-        
+            
         let x = advertisementData["kCBAdvDataServiceData"]! as! Dictionary<CBUUID, Data>
         let data = [UInt8](x[CBUUID(string: "1101")]!)
-//        for d in data {
-//            print(d)
-//        }
         let race = (Int(data[0]) << 8) + Int(data[1])
         var idx = 2
         let t1 = (UInt(data[idx]) << 16) + (UInt(data[idx+1]) << 8) + UInt(data[idx+2])
@@ -115,7 +105,6 @@ class BTManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         } else {
             prevRace = race
         }
-      //  log(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
         btAdvertise?(race, Double(t1)/10000.0, Double(t2)/10000.0, Double(t3)/10000.0, Double(t4)/10000.0)
     }
 }

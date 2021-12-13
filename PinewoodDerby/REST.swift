@@ -36,28 +36,38 @@ class REST: ObservableObject {
     static let shared = REST()
     private init() {}
     
-    func pollServer() {
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(2), repeats: true) { timer in
-
-            self.checkServerForUpdates()
-        }
-    }
-    
-    func checkServerForUpdates() {
-        // read from server
-        if timesUpdated {
-            readFileFromServer(timesName)
-        }
+    func deleteFileFromServer(_ name: String) {
+        guard timerUrl != nil else { return }
+        let url = timerUrl!.appendingPathComponent(name)
+        log("delete: \(name)")
+        let urlSession = URLSession.shared
+        var request = URLRequest(
+            url: url,
+            cachePolicy: .reloadIgnoringLocalCacheData
+        )
+        request.httpMethod = "DELETE"
+        
+        let task = urlSession.dataTask(
+            with: request,
+            completionHandler: { data, response, error in
+                if let error = error {
+                    log(error.localizedDescription)
+                }
+            })
+        task.resume()
     }
     
     func readFileFromServer(_ name: String) {
         guard timerUrl != nil else { return }
         let url = timerUrl!.appendingPathComponent(name)
         log("fetch: \(name)")
-        let task = URLSession.shared.downloadTask(with: url) {
-            (tempURL, response, error) in
+        let task = URLSession.shared.downloadTask(with: url) { tempURL, response, error in
             guard let tempURL = tempURL else {
                 log(error?.localizedDescription ?? "\(name): not downloaded")
+                return
+            }
+            let response = response as! HTTPURLResponse
+            if response.statusCode != 200 {
                 return
             }
             do {
@@ -107,12 +117,6 @@ class REST: ObservableObject {
         let task = urlSession.dataTask(
             with: request,
             completionHandler: { data, response, error in
-                print("data", data ?? "nil")
-                print("response: ", response ?? "nil")
-//                for k in response.keys {
-//                    print(k)
-//                }
-                //print(response?.value(forKey: "Status Code"))
                 if let error = error {
                     log(error.localizedDescription)
                 }

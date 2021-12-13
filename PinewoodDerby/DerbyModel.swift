@@ -119,7 +119,6 @@ class Derby: ObservableObject {
             entry.rankGroup = 0
             entry.rankOverall = 0
         }
-        removeFile(rest.timesName)
         calculateRankings()
         
         saveRacers()
@@ -136,10 +135,11 @@ class Derby: ObservableObject {
         rest.saveFilesToServer()
     }
     
+    // remove and old  times.csv
+    // generate        nextheats.csv
+    // start           readTimer()
     func startHeat(_ heat: Int, _ cars: [Int]) {
-        // start the read times timer
         timesTimer?.invalidate()
-        readTimes()
         
         var heatData = "\(heat)"
         for i in 0..<settings.trackCount {
@@ -155,11 +155,15 @@ class Derby: ObservableObject {
             log(error.localizedDescription)
             return
         }
+        
+        removeFile(rest.timesName)
         if simulationRunning {
             simulateHeat()
         } else {
+            rest.deleteFileFromServer(rest.timesName)
             rest.saveFileToServer(rest.nextHeatName)
         }
+        readTimes()
     }
     
     // MARK: Simulator
@@ -170,6 +174,9 @@ class Derby: ObservableObject {
         startRacing()
     }
     
+    // read nextheat.csv
+    // process and then
+    // generate times.csv
     func simulateHeat() {
         log(#function)
         let nextheatURL = settings.docDir.appendingPathComponent(rest.nextHeatName)
@@ -354,7 +361,6 @@ class Derby: ObservableObject {
                     idx[i] += 1
                 }
             }
-        
             var done = true
             for i in 0..<hCount {
                 if idx[i] < groupHeats[i].count {
@@ -393,15 +399,21 @@ class Derby: ObservableObject {
     }
     
     func readTimes() {
+        log(#function)
         let timesUrl = settings.docDir.appendingPathComponent(rest.timesName)
         let timesLogUrl = settings.docDir.appendingPathComponent(rest.timesLogName)
+        timesTimer?.invalidate()
         timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timesTimerInterval), repeats: true) { timer in
+            if !self.simulationRunning {
+                self.rest.readFileFromServer(self.rest.timesName)
+            }
             var data: String?
             do {
                 data = try String(contentsOf: timesUrl)
             } catch {
                 return
             }
+            self.timesTimer?.invalidate()
             
             if let times = data?.trimmingCharacters(in: .whitespacesAndNewlines) {
                 log("heat: read times: \(times)")
@@ -446,7 +458,6 @@ class Derby: ObservableObject {
             self.calculateRankings()
             self.saveHeats()
             self.objectWillChange.send()
-            self.timesTimer?.invalidate()
         }
     }
     
