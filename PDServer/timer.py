@@ -101,11 +101,12 @@ if __name__ == '__main__':
     doSimulate = True
     #print("simulate")
 
+  if not doSimulate:
+    initSerial()
+
   while True:
     data = getNextHeat()
     if doSimulate:
       simulate()
-    #print("heat:", heat, "trackCars:", trackCars)
-    #for i in range(len(cars)):
-      #print(" ", cars[i])
-   
+    else:
+      parseSerial(heat, trackCars) 
