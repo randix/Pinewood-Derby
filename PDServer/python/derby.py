@@ -63,7 +63,7 @@ while True:
     display(out)
 
   # Get the Timer output
-  print('Wait for race...')
+  #print('Wait for race...')
   while len(line) == 0:
     while ser.inWaiting() > 0:
       out = ser.read(1)

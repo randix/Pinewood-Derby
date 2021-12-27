@@ -4,15 +4,15 @@ import os
 import serial
 import time
 
-serialPort = '/dev/tty.usbserial-110'
+serialPort = '/dev/tty.usbserial-1110'
 
+raw = None
 rawOut = 'raw.out'
 
 ser = None
 
 
-# display, and try very hard to get it to disk,
-# each byte that comes in from the timer.
+# display character, and get to disk
 def display(c):
   raw.write(c)
   raw.flush()		# push the char to the OS
@@ -21,13 +21,10 @@ def display(c):
   if c == '>':
     print()
 
-
 def initSerial():
   global raw, ser
-
   # Open Serial Port
   try:
-
     ser = serial.Serial(port=serialPort,
                         baudrate=9600,
                         parity=serial.PARITY_NONE,
@@ -35,52 +32,41 @@ def initSerial():
                         bytesize=serial.EIGHTBITS)
     raw = open(rawOut, 'a')
     return True
-
   except:
     print('No serial port!')
     return False
 
 def parseTrack(track):
-  time = float(track.split('=')[1][:6])
+  timeVal = float(track.split('=')[1][:6])
   if len(track) > 8:
     place = track[8]
   else:
     place = ' '
   if place == '!':
     place = '1'
-  else if place == '"':
+  elif place == '"':
     place = '2'
-  else if place == '#':
+  elif place == '#':
     place = '3'
-  else if place == '$':
+  elif place == '$':
     place = '4'
-  return place, time
+  return place, timeVal
   
 def parseSerial(heat, trackCars):
-
   line = ''
   c = ''
-
-  while True:
-  
-    # read any waiting characters
+  ready = False
+  while not ready:
+    # Get the timer output
     while ser.inWaiting() > 0:
       c = ser.read(1).decode('utf-8')
       display(c)
-  
-    # Get the timer output
-    print('Wait for race...')
-    while len(line) == 0:
-      while ser.inWaiting() > 0:
-        c = ser.read(1).decode('utf-8')
-        display(c)
-        if c == '@' or c == '>':
-          continue
-        line += c
-        if c == '\r':
-          break
-        else:
-          time.sleep(0.1)
+      if c == '@' or c == '>':
+        continue
+      line += c
+      if c == '\r':
+        ready = True
+        break
      
   print('Parse...', line)
   tracks = line.split()
@@ -90,8 +76,9 @@ def parseSerial(heat, trackCars):
 
   out = heat
   for i in range(len(tracks)):
-    place, time = parseTrack(tracks[i])
-    out += ',%s,%s,%0.4f' % (trackCars[i], place, time)
+    place, timeVal = parseTrack(tracks[i])
+    print(i, place, timeVal)
+    out += ',%s,%s,%0.4f' % (trackCars[i], place, timeVal)
   print(out)  
   return out
      
@@ -100,5 +87,5 @@ def parseSerial(heat, trackCars):
 
 if __name__ == '__main__':
 
-  intiSerial()
-  parseSerial()
+  if initSerial():
+    parseSerial("1", ["42", "32", "12", "1", "-", "-"] )
