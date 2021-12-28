@@ -23,11 +23,11 @@ struct PinewoodDerbyApp: App {
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
         Settings.shared.readSettings()
-        derby.readPin()
+        REST.shared.findTimer()
         derby.readGroups()
         derby.readRacers()
         derby.readHeats()
-        REST.shared.findTimer()
+       
         
         //BTManager.shared.startAdvertisementScan(Advertisement.shared.adverisement(_:_:_:_:_:))
     }

@@ -463,19 +463,6 @@ class Derby: ObservableObject {
     
     // MARK: Configuration files
     
-    func readPin() {
-        let name = settings.docDir.appendingPathComponent(rest.pinName)
-        log("\(#function) \(rest.pinName)")
-        var data: String
-        do {
-            data = try String(contentsOf: name)
-        } catch {
-            log("error: \(error.localizedDescription)")
-            data = ""
-        }
-        settings.masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
     func readGroups() {
         let name = settings.docDir.appendingPathComponent(rest.groupsName)
         log("\(#function) \(rest.groupsName)")

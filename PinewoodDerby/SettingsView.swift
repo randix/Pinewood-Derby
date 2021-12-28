@@ -63,7 +63,7 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("192.168.12.125", text: $settings.myIpAddress)
+                    TextField("192.168.12.125", text: $rest.ipAddress)
                         .font(.system(size: 18))
                         .frame(width:150)
                         .textFieldStyle(.roundedBorder)
@@ -75,7 +75,7 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("192.168.12.128", text: $settings.serverIpAddress)
+                    TextField("192.168.12.128", text: $rest.serverIpAddress)
                         .font(.system(size: 18))
                         .frame(width:150)
                         .textFieldStyle(.roundedBorder)
@@ -87,7 +87,7 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                         .frame(width:150, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("8080", text: $settings.serverPort)
+                    TextField("8080", text: $rest.port)
                         .font(.system(size: 18))
                         .frame(width:70)
                         .textFieldStyle(.roundedBorder)
@@ -100,7 +100,7 @@ struct SettingsView: View {
                     Text("Connected:")
                         .font(.system(size: 18))
                     Spacer().frame(width:20)
-                    if settings.serverIpAddress == rest.serverIpAddress {
+                    if rest.connected {
                         Image(systemName: "checkmark.square").font(.system(size: 18))
                             .foregroundColor(.green)
                     } else {
@@ -120,129 +120,146 @@ struct SettingsView: View {
                 }
                 Spacer().frame(height:30)
             }
-            // MARK: --------------- Server Data pull ---------------
-            if !settings.isMaster {
-                Group {
-                    Button(action: {
-                        rest.readFilesFromServer()
-                    })  {
-                        Text("Update Configuration From Server").font(.system(size:18))
+            if rest.connected {
+                // MARK: --------------- Server Data pull ---------------
+                if !settings.isMaster {
+                    Group {
+                        Button(action: {
+                            rest.readFilesFromServer()
+                        })  {
+                            Text("Update Configuration From Server").font(.system(size:18))
+                        }
+                        Spacer().frame(height:30)
+                    }
+                    HStack {
+                        Spacer()
+                        Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
+                        Text("Pin: ").font(.system(size: 18))
+                        
+                        SecureField("pin", text: $settings.pin)
+                            .font(.system(size: 18))
+                            .frame(width:70)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                            .onChange(of: settings.pin, perform: { _ in
+                                if !settings.isMaster {
+                                    settings.isMaster = settings.pin == rest.masterPin
+                                }
+                            })
+                        Spacer()
+                    }
+                } else {
+                    // MARK: --------------- Server Data push and master stuff ---------------
+                    HStack {
+                        Text("Title:")
+                            .font(.system(size: 18))
+                            .frame(width:60, alignment: .trailing)
+                        //.background(.yellow)
+                        TextField("Title", text: $settings.title)
+                            .font(.system(size: 18))
+                            .frame(width:220)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        //.background(.yellow)
+                    }
+                    HStack {
+                        Text("Event:")
+                            .font(.system(size: 18))
+                            .frame(width:60, alignment: .trailing)
+                        //.background(.yellow)
+                        TextField("Event", text: $settings.event)
+                            .font(.system(size: 18))
+                            .frame(width:220)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        //.background(.yellow)
+                    }
+                    HStack {
+                        Text("Tracks:")
+                            .font(.system(size: 18))
+                            .frame(width:70, alignment: .trailing)
+                        //.background(.yellow)
+                        Picker("Names", selection: $tracksSelector) {
+                            ForEach(0 ..< possibleTracks.count) {
+                                Text(self.possibleTracks[$0])
+                            }
+                        }.pickerStyle(SegmentedPickerStyle())
+                            .frame(width: 160)
+                            .onChange(of: tracksSelector) { _ in
+                                derby.heats = []
+                                settings.trackCount = tracksSelector + 2
+                            }
                     }
                     Spacer().frame(height:30)
-                }
-                HStack {
-                    Spacer()
-                    Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
-                    Text("Pin: ").font(.system(size: 18))
-                    
-                    SecureField("pin", text: $settings.pin)
-                        .font(.system(size: 18))
-                        .frame(width:70)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                        .onChange(of: settings.pin, perform: { _ in
-                            if !settings.isMaster {
-                                settings.isMaster = settings.pin == settings.masterPin
-                                if settings.isMaster {
-                                    settings.pin = ""
+                    Group {
+                        Button(action: {
+                            settings.saveSettings()
+                            rest.saveFilesToServer()
+                        })  {
+                            Text("Send Configuration To Server").font(.system(size:18))
+                        }
+                    }
+                    Spacer().frame(height:50)
+                    Group {
+                        HStack {
+                            Text("Race:").font(.system(size:22)).bold()
+                            Button(action: {
+                                if !rest.connected {
+                                    alertAction = .serverNotConnected
+                                    alertTitle = "Timer Is Not Reachable"
+                                    alertMessage = "Cannot get the times from the timer until it is connected."
+                                    alertButton = "Acknowlege"
+                                    showAlert = true
+                                    return
                                 }
+                                alertAction = .startRace
+                                alertTitle = "Reset All Timing Data"
+                                alertMessage = "Are you sure?"
+                                alertButton = "Go"
+                                showAlert = true
+                            })  {
+                                Text("Start").font(.system(size:22)).bold()
                             }
-                        })
-                    Spacer()
-                }
-            } else {
-                // MARK: --------------- Server Data push and master stuff ---------------
-                HStack {
-                    Text("Title:")
-                        .font(.system(size: 18))
-                        .frame(width:60, alignment: .trailing)
-                    //.background(.yellow)
-                    TextField("Title", text: $settings.title)
-                        .font(.system(size: 18))
-                        .frame(width:220)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
-                }
-                HStack {
-                    Text("Event:")
-                        .font(.system(size: 18))
-                        .frame(width:60, alignment: .trailing)
-                    //.background(.yellow)
-                    TextField("Event", text: $settings.event)
-                        .font(.system(size: 18))
-                        .frame(width:220)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
-                }
-                HStack {
-                    Text("Tracks:")
-                        .font(.system(size: 18))
-                        .frame(width:70, alignment: .trailing)
-                    //.background(.yellow)
-                    Picker("Names", selection: $tracksSelector) {
-                             ForEach(0 ..< possibleTracks.count) {
-                                 Text(self.possibleTracks[$0])
-                             }
-                    }.pickerStyle(SegmentedPickerStyle())
-                        .frame(width: 160)
-                        .onChange(of: tracksSelector) { _ in
-                            derby.heats = []
-                            settings.trackCount = tracksSelector + 2
+                            Spacer().frame(width:20)
+                            Button(action: {
+                                if !rest.connected {
+                                    alertAction = .serverNotConnected
+                                    alertTitle = "Timer Is Not Reachable"
+                                    alertMessage = "Cannot get the times from the timer until it is connected."
+                                    alertButton = "Acknowlege"
+                                    showAlert = true
+                                    return
+                                }
+                                derby.tabSelection = Tab.heats.rawValue
+                                self.presentationMode.wrappedValue.dismiss()
+                            })  {
+                                Text("Resume").font(.system(size:22)).bold()
+                            }
                         }
-                }
-                Spacer().frame(height:30)
-                Group {
-                    Button(action: {
-                        settings.saveSettings()
-                        rest.saveFilesToServer()
-                    })  {
-                        Text("Send Configuration To Server").font(.system(size:18))
+                        Spacer().frame(height:40)
                     }
-                }
-                Spacer().frame(height:50)
-                Group {
-                    Button(action: {
-                        if settings.serverIpAddress != rest.serverIpAddress {
-                            alertAction = .serverNotConnected
-                            alertTitle = "Timer Is Not Reachable"
-                            alertMessage = "Cannot get the times from the timer until it is connected."
-                            alertButton = "Acknowlege"
+                    HStack {
+                        Spacer()
+                        Text("Simulation Testing:").font(.system(size:16)).bold()
+                        Button(action: {
+                            alertAction = .startSimulation
+                            alertTitle = "Reset All Timing Data"
+                            alertMessage = "Are you sure?"
+                            alertButton = "Go"
                             showAlert = true
-                            return
+                        })  {
+                            Text("Start").font(.system(size:16)).bold()
                         }
-                        alertAction = .startRace
-                        alertTitle = "Reset All Timing Data"
-                        alertMessage = "Are you sure?"
-                        alertButton = "Go"
-                        showAlert = true
-                    })  {
-                        Text("Start Racing").font(.system(size:22)).bold()
+                        Spacer().frame(width:20)
+                        Button(action: {
+                            derby.simulationRunning = true
+                            derby.tabSelection = Tab.heats.rawValue
+                            self.presentationMode.wrappedValue.dismiss()
+                        })  {
+                            Text("Resume").font(.system(size:16)).bold()
+                        }
+                        Spacer()
                     }
-                    Spacer().frame(height:40)
-                }
-                HStack {
-                    Spacer()
-                    Text("Simulation Testing:").font(.system(size:16)).bold()
-                    Button(action: {
-                        alertAction = .startSimulation
-                        alertTitle = "Reset All Timing Data"
-                        alertMessage = "Are you sure?"
-                        alertButton = "Go"
-                        showAlert = true
-                    })  {
-                        Text("Start").font(.system(size:16)).bold()
-                    }
-                    Spacer().frame(width:20)
-                    Button(action: {
-                        derby.simulationRunning = true
-                        derby.tabSelection = Tab.heats.rawValue
-                        self.presentationMode.wrappedValue.dismiss()
-                    })  {
-                        Text("Resume").font(.system(size:16)).bold()
-                    }
-                    Spacer()
                 }
             }
             Spacer().frame(height:40)
@@ -302,12 +319,7 @@ class Settings: ObservableObject {
     var appName = ""
     var appVersion = ""
     let iPad = UIScreen.main.bounds.width > 600
-    
-    @Published var myIpAddress: String = "192.168.12.125"
-    @Published var serverIpAddress: String = "192.168.12.128"
-    @Published var serverPort: String = "8080"
-    
-    var masterPin = "1234"
+
     @Published var pin: String = ""
     
     @Published var title = ""
@@ -331,9 +343,9 @@ class Settings: ObservableObject {
             title = "Pinewood Derby"
             event = "Event"
             trackCount = 4
-            myIpAddress =  "192.168.12.125"
-            serverIpAddress = "192.168.12.128"
-            serverPort = "8080"
+            rest.ipAddress =  "192.168.12.157"
+            rest.serverIpAddress = "192.168.12.1"
+            rest.port = "8080"
             saveSettings()
             return
         }
@@ -369,14 +381,14 @@ class Settings: ObservableObject {
                 }
                 log("tracks=\(String(trackCount))")
             case "myIpAddress":
-                myIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("myIpAddress=\(myIpAddress)")
+                rest.ipAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("myIpAddress=\(rest.ipAddress)")
             case "serverIpAddress":
-                serverIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("serverIpAddress=\(serverIpAddress)")
+                rest.serverIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("serverIpAddress=\(rest.serverIpAddress)")
             case "serverPort":
-                serverPort = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("serverPort=\(serverPort)")
+                rest.port = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("serverPort=\(rest.port)")
             default:
                 log("incorrect format: \(config)")
             }
@@ -390,9 +402,9 @@ class Settings: ObservableObject {
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
         list.append("tracks=\(String(trackCount))")
-        list.append("myIpAddress=\(myIpAddress.trimmingCharacters(in: .whitespaces))")
-        list.append("serverIpAddress=\(serverIpAddress.trimmingCharacters(in: .whitespaces))")
-        list.append("serverPort=\(serverPort.trimmingCharacters(in: .whitespaces))")
+        list.append("myIpAddress=\(rest.ipAddress.trimmingCharacters(in: .whitespaces))")
+        list.append("serverIpAddress=\(rest.serverIpAddress.trimmingCharacters(in: .whitespaces))")
+        list.append("serverPort=\(rest.port.trimmingCharacters(in: .whitespaces))")
         let name = docDir.appendingPathComponent(rest.settingsName)
         let fileData = list.joined(separator: "\n") + "\n"
         

@@ -1,13 +1,9 @@
 issues
-  not archiving every time?
-  not updating title / event
-  not getting times from racers
-  should we pull the timelog: yes, after archiving the old one
-
-Server:
-  read data from physical timer
-  server: add cert for https
+  dark mode for TimesView
   
+Server:
+  server: add cert for https
+
 document
 include manual into release
 
