@@ -1,9 +1,10 @@
 //
 //  BTManager.swift
 //
-//  Created by Rand Dow on 12/13/19.
+//  Created by Randall Dow on 12/13/19.
+//  Copyright (C) 2021 Randall Dow. All rights reserved.
 //
-// Dependency: a global "func log(_ msg: String) -> Void"
+//  Dependency: a global "func log(_ msg: String) -> Void"
 
 
 import Foundation

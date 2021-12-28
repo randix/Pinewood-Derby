@@ -1,16 +1,28 @@
 #!/usr/bin/python3
 
+# parse.py
+#
+# Rand Dow 28-Dec-2021
+#
+# Copyright (C) Randall Dow. All rights reserved.
+#
+#
+# reads from the serial port and parse the data from the
+# microwizard.com Fast Track Model K2
+#
+# output the raw data to the file "raw.out"
+# output the parsed data to "times.csv"
+#
+
 import os
 import serial
 import time
 
-serialPort = '/dev/tty.usbserial-1110'
-
-raw = None
-rawOut = 'raw.out'
-
 ser = None
+serialPort = '/dev/tty.usbserial-110'	# macOS 12.1
 
+raw = None	# file descriptor
+rawOut = 'raw.out'
 
 # display character, and get to disk
 def display(c):
@@ -52,7 +64,7 @@ def parseTrack(track):
     place = '4'
   return place, timeVal
   
-def parseSerial(heat, trackCars):
+def parseSerial(trackCars):
   line = ''
   c = ''
   ready = False
@@ -74,18 +86,17 @@ def parseSerial(heat, trackCars):
   c = ''
   print(tracks, len(tracks))
 
-  out = heat
-  for i in range(len(tracks)):
+  result = []
+  for i in range(len(trackCars)):
     place, timeVal = parseTrack(tracks[i])
     print(i, place, timeVal)
-    out += ',%s,%s,%0.4f' % (trackCars[i], place, timeVal)
-  print(out)  
-  return out
-     
+    result.append([trackCars[i], place, timeVal])
+  print(result)  
+  return result
 
 #-----------------
 
 if __name__ == '__main__':
 
   if initSerial():
-    parseSerial("1", ["42", "32", "12", "1", "-", "-"] )
+    parseSerial(["42", "32", "12", "1"])

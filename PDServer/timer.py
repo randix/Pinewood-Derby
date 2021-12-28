@@ -1,35 +1,42 @@
 #!/usr/bin/env python3
 
+# timer.py
+#
+# Rand Dow 28-Dec-2021
+#
+# Copyright (C) Randall Dow. All rights reserved.
+#
+
+import parse
+
 import os
 import time
 import random
 import sys
 
-cars = []       # car number, firstSim, [track time]
-
 nextheat = "nextheat.csv"
 timeslog = "timeslog.csv"
 times    = "times.csv"
 
-heat = 0
-trackCars = []  # this heat, car numbers
-result = []
-
-doSimulate = False
+cars = []       # [car number, firstSim, [track time]]
+trackCars = []  # [heat, car number, track time, ...]
 
 def getNextHeat():
-  global heat, trackCars
+  """
+  Open and read the nextheat file.
+  For simulation set up the 'cars' array.
+  """ 
   while True:
     time.sleep(0.2)
-    #if True:
     try:
       f = open(nextheat, 'r')
       filedata = f.read()
       f.close()
+      os.remove(nextheat)
       data = filedata.split(',')
       for i in range(len(data)):
         data[i] = data[i].strip()
-      #print("data", data)
+      print("data", data)
       heat = data[0]
       trackCars = []
       for i in range(1, len(data)):
@@ -41,17 +48,14 @@ def getNextHeat():
             break
         if not found:
           cars.append([data[i], 0, [0,0,0,0,0,0]])
-      #print("trackCars", trackCars)
-      os.remove(nextheat)
-      return data
+      print("trackCars", trackCars)
+      print("cars", cars)
+      return heat, trackCars
     except:
-      #print("except")
       continue
 
-def simulate():
-  global result
+def simulate(trackCars):
   result = []
-
   for i in range(len(trackCars)):
     if trackCars[i] == "0":
       continue
@@ -65,15 +69,16 @@ def simulate():
       cars[index][2][i] = cars[index][1]
     else:
       cars[index][2][i] = random.uniform(cars[index][1]-0.2, cars[index][1]+0.2)
-    # heat, car,place,time, ...
+    # car,place,time, ...
     result.append([trackCars[i], 0, cars[index][2][i]])
   result = sorted(result, key=lambda result: result[2])
   for i in range(len(result)):
     result[i][1] = i+1
   time.sleep(3)
-  output()
+  return result
 
-def output():
+def output(heat, trackCars, result):
+  print('output:', heat, result)
   out = heat
   for i in range(len(trackCars)):
     if trackCars[i] == "0":
@@ -81,7 +86,7 @@ def output():
       continue
     for j in range(len(result)):
       if result[j][0] == trackCars[i]:
-        out += ',%s,%d,%0.4f' % (trackCars[i], result[j][1], result[j][2])
+        out += ',%s,%s,%0.4f' % (trackCars[i], result[j][1], result[j][2])
   print(out)
   out += '\n'
   f = open(times+".tmp", 'w')
@@ -92,21 +97,29 @@ def output():
   f.close
   os.rename(times+".tmp", times)
 
-# ------------------------------
-
-if __name__ == '__main__':
+def main():
+  global cars
 
   doSimulate = False
   if len(sys.argv) > 1:
     doSimulate = True
-    #print("simulate")
+    cars = []
 
   if not doSimulate:
-    initSerial()
+    if not parse.initSerial():
+      print("ERROR: CANNOT OPEN SERIAL PORT TO TRACK TIMER.")
+      sys.exit(1)
 
   while True:
-    data = getNextHeat()
+    heat, trackCars = getNextHeat()
     if doSimulate:
-      simulate()
+      result = simulate(trackCars)
     else:
-      parseSerial(heat, trackCars) 
+      result = parse.parseSerial(trackCars) 
+    output(heat, trackCars, result)
+
+
+# ------------------------------
+
+if __name__ == '__main__':
+  main()
