@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A42C9D89271B02FF00B58F25 /* RacerGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */; };
-		A450511B27287E79004FC466 /* Pinewood-Derby.pages in Resources */ = {isa = PBXBuildFile; fileRef = A450511A27287E79004FC466 /* Pinewood-Derby.pages */; };
 		A45108C927664AF5005E6897 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A45108C827664AF5005E6897 /* README.md */; };
 		A464555A27114A8B00886AA2 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555927114A8B00886AA2 /* REST.swift */; };
 		A464555C271319A300886AA2 /* TimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555B271319A300886AA2 /* TimesView.swift */; };
@@ -31,7 +30,6 @@
 
 /* Begin PBXFileReference section */
 		A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacerGroupView.swift; sourceTree = "<group>"; };
-		A450511A27287E79004FC466 /* Pinewood-Derby.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pinewood-Derby.pages"; sourceTree = "<group>"; };
 		A45108C827664AF5005E6897 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A464555927114A8B00886AA2 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		A464555B271319A300886AA2 /* TimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesView.swift; sourceTree = "<group>"; };
@@ -70,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				A45108C827664AF5005E6897 /* README.md */,
-				A450511A27287E79004FC466 /* Pinewood-Derby.pages */,
 				A4E0B1C4270AAE83008E3880 /* note.txt */,
 				A4E0B1A3270564C8008E3880 /* PinewoodDerby */,
 				A4E0B1A2270564C8008E3880 /* Products */,
@@ -179,7 +176,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
-				A450511B27287E79004FC466 /* Pinewood-Derby.pages in Resources */,
 				A45108C927664AF5005E6897 /* README.md in Resources */,
 				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
 			);

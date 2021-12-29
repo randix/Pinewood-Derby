@@ -10,9 +10,15 @@
 import parse
 
 import os
+import threading
 import time
 import random
+import socket
 import sys
+
+
+advertisePort = 6543
+PORT = 8080	# this MUST match the PDServer.py PORT
 
 nextheat = "nextheat.csv"
 timeslog = "timeslog.csv"
@@ -20,6 +26,16 @@ times    = "times.csv"
 
 cars = []       # [car number, firstSim, [track time]]
 trackCars = []  # [heat, car number, track time, ...]
+
+def advertise():
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+  host = '255.255.255.255'
+  msg = "PinewoodDerby PORT=8080"
+  while True:
+    #print("advertise " + msg)
+    time.sleep(2)
+    s.sendto(bytes(msg, 'utf-8'), (host, PORT))
 
 def getNextHeat():
   """
@@ -99,6 +115,9 @@ def output(heat, trackCars, result):
 
 def main():
   global cars
+
+  adv = threading.Thread(target=advertise)
+  adv.start()
 
   doSimulate = False
   if len(sys.argv) > 1:
