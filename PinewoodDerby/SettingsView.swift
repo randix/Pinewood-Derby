@@ -59,47 +59,25 @@ struct SettingsView: View {
             // MARK: --------------- Server Connection ---------------
             VStack(spacing: 0) {
                 HStack {
-                    Text("My IP Address:")
+                    Spacer()
+                    Text("Timer:")
                         .font(.system(size: 18))
-                        .frame(width:150, alignment: .trailing)
+                    //.frame(width:50, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("192.168.12.125", text: $rest.ipAddress)
+                    TextField("http://raspberypi.local:8484/", text: $rest.timer)
                         .font(.system(size: 18))
-                        .frame(width:150)
+                        .frame(width:300)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                     //.background(.yellow)
+                    Spacer()
                 }
+                Spacer().frame(height:10)
                 HStack {
-                    Text("Server IP Address:")
-                        .font(.system(size: 18))
-                        .frame(width:150, alignment: .trailing)
-                    //.background(.yellow)
-                    TextField("192.168.12.128", text: $rest.serverIpAddress)
-                        .font(.system(size: 18))
-                        .frame(width:150)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
-                }
-                HStack {
-                    Text("Server Port:")
-                        .font(.system(size: 18))
-                        .frame(width:150, alignment: .trailing)
-                    //.background(.yellow)
-                    TextField("8080", text: $rest.port)
-                        .font(.system(size: 18))
-                        .frame(width:70)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                    //.background(.yellow)
-                    Spacer().frame(width: 80)
-                }
-                HStack {
-                    Spacer().frame(width:15)
+                    Spacer()
                     Text("Connected:")
                         .font(.system(size: 18))
-                    Spacer().frame(width:20)
+                    Spacer().frame(width:5)
                     if rest.connected {
                         Image(systemName: "checkmark.square").font(.system(size: 18))
                             .foregroundColor(.green)
@@ -109,28 +87,20 @@ struct SettingsView: View {
                     }
                     Spacer().frame(width: 20)
                     Button(action: {
-                        rest.findTimer()
+                        rest.readFilesFromServer()
                     }) {
-                        Text("Rescan")
+                        Text("Update")
                             .font(.system(size: 18))
                             .frame(width:70)
                         //.background(.yellow)
                     }
-                    
+                    Spacer()
                 }
                 Spacer().frame(height:30)
             }
             if rest.connected {
                 // MARK: --------------- Server Data pull ---------------
                 if !settings.isMaster {
-                    Group {
-                        Button(action: {
-                            rest.readFilesFromServer()
-                        })  {
-                            Text("Update Configuration From Server").font(.system(size:18))
-                        }
-                        Spacer().frame(height:30)
-                    }
                     HStack {
                         Spacer()
                         Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
@@ -140,6 +110,7 @@ struct SettingsView: View {
                             .font(.system(size: 18))
                             .frame(width:70)
                             .textFieldStyle(.roundedBorder)
+                            .keyboardType(.numberPad)
                             .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                             .onChange(of: settings.pin, perform: { _ in
                                 if !settings.isMaster {
@@ -236,31 +207,32 @@ struct SettingsView: View {
                                 Text("Resume").font(.system(size:22)).bold()
                             }
                         }
-                        Spacer().frame(height:40)
-                    }
-                    HStack {
-                        Spacer()
-                        Text("Simulation Testing:").font(.system(size:16)).bold()
-                        Button(action: {
-                            alertAction = .startSimulation
-                            alertTitle = "Reset All Timing Data"
-                            alertMessage = "Are you sure?"
-                            alertButton = "Go"
-                            showAlert = true
-                        })  {
-                            Text("Start").font(.system(size:16)).bold()
-                        }
-                        Spacer().frame(width:20)
-                        Button(action: {
-                            derby.simulationRunning = true
-                            derby.tabSelection = Tab.heats.rawValue
-                            self.presentationMode.wrappedValue.dismiss()
-                        })  {
-                            Text("Resume").font(.system(size:16)).bold()
-                        }
-                        Spacer()
                     }
                 }
+                Spacer().frame(height:40)
+                HStack {
+                    Spacer()
+                    Text("Simulation Testing:").font(.system(size:16)).bold()
+                    Button(action: {
+                        alertAction = .startSimulation
+                        alertTitle = "Reset All Timing Data"
+                        alertMessage = "Are you sure?"
+                        alertButton = "Go"
+                        showAlert = true
+                    })  {
+                        Text("Start").font(.system(size:16)).bold()
+                    }
+                    Spacer().frame(width:20)
+                    Button(action: {
+                        derby.simulationRunning = true
+                        derby.tabSelection = Tab.heats.rawValue
+                        self.presentationMode.wrappedValue.dismiss()
+                    })  {
+                        Text("Resume").font(.system(size:16)).bold()
+                    }
+                    Spacer()
+                }
+                
             }
             Spacer().frame(height:40)
             Button(action: {
@@ -319,7 +291,7 @@ class Settings: ObservableObject {
     var appName = ""
     var appVersion = ""
     let iPad = UIScreen.main.bounds.width > 600
-
+    
     @Published var pin: String = ""
     
     @Published var title = ""
@@ -343,9 +315,7 @@ class Settings: ObservableObject {
             title = "Pinewood Derby"
             event = "Event"
             trackCount = 4
-            rest.ipAddress =  "192.168.12.157"
-            rest.serverIpAddress = "192.168.12.1"
-            rest.port = "8080"
+            rest.timer =  "http://raspberrypi.local:8484/"
             saveSettings()
             return
         }
@@ -380,15 +350,9 @@ class Settings: ObservableObject {
                     trackCount = Settings.maxTracks
                 }
                 log("tracks=\(String(trackCount))")
-            case "myIpAddress":
-                rest.ipAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("myIpAddress=\(rest.ipAddress)")
-            case "serverIpAddress":
-                rest.serverIpAddress = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("serverIpAddress=\(rest.serverIpAddress)")
-            case "serverPort":
-                rest.port = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("serverPort=\(rest.port)")
+            case "timer":
+                rest.timer = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                log("timer=\(rest.timer)")
             default:
                 log("incorrect format: \(config)")
             }
@@ -402,9 +366,7 @@ class Settings: ObservableObject {
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
         list.append("tracks=\(String(trackCount))")
-        list.append("myIpAddress=\(rest.ipAddress.trimmingCharacters(in: .whitespaces))")
-        list.append("serverIpAddress=\(rest.serverIpAddress.trimmingCharacters(in: .whitespaces))")
-        list.append("serverPort=\(rest.port.trimmingCharacters(in: .whitespaces))")
+        list.append("timer=\(rest.timer.trimmingCharacters(in: .whitespaces))")
         let name = docDir.appendingPathComponent(rest.settingsName)
         let fileData = list.joined(separator: "\n") + "\n"
         

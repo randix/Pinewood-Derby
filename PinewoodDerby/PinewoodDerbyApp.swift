@@ -22,8 +22,11 @@ struct PinewoodDerbyApp: App {
         
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
+        REST.shared.readFilesFromServer()
+        //let beacon = BeaconListener()
+       // beacon.start()
+        
         Settings.shared.readSettings()
-        REST.shared.findTimer()
         derby.readGroups()
         derby.readRacers()
         derby.readHeats()

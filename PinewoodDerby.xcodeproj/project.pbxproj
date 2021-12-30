@@ -23,7 +23,6 @@
 		A4E0B1B727074B05008E3880 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B627074B05008E3880 /* SettingsView.swift */; };
 		A4E0B1B927074B6A008E3880 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1B827074B6A008E3880 /* ResultsView.swift */; };
 		A4E0B1BB27074BBD008E3880 /* RacerAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1BA27074BBD008E3880 /* RacerAddView.swift */; };
-		A4E0B1BF2707596C008E3880 /* BTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1BE2707596C008E3880 /* BTManager.swift */; };
 		A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C027075982008E3880 /* DerbyModel.swift */; };
 		A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C2270759FC008E3880 /* Logger.swift */; };
 /* End PBXBuildFile section */
@@ -46,7 +45,6 @@
 		A4E0B1B627074B05008E3880 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A4E0B1B827074B6A008E3880 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		A4E0B1BA27074BBD008E3880 /* RacerAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacerAddView.swift; sourceTree = "<group>"; };
-		A4E0B1BE2707596C008E3880 /* BTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTManager.swift; sourceTree = "<group>"; };
 		A4E0B1C027075982008E3880 /* DerbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerbyModel.swift; sourceTree = "<group>"; };
 		A4E0B1C2270759FC008E3880 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A4E0B1C4270AAE83008E3880 /* note.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = note.txt; sourceTree = "<group>"; };
@@ -101,7 +99,6 @@
 				A4E0B1B827074B6A008E3880 /* ResultsView.swift */,
 				A4E0B1C027075982008E3880 /* DerbyModel.swift */,
 				A464555927114A8B00886AA2 /* REST.swift */,
-				A4E0B1BE2707596C008E3880 /* BTManager.swift */,
 				A4E0B1A8270564C9008E3880 /* Assets.xcassets */,
 				A4E0B1AA270564C9008E3880 /* Preview Content */,
 			);
@@ -202,7 +199,6 @@
 				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,
 				A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */,
 				A464556227190DD400886AA2 /* HeatsSpecialView.swift in Sources */,
-				A4E0B1BF2707596C008E3880 /* BTManager.swift in Sources */,
 				A464555C271319A300886AA2 /* TimesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,7 +335,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinewoodDerby/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app uses network discovery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -374,7 +370,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinewoodDerby/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Listens to Raspberry Pi advertisements for the Track Timer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app uses network discovery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

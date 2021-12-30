@@ -44,4 +44,16 @@ The master mode allows full control of the race, including
 
 ##### Computer (e.g., RaspberryPi) Timer Connection
 
+This will assume in this section that the computer used is a Raspberry Pi, RPi. Pretty much any computer may be used to attach to the timer and send the data to the iPhones and/or iPads. 
+
+The RPi and the iPhones and iPads must be connected to the local WiFi in order to communicate. 
+
 ### Technical Detail
+
+If you don't understand how the Internet operates, please skip this section.
+
+The RPi is started and connected to the local WiFi. This will be discussed below in Installation. the file PIN.txt is edited to create a PIN for the iOS application. This ensures that only the race administrator can have access to the master mode.  Then the programs (applications) ***PDServer.py*** and ***timer.py*** are started.
+
+The RPI begins broadcasting a message including the Internet port that it is listening for commands from the iPhones and iPads.
+
+### Installation

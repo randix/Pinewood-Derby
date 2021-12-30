@@ -1,16 +1,16 @@
 issues
   dark mode for TimesView
+  change start alertbox to pop-up for larger text
   
 Server:
   server: add cert for https
-  broadcast a UDP packet
 
 document
 include manual into release
 
 RESTView:
   change to https
-  find UDP packet
+
 
 TestFlight:
     add background photo

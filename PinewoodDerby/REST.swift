@@ -6,21 +6,15 @@
 //
 
 import Foundation
+import Network
 
 class REST: ObservableObject {
     
-    var timer: Timer?
-    
     // TODO: Apple requires https
-    let webProtocol = "http://"
-    
-    @Published var ipAddress = "192.168.12.125"
-    @Published var serverIpAddress: String = ""
-    @Published var port = "8080"
+    @Published var timer = "http://raspberrypi.local:8484/"
+
     @Published var connected = false
     @Published var masterPin = "1234"
-    
-    var timerUrl: URL?
     
     var timesUpdated = false
     var derbyUpdated = false
@@ -43,9 +37,13 @@ class REST: ObservableObject {
     private init() {}
     
     func deleteFileFromServer(_ name: String) {
-        guard timerUrl != nil else { return }
-        let url = timerUrl!.appendingPathComponent(name)
         log("delete: \(name)")
+        connected = false
+        guard let timerUrl = URL(string: timer) else {
+            // TODO: error
+            return
+        }
+        let url = timerUrl.appendingPathComponent(name)
         let urlSession = URLSession.shared
         var request = URLRequest(
             url: url,
@@ -58,15 +56,21 @@ class REST: ObservableObject {
             completionHandler: { data, response, error in
                 if let error = error {
                     log(error.localizedDescription)
+                    return
                 }
-               
+                self.connected = true
             })
         task.resume()
     }
     
     func readFileFromServer(_ name: String) {
-        guard timerUrl != nil else { return }
-        let url = timerUrl!.appendingPathComponent(name)
+        log("read from server: \(name)")
+        connected = false
+        guard let timerUrl = URL(string: timer) else {
+            // TODO: error
+            return
+        }
+        let url = timerUrl.appendingPathComponent(name)
         if name != timesName {
             log("fetch: \(name)")
         }
@@ -76,6 +80,7 @@ class REST: ObservableObject {
                 self.semaphore.signal()
                 return
             }
+            self.connected = true
             let response = response as! HTTPURLResponse
             if response.statusCode != 200 {
                 self.semaphore.signal()
@@ -88,6 +93,7 @@ class REST: ObservableObject {
                 }
                 try FileManager.default.copyItem(at: tempURL, to: file)
                 log("success fetched: \(name)")
+                
             }
             catch {
                 log(error.localizedDescription)
@@ -107,8 +113,12 @@ class REST: ObservableObject {
     }
     
     func saveFileToServer(_ name: String) {
-        guard timerUrl != nil else { return }
-        let url = timerUrl!.appendingPathComponent(name)
+        connected = false
+        guard let timerUrl = URL(string: timer) else {
+            // TODO: error
+            return
+        }
+        let url = timerUrl.appendingPathComponent(name)
         let urlSession = URLSession.shared
         
         // To ensure that our request is always sent, we tell
@@ -132,7 +142,9 @@ class REST: ObservableObject {
             completionHandler: { data, response, error in
                 if let error = error {
                     log(error.localizedDescription)
+                    return
                 }
+                self.connected = true
             })
         task.resume()
     }
@@ -142,39 +154,6 @@ class REST: ObservableObject {
         saveFileToServer(racersName)
         saveFileToServer(heatsName)
         saveFileToServer(groupsName)
-    }
-    
-    func findTimer() {
-        log(#function)
-        connected = false
-        let ipParts = ipAddress.components(separatedBy: ".")
-        let network = "\(ipParts[0]).\(ipParts[1]).\(ipParts[2])."
-        
-        for addr in 1..<255 {
-            if let url = URL(string: "\(webProtocol)\(network)\(addr):\(port)/") {
-                var request = URLRequest(url: url)
-                request.httpMethod = "HEAD"
-                URLSession(configuration: .default)
-                    .dataTask(with: request) { (_, response, error) -> Void in
-                        guard error == nil else {
-                            return
-                        }
-                        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-                            return
-                        }
-                        DispatchQueue.main.async {
-                            self.connected = true
-                            self.serverIpAddress = network + String(addr)
-                            self.timerUrl = URL(string: "http://" + self.serverIpAddress + ":" + self.port + "/")
-                            log("PDServer: \(self.timerUrl!)")
-                            self.readFileFromServer(self.pinName)
-                            self.readPin()
-                            self.objectWillChange.send()
-                        }
-                    }
-                    .resume()
-            }
-        }
     }
     
     func readPin() {
