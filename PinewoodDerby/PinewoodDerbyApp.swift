@@ -36,7 +36,7 @@ struct PinewoodDerbyApp: App {
                 }
             }
         }
-        let f = "Pinewood Derby"
+        var f = "Pinewood Derby"
         var fileUrl = Bundle.main.url(forResource:f, withExtension: "pdf")!
         var destUrl = docsDir.appendingPathComponent(f + ".pdf")
         if !FileManager.default.fileExists(atPath: destUrl.path) {
@@ -57,8 +57,20 @@ struct PinewoodDerbyApp: App {
                 log("error: \(error.localizedDescription)")
             }
         }
+        f = "PDServer"
+        fileUrl = Bundle.main.url(forResource:f, withExtension: "tar")!
+        destUrl = docsDir.appendingPathComponent(f + ".tar")
+        if !FileManager.default.fileExists(atPath: destUrl.path) {
+            do {
+                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
+                log("Copied \(f).tar")
+            } catch {
+                log("error: \(error.localizedDescription)")
+            }
+        }
     }
    
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

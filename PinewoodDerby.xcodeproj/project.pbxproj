@@ -28,6 +28,7 @@
 		A4F8A4A9277F5CC400CA367B /* groups.csv in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4A7277F5CC400CA367B /* groups.csv */; };
 		A4F8A4AB277F6AD200CA367B /* HeatsStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */; };
 		A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */; };
+		A4F8A4AF277F80B500CA367B /* PDServer.tar in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4AE277F80B500CA367B /* PDServer.tar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		A4F8A4A7277F5CC400CA367B /* groups.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = groups.csv; sourceTree = "<group>"; };
 		A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsStartView.swift; sourceTree = "<group>"; };
 		A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Pinewood Derby.pdf"; sourceTree = "<group>"; };
+		A4F8A4AE277F80B500CA367B /* PDServer.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; name = PDServer.tar; path = PDServer/PDServer.tar; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		A4E0B198270564C8008E3880 = {
 			isa = PBXGroup;
 			children = (
+				A4F8A4AE277F80B500CA367B /* PDServer.tar */,
 				A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */,
 				A4F8A4A7277F5CC400CA367B /* groups.csv */,
 				A4F8A4A6277F5CC400CA367B /* racers.csv */,
@@ -185,6 +188,7 @@
 				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
 				A45108C927664AF5005E6897 /* README.md in Resources */,
 				A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */,
+				A4F8A4AF277F80B500CA367B /* PDServer.tar in Resources */,
 				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
 				A4F8A4A9277F5CC400CA367B /* groups.csv in Resources */,
 			);
