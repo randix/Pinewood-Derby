@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SingleView: View {
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     @ObservedObject var derby = Derby.shared
     
     let group: String
@@ -112,6 +114,8 @@ struct SingleView: View {
 }
 
 struct ResultsView: View {
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var derby = Derby.shared
     @State var groupSelector = 0

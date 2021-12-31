@@ -16,6 +16,7 @@ enum AlertAction {
 struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var derby = Derby.shared
     

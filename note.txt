@@ -1,6 +1,5 @@
 issues
-  change start alertbox to pop-up for larger text?
-  
+ 
 Server:
   server: add cert for https
 

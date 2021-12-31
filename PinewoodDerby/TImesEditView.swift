@@ -10,6 +10,8 @@ import SwiftUI
 struct TimesEditView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     @Binding var entry: RacerEntry?
     
     @ObservedObject var derby = Derby.shared

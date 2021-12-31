@@ -27,16 +27,24 @@ struct PinewoodDerbyApp: App {
         for f in ["racers", "groups"] {
             let fileUrl = Bundle.main.url(forResource:f, withExtension: "csv")!
             let destUrl = docsDir.appendingPathComponent(f + ".csv")
-            print("main init", fileUrl, "to", destUrl)
-            print(fileUrl.path)
             if !FileManager.default.fileExists(atPath: destUrl.path) {
                 do {
-                    print("copy)")
                     try FileManager.default.copyItem(at: fileUrl, to: destUrl)
                     log("Copied \(f)")
                 } catch {
                     log("error: \(error.localizedDescription)")
                 }
+            }
+        }
+        let f = "Pinewood Derby"
+        let fileUrl = Bundle.main.url(forResource:f, withExtension: "pdf")!
+        let destUrl = docsDir.appendingPathComponent(f + ".pdf")
+        if !FileManager.default.fileExists(atPath: destUrl.path) {
+            do {
+                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
+                log("Copied \(f).pdf")
+            } catch {
+                log("error: \(error.localizedDescription)")
             }
         }
     }

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Times: View {
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     @ObservedObject var derby = Derby.shared
     
     let heat: Int
@@ -51,14 +53,12 @@ struct HeatsView: View {
     
     @ObservedObject var derby = Derby.shared
     
-    @State var alertShow = false
-    @State var alertTitle = ""
-    @State var alertMessage = ""
+//    @State var alertShow = false
+//    @State var alertTitle = ""
+//    @State var alertMessage = ""
     
-    @State var nextHeat = 0
-    @State var cars = [Int]()
-    
-    @State var showHeatModal = false
+    @State var showSpecialModal = false
+    @State var showStartModal = false
     
     var body: some View {
         VStack {
@@ -67,7 +67,7 @@ struct HeatsView: View {
                 
                 if derby.isMaster {
                     Button(action: {
-                        showHeatModal = true
+                        showSpecialModal = true
                     }) {
                         VStack {
                             Image(systemName: "flag.2.crossed").font(.system(size: 14))
@@ -147,34 +147,18 @@ struct HeatsView: View {
                     
                     .onTapGesture(perform: {
                         if derby.isMaster {
-                            nextHeat = heat.heat
-                            cars = heat.tracks
-                            alertTitle = "Run Heat \(heat.heat)"
-                            alertMessage = "\nCheck cars ready:\n"
-                            for i in 0..<derby.trackCount {
-                                alertMessage += "Track \(i+1): \(heat.tracks[i] == 0 ? "-" : String(format: "%2d", heat.tracks[i]))"
-                                if i < derby.trackCount {
-                                    alertMessage += "\n "
-                                }
-                            }
-                            alertShow = true
+                            showStartModal = true
+                            derby.nextHeat = heat.heat
+                            derby.trackCars = heat.tracks
                         }
                     })
-                    
-                    .alert(isPresented: self.$alertShow) {
-                        Alert(title: Text(self.alertTitle),
-                              message: Text(self.alertMessage),
-                              primaryButton: .cancel(),
-                              secondaryButton: .destructive(Text("Start")) {
-                            derby.startHeat(nextHeat, cars)
-                        })
-                    }
                 }
                 //.border(.green)
                 .listRowInsets(.init())
             }
             //.border(.red)
-            .sheet(isPresented: $showHeatModal, content: { HeatsSpecialView() })
+            .sheet(isPresented: $showSpecialModal, content: { HeatsSpecialView() })
+            .sheet(isPresented: $showStartModal, content: { HeatsStartView() })
             
             Spacer()
             if derby.isMaster {

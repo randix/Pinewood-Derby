@@ -10,6 +10,8 @@ import SwiftUI
 struct RacerAddView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     @Binding var entry: RacerEntry?
     
     @State var id = UUID()

@@ -113,6 +113,7 @@ class Derby: ObservableObject {
     var timesTimer: Timer?
     let timesTimerInterval = 0.5
     var nextHeat = 0
+    var trackCars = [Int]()
     
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     

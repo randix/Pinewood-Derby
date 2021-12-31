@@ -26,6 +26,8 @@
 		A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C2270759FC008E3880 /* Logger.swift */; };
 		A4F8A4A8277F5CC400CA367B /* racers.csv in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4A6277F5CC400CA367B /* racers.csv */; };
 		A4F8A4A9277F5CC400CA367B /* groups.csv in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4A7277F5CC400CA367B /* groups.csv */; };
+		A4F8A4AB277F6AD200CA367B /* HeatsStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */; };
+		A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		A4E696BA272AEC3C00623DA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A4F8A4A6277F5CC400CA367B /* racers.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = racers.csv; sourceTree = "<group>"; };
 		A4F8A4A7277F5CC400CA367B /* groups.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = groups.csv; sourceTree = "<group>"; };
+		A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsStartView.swift; sourceTree = "<group>"; };
+		A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Pinewood Derby.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,7 @@
 		A4E0B198270564C8008E3880 = {
 			isa = PBXGroup;
 			children = (
+				A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */,
 				A4F8A4A7277F5CC400CA367B /* groups.csv */,
 				A4F8A4A6277F5CC400CA367B /* racers.csv */,
 				A45108C827664AF5005E6897 /* README.md */,
@@ -97,6 +102,7 @@
 				A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */,
 				A4E0B1B427074A64008E3880 /* HeatsView.swift */,
 				A464556127190DD400886AA2 /* HeatsSpecialView.swift */,
+				A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */,
 				A464555B271319A300886AA2 /* TimesView.swift */,
 				A464555F27154A9E00886AA2 /* TImesEditView.swift */,
 				A464555D27146E0600886AA2 /* Rankings.swift */,
@@ -178,6 +184,7 @@
 				A4F8A4A8277F5CC400CA367B /* racers.csv in Resources */,
 				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
 				A45108C927664AF5005E6897 /* README.md in Resources */,
+				A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */,
 				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
 				A4F8A4A9277F5CC400CA367B /* groups.csv in Resources */,
 			);
@@ -200,6 +207,7 @@
 				A464555E27146E0600886AA2 /* Rankings.swift in Sources */,
 				A464556027154A9E00886AA2 /* TImesEditView.swift in Sources */,
 				A4E0B1B927074B6A008E3880 /* ResultsView.swift in Sources */,
+				A4F8A4AB277F6AD200CA367B /* HeatsStartView.swift in Sources */,
 				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,
 				A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */,
 				A464556227190DD400886AA2 /* HeatsSpecialView.swift in Sources */,
@@ -333,7 +341,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;
@@ -368,7 +376,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;
