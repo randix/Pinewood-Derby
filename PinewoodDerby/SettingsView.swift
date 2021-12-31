@@ -19,7 +19,6 @@ struct SettingsView: View {
     
     @ObservedObject var derby = Derby.shared
     
-    var possibleTracks = ["2", "3", "4", "5", "6"]
     @State var tracksSelector = 2
     
     @State var showAlert = false
@@ -94,31 +93,41 @@ struct SettingsView: View {
                     }
                     Spacer()
                 }
+                if !derby.connected {
+                    Spacer().frame(height:10)
+                    Text("Check for not connected:\n - is WiFi enabled and connected on this device?\n - is the Timer Computer properly configured?\n   - powered on?\n   - connected to WiFi?\n   - PDServer running?")
+                        .font(.system(size: 10))
+                }
                 Spacer().frame(height:30)
             }
-            if derby.connected {
-                // MARK: --------------- Server Data pull ---------------
-                if !derby.isMaster {
-                    HStack {
-                        Spacer()
-                        Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
-                        Text("Pin: ").font(.system(size: 18))
-                        
-                        SecureField("pin", text: $derby.pin)
-                            .font(.system(size: 18))
-                            .frame(width:70)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                            .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                            .onChange(of: derby.pin, perform: { _ in
-                                if !derby.isMaster {
-                                    derby.isMaster = derby.pin == derby.masterPin
-                                }
-                            })
-                        Spacer()
-                    }
-                } else {
-                    // MARK: --------------- Server Data push and master stuff ---------------
+            
+            // MARK: --------------- PIN ---------------
+            if !derby.isMaster {
+                HStack {
+                    Spacer()
+                    Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
+                    Text("Pin: ").font(.system(size: 18))
+                    
+                    SecureField("pin", text: $derby.pin)
+                        .font(.system(size: 18))
+                        .frame(width:70)
+                        .textFieldStyle(.roundedBorder)
+                        .keyboardType(.numberPad)
+                        .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
+                        .onChange(of: derby.pin, perform: { _ in
+                            //print("pins: derby.pin=\(derby.pin) masterPin=\(derby.masterPin)")
+                            if !derby.isMaster {
+                                derby.isMaster = derby.pin == derby.masterPin
+                            }
+                        })
+                    Spacer()
+                }
+            }
+            
+            if derby.isMaster {
+                
+                // MARK: --------------- Configuration ---------------
+                Group {
                     HStack {
                         Text("Title:")
                             .font(.system(size: 18))
@@ -149,8 +158,8 @@ struct SettingsView: View {
                             .frame(width:70, alignment: .trailing)
                         //.background(.yellow)
                         Picker("Names", selection: $tracksSelector) {
-                            ForEach(0 ..< possibleTracks.count) {
-                                Text(self.possibleTracks[$0])
+                            ForEach(0 ..< Derby.possibleTracks.count) {
+                                Text(Derby.possibleTracks[$0])
                             }
                         }.pickerStyle(SegmentedPickerStyle())
                             .frame(width: 160)
@@ -160,18 +169,13 @@ struct SettingsView: View {
                             }
                     }
                     Spacer().frame(height:50)
+                }
+                if derby.connected {
                     Group {
                         HStack {
                             Text("Race:").font(.system(size:22)).bold()
                             Button(action: {
-                                if !derby.connected {
-                                    alertAction = .serverNotConnected
-                                    alertTitle = "Timer Is Not Reachable"
-                                    alertMessage = "Cannot get the times from the timer until it is connected."
-                                    alertButton = "Acknowlege"
-                                    showAlert = true
-                                    return
-                                }
+                                derby.simulationRunning = false
                                 alertAction = .startRace
                                 alertTitle = "Reset All Timing Data"
                                 alertMessage = "Are you sure?"
@@ -182,23 +186,17 @@ struct SettingsView: View {
                             }
                             Spacer().frame(width:15)
                             Button(action: {
-                                if !derby.connected {
-                                    alertAction = .serverNotConnected
-                                    alertTitle = "Timer Is Not Reachable"
-                                    alertMessage = "Cannot get the times from the timer until it is connected."
-                                    alertButton = "Acknowlege"
-                                    showAlert = true
-                                    return
-                                }
+                                derby.simulationRunning = false
                                 derby.tabSelection = Tab.heats.rawValue
                                 self.presentationMode.wrappedValue.dismiss()
                             })  {
                                 Text("Resume").font(.system(size:22)).bold()
                             }
                         }
+                        Spacer().frame(height:40)
                     }
                 }
-                Spacer().frame(height:40)
+                
                 HStack {
                     Spacer()
                     Text("Simulation Testing:").font(.system(size:16)).bold()
@@ -222,26 +220,25 @@ struct SettingsView: View {
                     }
                     Spacer()
                 }
-                
             }
-            Spacer().frame(height:40)
-            Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            })  {
-                Text("Dismiss").font(.system(size:18)).bold()
-            }
-            
-            Spacer()
-            Group {
-                Spacer().frame(height: 10)
-                Text("\(derby.appName) \(derby.appVersion)")
-                    .font(.system(size: 9))
-                Text("For info, see: Files App: On My " + (derby.iPad ? "iPad" : "iPhone") + " / Pinewood-Derby / Pinewood-Derby")
-                    .font(.system(size: 9))
-                Text("Copyright © 2021 Randix LLC. All rights reserved.")
-                    .font(.system(size: 9))
-                Spacer().frame(height: 10)
-            }
+        }
+        Spacer().frame(height:40)
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })  {
+            Text("Dismiss").font(.system(size:18)).bold()
+        }
+        
+        Spacer()
+        Group {
+            Spacer().frame(height: 10)
+            Text("\(derby.appName) \(derby.appVersion)")
+                .font(.system(size: 9))
+            Text("For info, see: Files App: On My " + (derby.iPad ? "iPad" : "iPhone") + " / Pinewood-Derby / Pinewood-Derby")
+                .font(.system(size: 9))
+            Text("Copyright © 2021 Randix LLC. All rights reserved.")
+                .font(.system(size: 9))
+            Spacer().frame(height: 10)
         }
         .alert(isPresented: self.$showAlert) {
             Alert(title: Text(alertTitle),

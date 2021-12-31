@@ -47,9 +47,13 @@ struct ContentView: View {
             }) {
                 VStack {
                     Spacer().frame(height:5)
-                    Image(systemName: "gear").font(.system(size: 24))
+                    Image(systemName: "gear")
+                        .font(.system(size: 24))
+                        .foregroundColor(derby.connected || derby.isMaster ? .blue : .red)
                     Spacer().frame(height:3)
-                    Text("Settings").font(.system(size: 12))
+                    Text("Settings")
+                        .font(.system(size: 12))
+                        .foregroundColor(derby.connected  || derby.isMaster ? .blue : .red)
                 }
             }
             .frame(width:55)

@@ -91,6 +91,7 @@ class Derby: ObservableObject {
     @Published var event = ""
     
     @Published var trackCount = 0
+    static let possibleTracks = ["2", "3", "4", "5", "6"]
     static let maxTracks = 6
     
     @Published var racers: [RacerEntry] = []
@@ -471,12 +472,11 @@ extension Derby {
             
             try FileManager.default.removeItem(atPath: nameUrl.path)
             log("remove \(Filenames.pinName)")
+            masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
+            objectWillChange.send()
         } catch {
             log("error: \(error.localizedDescription)")
-            data = ""
         }
-        masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
-        objectWillChange.send()
         nextState()
     }
     
@@ -562,6 +562,7 @@ extension Derby {
             data = ""
         }
         let lines = data!.components(separatedBy: .newlines)
+        racers = []
         for line in lines {
             let ln = line.trimmingCharacters(in: .whitespaces)
             if ln.count == 0 {
@@ -663,6 +664,7 @@ extension Derby {
         log("\(#function) \(Filenames.heatsName)")
         do {
             let data = try String(contentsOf: name)
+            heats = []
             let lines = data.components(separatedBy: .newlines)
             for line in lines {
                 if line.count == 0 {
@@ -867,6 +869,9 @@ extension Derby {
                 log(error?.localizedDescription ?? "\(name): not downloaded")
                 DispatchQueue.main.async {
                     self.connected = false
+                    if name != Filenames.timesName {
+                        self.stateMachine![self.stateIndex].read()
+                    }
                 }
                 return
             }
@@ -875,6 +880,11 @@ extension Derby {
             }
             let response = response as! HTTPURLResponse
             if response.statusCode != 200 {
+                DispatchQueue.main.async {
+                    if name != Filenames.timesName {
+                        self.stateMachine![self.stateIndex].read()
+                    }
+                }
                 return
             }
             do {
@@ -884,15 +894,14 @@ extension Derby {
                 }
                 try FileManager.default.copyItem(at: tempURL, to: file)
                 log("fetched: \(name)")
-                
-                DispatchQueue.main.async {
-                    if name != Filenames.timesName {
-                        self.stateMachine![self.stateIndex].read()
-                    }
-                }
             }
             catch {
                 log(error.localizedDescription)
+            }
+            DispatchQueue.main.async {
+                if name != Filenames.timesName {
+                    self.stateMachine![self.stateIndex].read()
+                }
             }
         }
         task.resume()
