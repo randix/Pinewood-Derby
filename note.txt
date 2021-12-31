@@ -1,6 +1,5 @@
 issues
-  dark mode for TimesView
-  change start alertbox to pop-up for larger text
+  change start alertbox to pop-up for larger text?
   
 Server:
   server: add cert for https
@@ -11,9 +10,8 @@ include manual into release
 RESTView:
   change to https
 
-
 TestFlight:
     add background photo
     everything for the app store
 
-consider - supporting 8 tracks (major mods to all views, or force landscape only usage on phone...)
+consider - supporting 8 tracks (major mods to all views, or force landscape only usage on phone, or only on iPad...)

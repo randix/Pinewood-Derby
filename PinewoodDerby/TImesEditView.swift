@@ -12,7 +12,6 @@ struct TimesEditView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var entry: RacerEntry?
     
-    @ObservedObject var settings = Settings.shared
     @ObservedObject var derby = Derby.shared
     
     @State var id = UUID()
@@ -88,7 +87,7 @@ struct TimesEditView: View {
                 }
             }
             Spacer().frame(height:10)
-            if settings.trackCount > 2 {
+            if derby.trackCount > 2 {
                 HStack {
                     Text("Track 3:")
                         .font(.system(size: 18))
@@ -110,7 +109,7 @@ struct TimesEditView: View {
                     }
                 }
                 Spacer().frame(height:10)
-                if settings.trackCount > 3 {
+                if derby.trackCount > 3 {
                     HStack {
                         Text("Track 4:")
                             .font(.system(size: 18))
@@ -132,7 +131,7 @@ struct TimesEditView: View {
                         }
                     }
                     Spacer().frame(height:10)
-                    if settings.trackCount > 4 {
+                    if derby.trackCount > 4 {
                         HStack {
                             Text("Track 5:")
                                 .font(.system(size: 18))
@@ -154,7 +153,7 @@ struct TimesEditView: View {
                             }
                         }
                         Spacer().frame(height:10)
-                        if settings.trackCount > 5 {
+                        if derby.trackCount > 5 {
                             HStack {
                                 Text("Track 6:")
                                     .font(.system(size: 18))

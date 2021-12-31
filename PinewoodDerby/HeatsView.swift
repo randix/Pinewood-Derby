@@ -50,7 +50,6 @@ struct HeatsView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var derby = Derby.shared
-    @ObservedObject var settings = Settings.shared
     
     @State var alertShow = false
     @State var alertTitle = ""
@@ -66,7 +65,7 @@ struct HeatsView: View {
             HStack {
                 Spacer().frame(width:30)
                 
-                if settings.isMaster {
+                if derby.isMaster {
                     Button(action: {
                         showHeatModal = true
                     }) {
@@ -99,16 +98,16 @@ struct HeatsView: View {
                     //.background(.yellow)
                 Text("T2").bold().frame(width: 43).font(.system(size: 18))
                     //.background(.yellow)
-                if settings.trackCount > 2 {
+                if derby.trackCount > 2 {
                     Text("T3").bold().frame(width: 43).font(.system(size: 18))
                         //.background(.yellow)
-                    if settings.trackCount > 3 {
+                    if derby.trackCount > 3 {
                         Text("T4").bold().frame(width: 43).font(.system(size: 18))
                             //.background(.yellow)
-                        if settings.trackCount > 4 {
+                        if derby.trackCount > 4 {
                             Text("T5").bold().frame(width: 43).font(.system(size: 18))
                             //.background(.yellow)
-                            if settings.trackCount > 5 {
+                            if derby.trackCount > 5 {
                                 Text("T6").bold().frame(width: 43).font(.system(size: 18))
                                 //.background(.yellow)
                             }
@@ -130,13 +129,13 @@ struct HeatsView: View {
                             //.background(.yellow)
                         Times(heat: heat.heat-1, track: 0)
                         Times(heat: heat.heat-1, track: 1)
-                        if settings.trackCount > 2 {
+                        if derby.trackCount > 2 {
                             Times(heat: heat.heat-1, track: 2)
-                            if settings.trackCount > 3 {
+                            if derby.trackCount > 3 {
                                 Times(heat: heat.heat-1, track: 3)
-                                if settings.trackCount > 4 {
+                                if derby.trackCount > 4 {
                                     Times(heat: heat.heat-1, track: 4)
-                                    if settings.trackCount > 5 {
+                                    if derby.trackCount > 5 {
                                         Times(heat: heat.heat-1, track: 5)
                                     }
                                 }
@@ -147,14 +146,14 @@ struct HeatsView: View {
                     .background(heat.hasRun ? .gray : Color(UIColor.systemBackground))
                     
                     .onTapGesture(perform: {
-                        if settings.isMaster {
+                        if derby.isMaster {
                             nextHeat = heat.heat
                             cars = heat.tracks
                             alertTitle = "Run Heat \(heat.heat)"
                             alertMessage = "\nCheck cars ready:\n"
-                            for i in 0..<settings.trackCount {
+                            for i in 0..<derby.trackCount {
                                 alertMessage += "Track \(i+1): \(heat.tracks[i] == 0 ? "-" : String(format: "%2d", heat.tracks[i]))"
-                                if i < settings.trackCount {
+                                if i < derby.trackCount {
                                     alertMessage += "\n "
                                 }
                             }
@@ -178,7 +177,7 @@ struct HeatsView: View {
             .sheet(isPresented: $showHeatModal, content: { HeatsSpecialView() })
             
             Spacer()
-            if settings.isMaster {
+            if derby.isMaster {
                 Text("Tap on heat to start.")
                 Spacer().frame(height: 10)
             }

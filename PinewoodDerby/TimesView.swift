@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PlaceView: View {
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     let time: Double
     let place: Int
     let ignore: Bool
@@ -17,10 +19,10 @@ struct PlaceView: View {
         VStack {
             Text(time == 0.0 ? "-" : String(format: "%0.4f", time))
                 .font(.system(size: 14))
-                .foregroundColor(ignore ? .red : .black)
+                .foregroundColor(ignore ? .red : colorScheme == .dark ? .white : .black)
             Text(place == 0 ? "-" : String(format: "%d", place))
                 .font(.system(size: 14))
-                .foregroundColor(ignore ? .red : .black)
+                .foregroundColor(ignore ? .red : colorScheme == .dark ? .white : .black)
         }
         .frame(width: 50, alignment: .center)
         //.background(.yellow)
@@ -31,7 +33,6 @@ struct TimesView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
-    @ObservedObject var settings = Settings.shared
     
     @State var thisEntry: RacerEntry?
     @State var showEditModal = false
@@ -59,16 +60,16 @@ struct TimesView: View {
                 //.background(.yellow)
                 Text("T2").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                 //.background(.yellow)
-                if settings.trackCount > 2 {
+                if derby.trackCount > 2 {
                     Text("T3").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                     //.background(.yellow)
-                    if settings.trackCount > 3 {
+                    if derby.trackCount > 3 {
                         Text("T4").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                         //.background(.yellow)
-                        if settings.trackCount > 4 {
+                        if derby.trackCount > 4 {
                             Text("T5").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                             //.background(.yellow)
-                            if settings.trackCount > 5 {
+                            if derby.trackCount > 5 {
                                 Text("T6").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                                 //.background(.yellow)
                             }
@@ -95,13 +96,13 @@ struct TimesView: View {
                     //.background(.yellow)
                     PlaceView(time: entry.times[0], place: entry.places[0], ignore: entry.ignores[0])
                     PlaceView(time: entry.times[1], place: entry.places[1], ignore: entry.ignores[1])
-                    if settings.trackCount > 2 {
+                    if derby.trackCount > 2 {
                         PlaceView(time: entry.times[2], place: entry.places[2], ignore: entry.ignores[2])
-                        if settings.trackCount > 3 {
+                        if derby.trackCount > 3 {
                             PlaceView(time: entry.times[3], place: entry.places[3], ignore: entry.ignores[3])
-                            if settings.trackCount > 4 {
+                            if derby.trackCount > 4 {
                                 PlaceView(time: entry.times[4], place: entry.places[4], ignore: entry.ignores[4])
-                                if settings.trackCount > 5 {
+                                if derby.trackCount > 5 {
                                     PlaceView(time: entry.times[5], place: entry.places[5], ignore: entry.ignores[5])
                                 }
                             }
@@ -110,7 +111,7 @@ struct TimesView: View {
                     Spacer()
                 }
                 .swipeActions {
-                    if settings.isMaster {
+                    if derby.isMaster {
                         Button {
                             thisEntry = entry
                             showEditModal = true
@@ -135,7 +136,7 @@ struct TimesView: View {
             .sheet(isPresented: $showEditModal, content: { TimesEditView(entry: $thisEntry) })
             
             Spacer()
-            if settings.isMaster {
+            if derby.isMaster {
                 Text("Swipe left on car times to edit.")
                 Spacer().frame(height: 10)
             }

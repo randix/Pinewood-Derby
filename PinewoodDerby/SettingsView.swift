@@ -17,9 +17,7 @@ struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject var settings = Settings.shared
     @ObservedObject var derby = Derby.shared
-    @ObservedObject var rest = REST.shared
     
     var possibleTracks = ["2", "3", "4", "5", "6"]
     @State var tracksSelector = 2
@@ -51,7 +49,7 @@ struct SettingsView: View {
                     }
                     Spacer().frame(height:20)
                     
-                    Text("\(Settings.shared.appName) \(Settings.shared.appVersion)")
+                    Text("\(derby.appName) \(derby.appVersion)")
                         .font(.system(size: 14))
                     Spacer().frame(height:20)
                 }
@@ -64,7 +62,7 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                     //.frame(width:50, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("http://raspberypi.local:8484/", text: $rest.timer)
+                    TextField("http://raspberypi.local:8484/", text: $derby.timer)
                         .font(.system(size: 18))
                         .frame(width:300)
                         .textFieldStyle(.roundedBorder)
@@ -78,7 +76,7 @@ struct SettingsView: View {
                     Text("Connected:")
                         .font(.system(size: 18))
                     Spacer().frame(width:5)
-                    if rest.connected {
+                    if derby.connected {
                         Image(systemName: "checkmark.square").font(.system(size: 18))
                             .foregroundColor(.green)
                     } else {
@@ -87,7 +85,7 @@ struct SettingsView: View {
                     }
                     Spacer().frame(width: 20)
                     Button(action: {
-                        rest.readFilesFromServer()
+                        derby.readFilesFromServer()
                     }) {
                         Text("Update")
                             .font(.system(size: 18))
@@ -98,23 +96,23 @@ struct SettingsView: View {
                 }
                 Spacer().frame(height:30)
             }
-            if rest.connected {
+            if derby.connected {
                 // MARK: --------------- Server Data pull ---------------
-                if !settings.isMaster {
+                if !derby.isMaster {
                     HStack {
                         Spacer()
                         Image(systemName: "123.rectangle").font(.system(size: 18)).frame(width: 30)
                         Text("Pin: ").font(.system(size: 18))
                         
-                        SecureField("pin", text: $settings.pin)
+                        SecureField("pin", text: $derby.pin)
                             .font(.system(size: 18))
                             .frame(width:70)
                             .textFieldStyle(.roundedBorder)
                             .keyboardType(.numberPad)
                             .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
-                            .onChange(of: settings.pin, perform: { _ in
-                                if !settings.isMaster {
-                                    settings.isMaster = settings.pin == rest.masterPin
+                            .onChange(of: derby.pin, perform: { _ in
+                                if !derby.isMaster {
+                                    derby.isMaster = derby.pin == derby.masterPin
                                 }
                             })
                         Spacer()
@@ -126,7 +124,7 @@ struct SettingsView: View {
                             .font(.system(size: 18))
                             .frame(width:60, alignment: .trailing)
                         //.background(.yellow)
-                        TextField("Title", text: $settings.title)
+                        TextField("Title", text: $derby.title)
                             .font(.system(size: 18))
                             .frame(width:220)
                             .textFieldStyle(.roundedBorder)
@@ -138,7 +136,7 @@ struct SettingsView: View {
                             .font(.system(size: 18))
                             .frame(width:60, alignment: .trailing)
                         //.background(.yellow)
-                        TextField("Event", text: $settings.event)
+                        TextField("Event", text: $derby.event)
                             .font(.system(size: 18))
                             .frame(width:220)
                             .textFieldStyle(.roundedBorder)
@@ -158,24 +156,15 @@ struct SettingsView: View {
                             .frame(width: 160)
                             .onChange(of: tracksSelector) { _ in
                                 derby.heats = []
-                                settings.trackCount = tracksSelector + 2
+                                derby.trackCount = tracksSelector + 2
                             }
-                    }
-                    Spacer().frame(height:30)
-                    Group {
-                        Button(action: {
-                            settings.saveSettings()
-                            rest.saveFilesToServer()
-                        })  {
-                            Text("Send Configuration To Server").font(.system(size:18))
-                        }
                     }
                     Spacer().frame(height:50)
                     Group {
                         HStack {
                             Text("Race:").font(.system(size:22)).bold()
                             Button(action: {
-                                if !rest.connected {
+                                if !derby.connected {
                                     alertAction = .serverNotConnected
                                     alertTitle = "Timer Is Not Reachable"
                                     alertMessage = "Cannot get the times from the timer until it is connected."
@@ -193,7 +182,7 @@ struct SettingsView: View {
                             }
                             Spacer().frame(width:20)
                             Button(action: {
-                                if !rest.connected {
+                                if !derby.connected {
                                     alertAction = .serverNotConnected
                                     alertTitle = "Timer Is Not Reachable"
                                     alertMessage = "Cannot get the times from the timer until it is connected."
@@ -244,9 +233,9 @@ struct SettingsView: View {
             Spacer()
             Group {
                 Spacer().frame(height: 10)
-                Text("\(settings.appName) \(settings.appVersion)")
+                Text("\(derby.appName) \(derby.appVersion)")
                     .font(.system(size: 9))
-                Text("For info, see: Files App: On My " + (settings.iPad ? "iPad" : "iPhone") + " / Pinewood-Derby / Pinewood-Derby")
+                Text("For info, see: Files App: On My " + (derby.iPad ? "iPad" : "iPhone") + " / Pinewood-Derby / Pinewood-Derby")
                     .font(.system(size: 9))
                 Text("Copyright © 2021 Randix LLC. All rights reserved.")
                     .font(.system(size: 9))
@@ -261,7 +250,7 @@ struct SettingsView: View {
                 if alertAction == .serverNotConnected {
                     return
                 }
-                settings.saveSettings()
+                derby.saveSettings()
                 if alertAction == .startRace {
                     derby.startRacing()
                 } else {
@@ -272,108 +261,11 @@ struct SettingsView: View {
             })
         }
         .onAppear(perform: {
-            tracksSelector = settings.trackCount - 2
+            tracksSelector = derby.trackCount - 2
         })
         .onDisappear(perform: {
-            settings.saveSettings()
+            derby.saveSettings()
         })
     }
 }
 
-class Settings: ObservableObject {
-    
-    @Published var isMaster = false
-    
-    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    
-    let rest = REST.shared
-    
-    var appName = ""
-    var appVersion = ""
-    let iPad = UIScreen.main.bounds.width > 600
-    
-    @Published var pin: String = ""
-    
-    @Published var title = ""
-    @Published var event = ""
-    @Published var trackCount = 0
-    
-    static let maxTracks = 6
-    
-    static let shared = Settings()
-    private init() {}
-    
-    func readSettings() {
-        log("\(#function) \(rest.settingsName)")
-        log("\(docDir)")
-        let name = docDir.appendingPathComponent(rest.settingsName)
-        var config: String
-        do {
-            config = try String(contentsOf: name)
-        } catch {
-            log("error: \(error.localizedDescription)")
-            title = "Pinewood Derby"
-            event = "Event"
-            trackCount = 4
-            rest.timer =  "http://raspberrypi.local:8484/"
-            saveSettings()
-            return
-        }
-        
-        let lines = config.components(separatedBy: "\n")
-        for line in lines {
-            if line.count == 0 {
-                continue
-            }
-            let keyValue = line.components(separatedBy: "=")
-            if keyValue.count < 2 {
-                log("\(rest.settingsName): format error")
-                continue
-            }
-            switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
-            case "title":
-                title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("title=\(title)")
-            case "event":
-                event = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("event=\(event)")
-            case "tracks":
-                let tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                trackCount = 2
-                if let t = Int(tracks) {
-                    trackCount = t
-                }
-                if trackCount < 2 {
-                    trackCount = 2
-                }
-                if trackCount > Settings.maxTracks {
-                    trackCount = Settings.maxTracks
-                }
-                log("tracks=\(String(trackCount))")
-            case "timer":
-                rest.timer = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                log("timer=\(rest.timer)")
-            default:
-                log("incorrect format: \(config)")
-            }
-        }
-        self.objectWillChange.send()
-    }
-    
-    func saveSettings() {
-        log("\(#function) \(rest.settingsName)")
-        var list = [String]()
-        list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
-        list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
-        list.append("tracks=\(String(trackCount))")
-        list.append("timer=\(rest.timer.trimmingCharacters(in: .whitespaces))")
-        let name = docDir.appendingPathComponent(rest.settingsName)
-        let fileData = list.joined(separator: "\n") + "\n"
-        
-        do {
-            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-        } catch {
-            log(error.localizedDescription)
-        }
-    }
-}

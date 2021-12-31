@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A42C9D89271B02FF00B58F25 /* RacerGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */; };
 		A45108C927664AF5005E6897 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A45108C827664AF5005E6897 /* README.md */; };
-		A464555A27114A8B00886AA2 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555927114A8B00886AA2 /* REST.swift */; };
 		A464555C271319A300886AA2 /* TimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555B271319A300886AA2 /* TimesView.swift */; };
 		A464555E27146E0600886AA2 /* Rankings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555D27146E0600886AA2 /* Rankings.swift */; };
 		A464556027154A9E00886AA2 /* TImesEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464555F27154A9E00886AA2 /* TImesEditView.swift */; };
@@ -30,7 +29,6 @@
 /* Begin PBXFileReference section */
 		A42C9D88271B02FF00B58F25 /* RacerGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RacerGroupView.swift; sourceTree = "<group>"; };
 		A45108C827664AF5005E6897 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		A464555927114A8B00886AA2 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		A464555B271319A300886AA2 /* TimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesView.swift; sourceTree = "<group>"; };
 		A464555D27146E0600886AA2 /* Rankings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rankings.swift; sourceTree = "<group>"; };
 		A464555F27154A9E00886AA2 /* TImesEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TImesEditView.swift; sourceTree = "<group>"; };
@@ -98,7 +96,6 @@
 				A464555D27146E0600886AA2 /* Rankings.swift */,
 				A4E0B1B827074B6A008E3880 /* ResultsView.swift */,
 				A4E0B1C027075982008E3880 /* DerbyModel.swift */,
-				A464555927114A8B00886AA2 /* REST.swift */,
 				A4E0B1A8270564C9008E3880 /* Assets.xcassets */,
 				A4E0B1AA270564C9008E3880 /* Preview Content */,
 			);
@@ -195,7 +192,6 @@
 				A464555E27146E0600886AA2 /* Rankings.swift in Sources */,
 				A464556027154A9E00886AA2 /* TImesEditView.swift in Sources */,
 				A4E0B1B927074B6A008E3880 /* ResultsView.swift in Sources */,
-				A464555A27114A8B00886AA2 /* REST.swift in Sources */,
 				A4E0B1A5270564C8008E3880 /* PinewoodDerbyApp.swift in Sources */,
 				A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */,
 				A464556227190DD400886AA2 /* HeatsSpecialView.swift in Sources */,

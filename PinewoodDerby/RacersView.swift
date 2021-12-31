@@ -11,7 +11,6 @@ struct RacersView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
-    @ObservedObject var settings = Settings.shared
     
     @State var thisEntry: RacerEntry?
     @State var showEditModal = false
@@ -25,7 +24,7 @@ struct RacersView: View {
             // Title row - with Rankings and Add buttons
             HStack {
                 Spacer().frame(width:35)
-                if settings.isMaster {
+                if derby.isMaster {
                     Button(action: {
                         thisEntry = nil
                         showEditModal = true
@@ -135,7 +134,7 @@ struct RacersView: View {
                     }
                 }
                 .swipeActions {
-                    if settings.isMaster {
+                    if derby.isMaster {
                         Button {
                             thisEntry = entry
                             showEditModal = true
@@ -164,7 +163,7 @@ struct RacersView: View {
             .sheet(isPresented: $showEditModal, content: { RacerAddView(entry: $thisEntry) })
             
             Spacer()
-            if settings.isMaster {
+            if derby.isMaster {
                 Text("Swipe left on racer to edit.")
                 Spacer().frame(height: 10)
             }

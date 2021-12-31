@@ -19,7 +19,6 @@ struct ContentView: View {
 
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
-    @ObservedObject var settings = Settings.shared
     @ObservedObject var derby = Derby.shared
     
     @State var showSettings = false
@@ -32,12 +31,12 @@ struct ContentView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Text(settings.title).font(.system(size: 24)).bold()//.foregroundColor(.brown)
+                    Text(derby.title).font(.system(size: 24)).bold()//.foregroundColor(.brown)
                     Spacer()
                 }
                 HStack {
                     Spacer()
-                    Text(settings.event).font(.system(size: 16)).bold()//.foregroundColor(.brown)
+                    Text(derby.event).font(.system(size: 16)).bold()//.foregroundColor(.brown)
                     Spacer()
                 }
             }
@@ -71,6 +70,10 @@ struct ContentView: View {
             .tag(Tab.results.rawValue)
         }
         .sheet(isPresented: $showSettings, content: { SettingsView() })
+        
+        .onAppear(perform:  {
+            derby.readFilesFromServer()
+        })
     }
 }
 

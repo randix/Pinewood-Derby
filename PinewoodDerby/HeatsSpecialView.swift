@@ -11,17 +11,15 @@ struct HeatsSpecialView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject var settings = Settings.shared
+    @ObservedObject var derby = Derby.shared
     
-    @State var cars = [String](repeating: "", count: Settings.maxTracks)
+    @State var cars = [String](repeating: "", count: Derby.maxTracks)
     @State var group = ""
     
     @State var alertShow = false
     @State var alertTitle = ""
     @State var alertMessage = ""
     @State var alertButton = ""
-    
-    let derby = Derby.shared
     
     var body: some View {
         VStack {
@@ -64,7 +62,7 @@ struct HeatsSpecialView: View {
                         .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                         .keyboardType(.numberPad)
                 }
-                if settings.trackCount > 2 {
+                if derby.trackCount > 2 {
                     HStack {
                         Text("Track 3:").font(.system(size: 18))
                         TextField("88", text: $cars[2])
@@ -74,7 +72,7 @@ struct HeatsSpecialView: View {
                             .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                             .keyboardType(.numberPad)
                     }
-                    if settings.trackCount > 3 {
+                    if derby.trackCount > 3 {
                         HStack {
                             Text("Track 4:").font(.system(size: 18))
                             TextField("88", text: $cars[3])
@@ -84,7 +82,7 @@ struct HeatsSpecialView: View {
                                 .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                                 .keyboardType(.numberPad)
                         }
-                        if settings.trackCount > 4 {
+                        if derby.trackCount > 4 {
                             HStack {
                                 Text("Track 5:").font(.system(size: 18))
                                 TextField("88", text: $cars[4])
@@ -94,7 +92,7 @@ struct HeatsSpecialView: View {
                                     .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                                     .keyboardType(.numberPad)
                             }
-                            if settings.trackCount > 5 {
+                            if derby.trackCount > 5 {
                                 HStack {
                                     Text("Track 6:").font(.system(size: 18))
                                     TextField("88", text: $cars[5])
@@ -121,8 +119,8 @@ struct HeatsSpecialView: View {
                 }
                 Spacer().frame(width: 40)
                 Button(action: {
-                    var carNumbers = [Int](repeating: 0, count: Settings.maxTracks)
-                    for i in 0..<settings.trackCount {
+                    var carNumbers = [Int](repeating: 0, count: Derby.maxTracks)
+                    for i in 0..<derby.trackCount {
                         if let c = Int(cars[i]) {
                             let car = derby.racers.filter { c == $0.carNumber }
                             if car.count != 1 {

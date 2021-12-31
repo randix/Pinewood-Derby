@@ -11,7 +11,6 @@ struct RankingsView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var derby = Derby.shared
-    let settings = Settings.shared
     
     var body: some View {
         VStack {
