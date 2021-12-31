@@ -84,6 +84,7 @@ struct SettingsView: View {
                     }
                     Spacer().frame(width: 20)
                     Button(action: {
+                        derby.simulationRunning = false
                         derby.readFilesFromServer()
                     }) {
                         Text("Update")
@@ -248,7 +249,6 @@ struct SettingsView: View {
                 if alertAction == .serverNotConnected {
                     return
                 }
-                //derby.saveSettings()
                 if alertAction == .startRace {
                     derby.startRacing()
                 } else {

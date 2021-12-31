@@ -21,6 +21,24 @@ struct PinewoodDerbyApp: App {
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
         Derby.shared.initStateMachine()
+        
+        // install sample files
+        let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        for f in ["racers", "groups"] {
+            let fileUrl = Bundle.main.url(forResource:f, withExtension: "csv")!
+            let destUrl = docsDir.appendingPathComponent(f + ".csv")
+            print("main init", fileUrl, "to", destUrl)
+            print(fileUrl.path)
+            if !FileManager.default.fileExists(atPath: destUrl.path) {
+                do {
+                    print("copy)")
+                    try FileManager.default.copyItem(at: fileUrl, to: destUrl)
+                    log("Copied \(f)")
+                } catch {
+                    log("error: \(error.localizedDescription)")
+                }
+            }
+        }
     }
    
     var body: some Scene {

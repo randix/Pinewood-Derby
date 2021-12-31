@@ -493,6 +493,7 @@ extension Derby {
             event = "Event"
             trackCount = 4
             saveSettings()
+            nextState()
             return
         }
         
@@ -545,7 +546,9 @@ extension Derby {
         
         do {
             try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-            saveFileToServer(Filenames.settingsName)
+            if connected {
+                saveFileToServer(Filenames.settingsName)
+            }
         } catch {
             log(error.localizedDescription)
         }
