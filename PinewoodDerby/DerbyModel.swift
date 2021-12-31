@@ -136,7 +136,11 @@ class Derby: ObservableObject {
     func nextState() {
         stateIndex += 1
         if stateIndex < stateMax {
-            readFileFromServer(stateMachine![stateIndex].name)
+            if simulationRunning {
+                stateMachine![stateIndex].read()
+            } else {
+                readFileFromServer(stateMachine![stateIndex].name)
+            }
         }
     }
     
@@ -842,7 +846,10 @@ extension Derby {
     }
     
     func readFileFromServer(_ name: String) {
-      
+        if simulationRunning {
+            self.stateMachine![self.stateIndex].read()
+            return
+        }
         guard let timerUrl = URL(string: timer) else {
             // TODO: error
             return
@@ -897,6 +904,9 @@ extension Derby {
     }
     
     func saveFileToServer(_ name: String) {
+        if simulationRunning {
+            return
+        }
         guard let timerUrl = URL(string: timer) else {
             // TODO: error
             return

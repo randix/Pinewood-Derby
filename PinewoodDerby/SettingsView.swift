@@ -180,7 +180,7 @@ struct SettingsView: View {
                             })  {
                                 Text("Start").font(.system(size:22)).bold()
                             }
-                            Spacer().frame(width:20)
+                            Spacer().frame(width:15)
                             Button(action: {
                                 if !derby.connected {
                                     alertAction = .serverNotConnected
@@ -203,6 +203,7 @@ struct SettingsView: View {
                     Spacer()
                     Text("Simulation Testing:").font(.system(size:16)).bold()
                     Button(action: {
+                        derby.simulationRunning = true
                         alertAction = .startSimulation
                         alertTitle = "Reset All Timing Data"
                         alertMessage = "Are you sure?"
@@ -211,7 +212,7 @@ struct SettingsView: View {
                     })  {
                         Text("Start").font(.system(size:16)).bold()
                     }
-                    Spacer().frame(width:20)
+                    Spacer().frame(width:15)
                     Button(action: {
                         derby.simulationRunning = true
                         derby.tabSelection = Tab.heats.rawValue
@@ -250,7 +251,7 @@ struct SettingsView: View {
                 if alertAction == .serverNotConnected {
                     return
                 }
-                derby.saveSettings()
+                //derby.saveSettings()
                 if alertAction == .startRace {
                     derby.startRacing()
                 } else {
