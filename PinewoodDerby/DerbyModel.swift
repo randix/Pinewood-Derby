@@ -776,7 +776,7 @@ extension Derby {
                 }
                 self.heats[heat-1].hasRun = true
             }
-            self.removeFile(Filenames.timesName)
+            //self.removeFile(Filenames.timesName)
             self.calculateRankings()
             self.saveHeats()
             self.objectWillChange.send()

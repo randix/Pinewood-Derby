@@ -9,18 +9,20 @@ import SwiftUI
 
 @main
 struct PinewoodDerbyApp: App {
+    
+    let derby = Derby.shared
    
     init() {
         let dictionary = Bundle.main.infoDictionary!
-        Derby.shared.appName = dictionary["CFBundleName"] as! String
+        derby.appName = dictionary["CFBundleName"] as! String
         let version = dictionary["CFBundleShortVersionString"] as! String
         let build = dictionary["CFBundleVersion"] as! String
-        Derby.shared.appVersion = "\(version).\(build)"
-        log("\(Derby.shared.appName) \(Derby.shared.appVersion)")
+        derby.appVersion = "\(version).\(build)"
+        log("\(derby.appName) \(derby.appVersion)")
         
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
-        Derby.shared.initStateMachine()
+        derby.initStateMachine()
         
         // install sample files and documentation
         let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
