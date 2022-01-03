@@ -648,9 +648,7 @@ extension Derby {
         
         do {
             try data.write(toFile: name.path, atomically: true, encoding: .utf8)
-            if connected {
-                saveFileToServer(Filenames.derbyName)
-            }
+            saveFileToServer(Filenames.derbyName)
         } catch {
             log(error.localizedDescription)
         }
