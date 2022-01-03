@@ -24,21 +24,20 @@ struct PinewoodDerbyApp: App {
         
         // install sample files and documentation
         let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        for f in ["racers", "groups"] {
-            let fileUrl = Bundle.main.url(forResource:f, withExtension: "csv")!
-            let destUrl = docsDir.appendingPathComponent(f + ".csv")
-            if !FileManager.default.fileExists(atPath: destUrl.path) {
-                do {
-                    try FileManager.default.copyItem(at: fileUrl, to: destUrl)
-                    log("Copied \(f)")
-                } catch {
-                    log("error: \(error.localizedDescription)")
-                }
+        var f = "derby"
+        var fileUrl = Bundle.main.url(forResource:f, withExtension: "txt")!
+        var destUrl = docsDir.appendingPathComponent(f + ".txt")
+        if !FileManager.default.fileExists(atPath: destUrl.path) {
+            do {
+                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
+                log("Copied \(f)")
+            } catch {
+                log("error: \(error.localizedDescription)")
             }
         }
-        var f = "Pinewood Derby"
-        var fileUrl = Bundle.main.url(forResource:f, withExtension: "pdf")!
-        var destUrl = docsDir.appendingPathComponent(f + ".pdf")
+        f = "Pinewood Derby"
+        fileUrl = Bundle.main.url(forResource:f, withExtension: "pdf")!
+        destUrl = docsDir.appendingPathComponent(f + ".pdf")
         if !FileManager.default.fileExists(atPath: destUrl.path) {
             do {
                 try FileManager.default.copyItem(at: fileUrl, to: destUrl)
