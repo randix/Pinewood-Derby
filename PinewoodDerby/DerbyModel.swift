@@ -59,30 +59,34 @@ class GroupEntry: Identifiable {
     var group: String
 }
 
-struct StateMachine {
-    let name: String
-    let read: () -> Void
-}
+//struct StateMachine {
+//    let name: String
+//    let read: () -> Void
+//}
 
 struct Filenames {
+    static let simFlagName = "sim.txt"  // local
+    
+    // configuration - on server also:
     static let pinName = "PIN.txt"
-    static let settingsName = "settings.txt"
-    static let racersName = "racers.csv"
-    static let groupsName = "groups.csv"
-    static let heatsName = "heats.csv"
-    static let timeslogName = "timeslog.csv"
+    static let derbyName = "derby.txt"
+    
+    static let timeslogName = "timeslog.csv"    // maintained separately on server and local
+    // for each heat:
+    static let heatName = "heat.csv"
     static let timesName = "times.csv"
-    static let nextHeatName = "nextheat.csv"
 }
 
 // MARK: DerbyModel
 
 class Derby: ObservableObject {
     
+    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    
     // TODO: Apple requires https
     @Published var timer = "http://raspberrypi.local:8484/"
-    @Published var connected = false
-   
+    @Published var connected = true
+    
     var appName = ""
     var appVersion = ""
     let iPad = UIScreen.main.bounds.width > 600
@@ -97,10 +101,12 @@ class Derby: ObservableObject {
     @Published var racers: [RacerEntry] = []
     @Published var heats: [HeatsEntry] = []
     @Published var groups: [GroupEntry] = []
-        
+    
     @Published var isMaster = false
     @Published var masterPin = "1234"
     @Published var pin: String = ""
+    
+    @Published var readingConfig = false
     
     let overall = "overall"
     
@@ -108,43 +114,24 @@ class Derby: ObservableObject {
     var maximumTime = 20.0
     
     @Published var tabSelection = Tab.racers.rawValue
+    
     @Published var simulationRunning = false
+    var simTimesCount = 0
     
     var timesTimer: Timer?
-    let timesTimerInterval = 0.5
-    var nextHeat = 0
+    let timesTimerInterval = 1.0
+    var heat = 0
     var trackCars = [Int]()
+    var seenTimes = 0
+    let timesVersion = "A"
     
-    let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let backgroundQueue = DispatchQueue(label: "background")
+    let mainQueue = DispatchQueue.main
     
-    var stateMachine: [StateMachine]?
-    var stateIndex = 0
-    var stateMax  = 5
+    //let semaphore = DispatchSemaphore(value: 0)
     
     static let shared = Derby()
     private init() {}
-    
-    func initStateMachine() {
-        stateMachine = [
-            StateMachine(name:Filenames.pinName, read: readPin),
-            StateMachine(name:Filenames.settingsName, read: readSettings),
-            StateMachine(name:Filenames.racersName, read: readRacers),
-            StateMachine(name:Filenames.groupsName, read: readGroups),
-            StateMachine(name:Filenames.heatsName, read: readHeats)
-        ]
-        stateMax = stateMachine!.count
-    }
-    
-    func nextState() {
-        stateIndex += 1
-        if stateIndex < stateMax {
-            if simulationRunning {
-                stateMachine![stateIndex].read()
-            } else {
-                readFileFromServer(stateMachine![stateIndex].name)
-            }
-        }
-    }
     
     // MARK: Delete single racer entry
     // called from RacersView to delete an entry
@@ -182,7 +169,11 @@ class Derby: ObservableObject {
         }
         calculateRankings()
         
-        saveRacers()
+        saveDerby()
+        
+        deleteFileFromServer(Filenames.timesName)   // async
+        removeFile(Filenames.timesName)
+        seenTimes = 0
         objectWillChange.send()
     }
     
@@ -192,15 +183,11 @@ class Derby: ObservableObject {
         log(#function)
         archiveData()
         clearTimes()
-        removeFile(Filenames.timeslogName)
         generateHeats()
     }
     
-    // remove old  times.csv
-    // generate nextheats.csv
-    // start readTimer()
+    // generate heat.csv
     func startHeat(_ heat: Int, _ cars: [Int]) {
-        timesTimer?.invalidate()
         
         var heatData = "\(heat)"
         for i in 0..<trackCount {
@@ -210,21 +197,18 @@ class Derby: ObservableObject {
         heatData += "\n"
         do {
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let nextheatURL = docURL.appendingPathComponent(Filenames.nextHeatName)
+            let nextheatURL = docURL.appendingPathComponent(Filenames.heatName)
             try heatData.write(toFile: nextheatURL.path, atomically: true, encoding: .utf8)
         } catch {
             log(error.localizedDescription)
             return
         }
         
-        removeFile(Filenames.timesName)
         if simulationRunning {
             simulateHeat()
         } else {
-            deleteFileFromServer(Filenames.timesName)
-            saveFileToServer(Filenames.nextHeatName)
+            saveFileToServer(Filenames.heatName)
         }
-        readTimes()
     }
     
     // MARK: Simulator
@@ -235,15 +219,15 @@ class Derby: ObservableObject {
         startRacing()
     }
     
-    // read nextheat.csv
+    // read heat.csv
     // process and then
     // generate times.csv
     func simulateHeat() {
         log(#function)
-        let nextheatURL = docDir.appendingPathComponent(Filenames.nextHeatName)
+        let heatURL = docDir.appendingPathComponent(Filenames.heatName)
         let timesURL = docDir.appendingPathComponent(Filenames.timesName)
         do {
-            let line = try String(contentsOf: nextheatURL)
+            let line = try String(contentsOf: heatURL)
             log("heat: \(line)")
             let values = line.split(separator: ",", omittingEmptySubsequences: false)
             if values.count < trackCount + 1 {
@@ -278,11 +262,13 @@ class Derby: ObservableObject {
                 }
             }
             data.sort { $0.track < $1.track }
-            var timesData = "\(heat)"
+            
+            simTimesCount += 1
+            var timesData = "\(timesVersion),\(simTimesCount),\(heat)"
             for i in 0..<self.trackCount {
                 timesData += String(format: ",%d,%d,%0.4f", data[i].car, data[i].place, data[i].time)
             }
-            log("simulated times \(timesData)")
+            log("simulateHeat: \(timesData)")
             timesData += "\n"
             
             try timesData.write(to: timesURL, atomically: true, encoding: .utf8)
@@ -366,7 +352,7 @@ class Derby: ObservableObject {
         }
         
         if changed {
-            saveRacers()
+            saveDerby()
             objectWillChange.send()
         }
     }
@@ -391,7 +377,7 @@ class Derby: ObservableObject {
             cars.shuffle()
             let offset = cars.count / trackCount
             log("\(group.group) count=\(cars.count) offset=\(offset)")
-        
+            
             groupHeats.append([HeatsEntry]())
             // generate the heats
             for i in 0..<cars.count {
@@ -433,7 +419,7 @@ class Derby: ObservableObject {
                 break
             }
         }
-
+        
         for i in 0..<heats.count {
             var heat = "\(heats[i].heat) \(heats[i].group) "
             for j in 0..<heats[i].tracks.count {
@@ -442,15 +428,15 @@ class Derby: ObservableObject {
             log(heat)
         }
         
-        saveHeats()
-        self.objectWillChange.send()
+        saveDerby()
+        objectWillChange.send()
     }
 }
 
 // MARK: Files
 
 extension Derby {
-   
+    
     func removeFile(_ name: String) {
         let nameUrl = docDir.appendingPathComponent(name)
         if FileManager.default.fileExists(atPath: nameUrl.path) {
@@ -478,42 +464,53 @@ extension Derby {
         } catch {
             log("error: \(error.localizedDescription)")
         }
-        nextState()
+        readFileFromServer(Filenames.derbyName)
     }
     
-    func readSettings() {
-        log("\(#function) \(Filenames.settingsName)")
-        log("\(docDir)")
-        let name = docDir.appendingPathComponent(Filenames.settingsName)
+    func readDerby() {
+        let name = docDir.appendingPathComponent(Filenames.derbyName)
+        log("readDerby: \(name)")
         var config: String
         do {
             config = try String(contentsOf: name)
         } catch {
             log("error: \(error.localizedDescription)")
-            title = "Pinewood Derby"
-            event = "Event"
-            trackCount = 4
-            saveSettings()
-            nextState()
+            readingConfig = false
+            objectWillChange.send()
             return
         }
+        let sections = config.components(separatedBy: "\n+++\n")
+        // 0: settings
+        let settingsSection = sections[0].components(separatedBy: "\n")
+        // 1: groups
+        let groupsSection = sections[1].components(separatedBy: "\n")
+        // 2: heats
+        let heatsSection = sections[2].components(separatedBy: "\n")
+        // 3: racers
+        let racersSection = sections[3].components(separatedBy: "\n")
         
-        let lines = config.components(separatedBy: "\n")
-        for line in lines {
+        // settings
+        for line in settingsSection {
             if line.count == 0 {
                 continue
             }
             let keyValue = line.components(separatedBy: "=")
             if keyValue.count < 2 {
-                log("\(Filenames.settingsName): format error")
+                log("\(Filenames.derbyName): format error")
                 continue
             }
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
             case "title":
                 title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                if title == "" {
+                    title = "Pinewood Derby"
+                }
                 log("title=\(title)")
             case "event":
                 event = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                if title == "" {
+                    title = "Event"
+                }
                 log("event=\(event)")
             case "tracks":
                 let tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
@@ -532,50 +529,55 @@ extension Derby {
                 log("incorrect format: \(config)")
             }
         }
-        objectWillChange.send()
-        nextState()
-    }
-    
-    func saveSettings() {
-        log("\(#function) \(Filenames.settingsName)")
-        var list = [String]()
-        list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
-        list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
-        list.append("tracks=\(String(trackCount))")
-        let name = docDir.appendingPathComponent(Filenames.settingsName)
-        let fileData = list.joined(separator: "\n") + "\n"
         
-        do {
-            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-            if connected {
-                saveFileToServer(Filenames.settingsName)
+        // groups
+        groups = []
+        for line in groupsSection {
+            if line.count == 0 {
+                continue
             }
-        } catch {
-            log(error.localizedDescription)
+            let group = line.trimmingCharacters(in: .whitespaces)
+            log("group: \(group)")
+            groups.append(GroupEntry(group: group))
         }
-    }
-    
-    func readRacers() {
-        let name = docDir.appendingPathComponent(Filenames.racersName)
-        log("\(#function) \(Filenames.racersName)")
-        var data: String?
-        do {
-            data = try String(contentsOf: name)
-        } catch {
-            log("error: \(error.localizedDescription)")
-            data = ""
+        
+        // heats
+        heats = []
+        for line in heatsSection {
+            if line.count == 0 {
+                continue
+            }
+            log("heat: \(line)")
+            let values = line.split(separator: ",", omittingEmptySubsequences: false)
+            if values.count < (trackCount+3) {
+                log("invalid")
+                continue
+            }
+            let heat = Int(values[0])!
+            let group = values[1]
+            let tCnt = values.count - 3
+            var tracks: [Int] = [Int](repeating: 0, count: tCnt)
+            for i in 0..<tCnt {
+                tracks[i] = Int(values[i+2])!
+            }
+            let hasRun = values.last == "true"
+            
+            let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
+            heats.append(h)
         }
-        let lines = data!.components(separatedBy: .newlines)
+        
+        // racers
         racers = []
-        for line in lines {
+        for line in racersSection {
             let ln = line.trimmingCharacters(in: .whitespaces)
             if ln.count == 0 {
                 continue
             }
-            log(line)
+            log("racer: \(line)")
             let values = ln.split(separator: ",", omittingEmptySubsequences: false)
             let racerDetails = 6    // number, carName, firstName, lastName, age, group
             if values.count < racerDetails {
+                log("invalid")
                 continue
             }
             let d = RacerEntry(number:Int(values[0])!,
@@ -596,112 +598,32 @@ extension Derby {
             racers.append(d)
         }
         
+        readingConfig = false
         calculateRankings()
         objectWillChange.send()
-        nextState()
     }
     
-    func saveRacers() {
-        let name = docDir.appendingPathComponent(Filenames.racersName)
-        log("\(#function) \(Filenames.racersName)")
-        var list = [String]()
-        for entry in racers {
-            let csv = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group)"
-            var times = ""
-            for i in 0..<trackCount {
-                times += String(format: ",%0.4f,%d,%d", entry.times[i], entry.places[i], entry.ignores[i] ? 1 : 0)
-            }
-            list.append(csv+times)
-        }
-        let fileData = list.joined(separator: "\n") + "\n"
-        do {
-            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-            saveFileToServer(Filenames.racersName)
-        } catch {
-            log("error: \(error.localizedDescription)")
-        }
-    }
-    
-    func readGroups() {
-        let name = docDir.appendingPathComponent(Filenames.groupsName)
-        log("\(#function) \(Filenames.groupsName)")
-        var data: String?
-        do {
-            data = try String(contentsOf: name)
-        } catch {
-            log("error: \(error.localizedDescription)")
-            data = ""
-        }
-        groups = []
-        let lines = data!.components(separatedBy: .newlines)
-        for line in lines {
-            if line.count == 0 {
-                continue
-            }
-            let group = line.trimmingCharacters(in: .whitespaces)
-            log(group)
-            groups.append(GroupEntry(group: group))
-        }
-        objectWillChange.send()
-        nextState()
-    }
-    
-    func saveGroups() {
-        let name = docDir.appendingPathComponent(Filenames.groupsName)
-        log("\(#function) \(Filenames.groupsName)")
-        var list = [String]()
-        for entry in groups {
-            let csv = "\(entry.group)"
-            list.append(csv)
-        }
-        let fileData = list.joined(separator: "\n") + "\n"
-        do {
-            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-            saveFileToServer(Filenames.groupsName)
-        } catch {
-            log("error: \(error.localizedDescription)")
-        }
-    }
-    
-    func readHeats() {
-        let name = docDir.appendingPathComponent(Filenames.heatsName)
-        log("\(#function) \(Filenames.heatsName)")
-        do {
-            let data = try String(contentsOf: name)
-            heats = []
-            let lines = data.components(separatedBy: .newlines)
-            for line in lines {
-                if line.count == 0 {
-                    continue
-                }
-                log(line)
-                let values = line.split(separator: ",", omittingEmptySubsequences: false)
-                if values.count < trackCount {
-                    continue
-                }
-                let heat = Int(values[0])!
-                let group = values[1]
-                let tCnt = values.count - 3
-                var tracks: [Int] = [Int](repeating: 0, count: tCnt)
-                for i in 0..<tCnt {
-                    tracks[i] = Int(values[i+2])!
-                }
-                let hasRun = values.last == "true"
-                
-                let h = HeatsEntry(heat: heat, group: String(group), tracks: tracks, hasRun: hasRun)
-                heats.append(h)
-            }
-        } catch {
-            log("error: \(error.localizedDescription)")
-        }
+    func saveDerby() {
+        log("\(#function) \(Filenames.derbyName)")
+        let name = docDir.appendingPathComponent(Filenames.derbyName)
+        var data = ""
         
-        objectWillChange.send()
-        nextState()
-    }
-    
-    func saveHeats() {
-        log("\(#function) \(Filenames.heatsName)")
+        // settings
         var list = [String]()
+        list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
+        list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
+        list.append("tracks=\(String(trackCount))")
+        data += list.joined(separator: "\n") + "\n+++\n"
+        
+        // groups
+        list = [String]()
+        for entry in groups {
+            list.append(entry.group)
+        }
+        data += list.joined(separator: "\n") + "\n+++\n"
+        
+        // heats
+        list = [String]()
         for entry in heats {
             var heat = "\(entry.heat),\(entry.group),"
             for i in 0..<entry.tracks.count {
@@ -710,77 +632,118 @@ extension Derby {
             heat.append("\(entry.hasRun)")
             list.append(heat)
         }
-        let name = docDir.appendingPathComponent(Filenames.heatsName)
-        let fileData = list.joined(separator: "\n") + "\n"
+        data += list.joined(separator: "\n") + "\n+++\n"
+        
+        // racers
+        list = [String]()
+        for entry in racers {
+            let csv = "\(entry.carNumber),\(entry.carName),\(entry.firstName),\(entry.lastName),\(entry.age),\(entry.group)"
+            var times = ""
+            for i in 0..<trackCount {
+                times += String(format: ",%0.4f,%d,%d", entry.times[i], entry.places[i], entry.ignores[i] ? 1 : 0)
+            }
+            list.append(csv+times)
+        }
+        data += list.joined(separator: "\n") + "\n"
+        
         do {
-            try fileData.write(toFile: name.path, atomically: true, encoding: .utf8)
-            saveFileToServer(Filenames.heatsName)
+            try data.write(toFile: name.path, atomically: true, encoding: .utf8)
+            if connected {
+                saveFileToServer(Filenames.derbyName)
+            }
         } catch {
             log(error.localizedDescription)
         }
     }
     
-    func readTimes() {
+    func startReadTimes() {
         log(#function)
-        let timesUrl = docDir.appendingPathComponent(Filenames.timesName)
-        let timeslogUrl = docDir.appendingPathComponent(Filenames.timeslogName)
-        timesTimer?.invalidate()
+        connected = true
         timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timesTimerInterval), repeats: true) { timer in
-            if !self.simulationRunning {
+            if self.simulationRunning {
+                self.readTimes()
+            } else {
                 self.readFileFromServer(Filenames.timesName)
             }
-            var data: String?
-            do {
-                data = try String(contentsOf: timesUrl)
-            } catch {
-                return
-            }
-            self.timesTimer?.invalidate()
-            
-            if let times = data?.trimmingCharacters(in: .whitespacesAndNewlines) {
-                log("heat: read times: \(times)")
-                // append to times log
-                do {
-                    let line = times + "\n"
-                    if FileManager.default.fileExists(atPath: timeslogUrl.path) {
-                        let fileHandle = try FileHandle(forWritingTo: timeslogUrl)
-                        fileHandle.seekToEndOfFile()
-                        fileHandle.write(Data(line.utf8))
-                        fileHandle.closeFile()
-                    } else {
-                        try line.write(to: timeslogUrl, atomically: true, encoding: .utf8)
-                    }
-                    log("heat times appended \(Filenames.timeslogName)")
-                } catch {
-                    log(error.localizedDescription)
-                }
-                
-                let values = times.split(separator: ",", omittingEmptySubsequences: false)
-                if values.count < (1 + 3 * self.trackCount) {
-                    return
-                }
-                let heat = Int(values[0])!
-                for i in 0..<self.trackCount {
-                    let carNumber = Int(values[3*i+1])
-                    if carNumber == 0 {
-                        continue
-                    }
-                    let place = Int(values[3*i+2])!
-                    let time = Double(values[3*i+3])!
-                    let entry = self.racers.filter { $0.carNumber == carNumber }[0]
-                    if entry.times[i] == 0.0 || time < entry.times[i] {
-                        entry.places[i] = place
-                        entry.times[i] = time
-                        entry.ignores[i] = false
-                    }
-                }
-                self.heats[heat-1].hasRun = true
-            }
-            //self.removeFile(Filenames.timesName)
-            self.calculateRankings()
-            self.saveHeats()
-            self.objectWillChange.send()
         }
+    }
+    
+    func readTimes() {
+        //log(#function)
+        let timesUrl = docDir.appendingPathComponent(Filenames.timesName)
+        let timeslogUrl = docDir.appendingPathComponent(Filenames.timeslogName)
+        
+        var rawData: String?
+        do {
+            rawData = try String(contentsOf: timesUrl).trimmingCharacters(in: .whitespacesAndNewlines)
+        } catch {
+            return
+        }
+        guard let values = rawData?.split(separator: ",", omittingEmptySubsequences: false) else {
+            log("readTimes: invalid format: \(String(describing: rawData))")
+            return
+        }
+        if values.count < (3 + 3 * self.trackCount) {
+            log("readTimes: invalid count: \(String(describing: rawData))")
+            return
+        }
+        if values[0] != self.timesVersion {
+            log("readTimes: invalid version: \(String(describing: rawData))")
+            return
+        }
+        
+        guard let timeCnt = Int((values[1])), timeCnt > self.seenTimes else {
+            // quietly
+            return
+        }
+        self.seenTimes = timeCnt
+        
+        guard let heat = Int(values[2]), heat <= self.heats.count else  {
+            log("readTimes: invalid heat: \(String(describing: rawData))")
+            return
+        }
+        
+        log("readTimes: \(rawData!)")
+        do {
+            let line = rawData! + "\n"
+            if FileManager.default.fileExists(atPath: timeslogUrl.path) {
+                let fileHandle = try FileHandle(forWritingTo: timeslogUrl)
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(Data(line.utf8))
+                fileHandle.closeFile()
+            } else {
+                try line.write(to: timeslogUrl, atomically: true, encoding: .utf8)
+            }
+        } catch {
+            log(error.localizedDescription)
+        }
+        
+        for i in 0..<self.trackCount {
+            let carNumber = Int(values[3*i+3])
+            if carNumber == 0 {
+                continue
+            }
+            let place = Int(values[3*i+4])!
+            let time = Double(values[3*i+5])!
+            print("PLACE TIME", carNumber as Any, place, time)
+            let entry = self.racers.filter { $0.carNumber == carNumber }
+            if entry.count < 1 {
+                print("not found")
+                continue
+            }
+            if entry[0].times[i] == 0.0 || time < entry[0].times[i] {
+                entry[0].places[i] = place
+                entry[0].times[i] = time
+                entry[0].ignores[i] = false
+            }
+        }
+        self.heats[heat-1].hasRun = true
+        
+        self.calculateRankings()
+        self.saveDerby()
+        
+        self.objectWillChange.send()
+        
     }
     
     func archiveData() {
@@ -808,7 +771,7 @@ extension Derby {
                 log(error.localizedDescription)
             }
         }
-        let files = [Filenames.settingsName, Filenames.racersName, Filenames.heatsName, Filenames.groupsName, Filenames.timeslogName]
+        let files = [Filenames.derbyName, Filenames.timeslogName]
         for f in files {
             log("copy \(f) to \(archiveName + "/" + f)")
             let srcURL = docURL.appendingPathComponent(f)
@@ -827,37 +790,60 @@ extension Derby {
 extension Derby {
     
     func deleteFileFromServer(_ name: String) {
+        log("\(#function) \(name)")
+        if !connected {
+            return
+        }
         guard let timerUrl = URL(string: timer) else {
-            // TODO: error
+            log("invalid URL: \(timer)")
             return
         }
         let url = timerUrl.appendingPathComponent(name)
         log("DELETE \(url)")
-        let urlSession = URLSession.shared
-        var request = URLRequest(
-            url: url,
-            cachePolicy: .reloadIgnoringLocalCacheData
-        )
+        var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         
-        let task = urlSession.dataTask(
+        URLSession.shared.dataTask(
             with: request,
             completionHandler: { data, response, error in
                 if let error = error {
                     log(error.localizedDescription)
                     return
                 }
-            })
-        task.resume()
+            }).resume()
     }
     
+    func dispatch(_ name: String) {
+        if name != Filenames.timesName {
+            log("\(#function) \(name)")
+        }
+        mainQueue.async {
+            switch name {
+            case Filenames.pinName:
+                self.readPin()
+            case Filenames.derbyName:
+                self.readDerby()
+            case Filenames.timesName:
+                self.readTimes()
+            default:
+                log("readFileFromServer: \(name) - unknown action")
+            }
+        }
+    }
+    
+    // this runs synchronously
     func readFileFromServer(_ name: String) {
-        if simulationRunning {
-            self.stateMachine![self.stateIndex].read()
+        if name != Filenames.timesName {
+            log("\(#function) \(name)")
+        }
+        if !connected {
+            dispatch(name)
             return
         }
+        
         guard let timerUrl = URL(string: timer) else {
-            // TODO: error
+            log("invalid URL: \(timer)")
+            dispatch(name)
             return
         }
         let url = timerUrl.appendingPathComponent(name)
@@ -870,72 +856,59 @@ extension Derby {
         let session = URLSession(configuration: sessionConfig)
         let task = session.downloadTask(with: url) { tempURL, response, error in
             guard let tempURL = tempURL else {
-                log(error?.localizedDescription ?? "\(name): not downloaded")
+                if name != Filenames.timesName {
+                    log(error?.localizedDescription ?? "\(name): not downloaded")
+                }
                 DispatchQueue.main.async {
                     self.connected = false
-                    if name != Filenames.timesName {
-                        self.stateMachine![self.stateIndex].read()
-                    }
                 }
+                self.dispatch(name)
                 return
             }
             DispatchQueue.main.async {
                 self.connected = true
             }
             let response = response as! HTTPURLResponse
-            if response.statusCode != 200 {
-                DispatchQueue.main.async {
+            if response.statusCode == 200 {
+                do {
+                    let file = self.docDir.appendingPathComponent(name)
+                    if FileManager.default.fileExists(atPath: file.path) {
+                        try FileManager.default.removeItem(at: file)
+                    }
+                    try FileManager.default.copyItem(at: tempURL, to: file)
                     if name != Filenames.timesName {
-                        self.stateMachine![self.stateIndex].read()
+                        log("fetched: \(name)")
                     }
                 }
-                return
-            }
-            do {
-                let file = self.docDir.appendingPathComponent(name)
-                if FileManager.default.fileExists(atPath: file.path) {
-                    try FileManager.default.removeItem(at: file)
-                }
-                try FileManager.default.copyItem(at: tempURL, to: file)
-                log("fetched: \(name)")
-            }
-            catch {
-                log(error.localizedDescription)
-            }
-            DispatchQueue.main.async {
-                if name != Filenames.timesName {
-                    self.stateMachine![self.stateIndex].read()
+                catch {
+                    log(error.localizedDescription)
                 }
             }
+            self.dispatch(name)
         }
         task.resume()
     }
     
     func readFilesFromServer() {
-        stateIndex = 0
-        readFileFromServer((stateMachine![stateIndex].name))
+        readingConfig = true
+        readFileFromServer(Filenames.pinName)
+        objectWillChange.send()
     }
     
     func saveFileToServer(_ name: String) {
-        if simulationRunning {
+        log("\(#function) \(name)")
+        if !connected || simulationRunning {
             return
         }
         guard let timerUrl = URL(string: timer) else {
-            // TODO: error
+            log("invalid URL: \(timer)")
             return
         }
         let url = timerUrl.appendingPathComponent(name)
         log("POST \(url)")
-        let urlSession = URLSession.shared
-        
-        // To ensure that our request is always sent, we tell
-        // the system to ignore all local cache data
-        var request = URLRequest(
-            url: url,
-            cachePolicy: .reloadIgnoringLocalCacheData
-        )
         let fileUrl = docDir.appendingPathComponent(name)
-  
+        
+        var request = URLRequest(url: url)
         do {
             request.httpBody = try Data(contentsOf: fileUrl)
         } catch {
@@ -944,14 +917,13 @@ extension Derby {
         }
         request.httpMethod = "POST"
         
-        let task = urlSession.dataTask(
+        URLSession.shared.dataTask(
             with: request,
             completionHandler: { data, response, error in
                 if let error = error {
                     log(error.localizedDescription)
-                    return
                 }
-            })
-        task.resume()
+                // nothing more to do...
+            }).resume()
     }
 }

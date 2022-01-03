@@ -80,7 +80,7 @@ struct RacerGroupView: View {
                                 r.group = newGroup
                             }
                         }
-                        derby.saveRacers()
+                        derby.saveDerby()
                     } else {
                         let others = groups.filter { $0.group == newGroup }
                         if others.count > 0 {
@@ -129,7 +129,7 @@ struct RacerGroupView: View {
                                     r.group = ""
                                 }
                             }
-                            derby.saveRacers()
+                            derby.saveDerby()
                             updateGroups()
                         }) {
                             Label("Delete", systemImage: "trash")
@@ -158,7 +158,7 @@ struct RacerGroupView: View {
             }
             derby.groups.append(group)
         }
-        derby.saveGroups()
+        derby.saveDerby()
         derby.objectWillChange.send()
     }
 }

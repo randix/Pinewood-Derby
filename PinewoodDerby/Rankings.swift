@@ -30,7 +30,7 @@ struct RankingsView: View {
                 Spacer().frame(width:30)
                 Button(action: {
                     derby.racers.sort { $0.group < $1.group }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text("Group").bold()
                         .frame(width: 44, alignment: .leading)
@@ -39,7 +39,7 @@ struct RankingsView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.group + String(format: "%03d", $0.rankGroup) < $1.group + String(format: "%03d", $1.rankGroup) }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 42, alignment: .center).font(.system(size: 12))
@@ -49,7 +49,7 @@ struct RankingsView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.rankOverall < $1.rankOverall }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     VStack {
                         Text("Rank").bold().frame(width: 46, alignment: .center).font(.system(size: 12))
@@ -59,7 +59,7 @@ struct RankingsView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.carNumber < $1.carNumber }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text(" Car#").bold()
                         .frame(width: 42, alignment: .leading)
@@ -68,7 +68,7 @@ struct RankingsView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text("Name").bold()
                         .frame(width: 150, alignment: .leading)

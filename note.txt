@@ -1,7 +1,8 @@
 issues
   observer devices should auto-update
   pin change
-  block Update while updating (messes up the state machine, by having multiple requests, double incrementing)
+  clean up iPad display
+  resume automatically!
   
 Server:
   server: add cert for https

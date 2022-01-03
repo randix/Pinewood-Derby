@@ -66,7 +66,7 @@ struct RacersView: View {
                 Spacer().frame(width:30)
                 Button(action: {
                     derby.racers.sort { $0.carNumber < $1.carNumber }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text(" # Car").bold()
                         .frame(width: 105, alignment: .leading)
@@ -75,7 +75,7 @@ struct RacersView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.lastName + $0.firstName <  $1.lastName + $1.firstName }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text("Name").bold()
                         .frame(width: 145, alignment: .leading)
@@ -84,7 +84,7 @@ struct RacersView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.group < $1.group }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text("Group")
                         .bold()
@@ -94,7 +94,7 @@ struct RacersView: View {
                 }
                 Button(action: {
                     derby.racers.sort { $0.age < $1.age }
-                    derby.saveRacers()
+                    derby.saveDerby()
                 }) {
                     Text("Age").bold()
                         .frame(width: 34, alignment: .leading)

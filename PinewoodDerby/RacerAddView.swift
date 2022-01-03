@@ -291,7 +291,7 @@ struct RacerAddView: View {
                     let d = RacerEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: ageInt, group: group)
                     derby.racers.append(d)
                 }
-                derby.saveRacers()
+                derby.saveDerby()
                 derby.objectWillChange.send()
                 return true
             } else {

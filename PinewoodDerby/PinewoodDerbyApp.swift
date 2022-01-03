@@ -22,8 +22,6 @@ struct PinewoodDerbyApp: App {
         
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
-        derby.initStateMachine()
-        
         // install sample files and documentation
         let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         for f in ["racers", "groups"] {

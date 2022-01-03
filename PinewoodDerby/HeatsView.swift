@@ -33,6 +33,7 @@ struct Times: View {
     func timeForCar(_ carNumber: Int, _ track: Int) -> String {
         if carNumber == 0 { return "" }
         let entry = derby.racers.filter { $0.carNumber == carNumber }
+        if entry.count < 1 { return "" }
         let time = entry[0].times[track]
         if time == 0.0 { return "-" }
         return String(format: "%0.4f", time)
@@ -41,6 +42,7 @@ struct Times: View {
     func placeForCar(_ carNumber: Int, _ track: Int) -> String {
         if carNumber == 0 { return "" }
         let entry = derby.racers.filter { $0.carNumber == carNumber }
+        if entry.count < 1 { return "" }
         let place = entry[0].places[track]
         if place == 0 { return "-" }
         return String(format: "%d", place)
@@ -148,7 +150,7 @@ struct HeatsView: View {
                     .onTapGesture(perform: {
                         if derby.isMaster {
                             showStartModal = true
-                            derby.nextHeat = heat.heat
+                            derby.heat = heat.heat
                             derby.trackCars = heat.tracks
                         }
                     })

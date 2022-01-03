@@ -61,7 +61,7 @@ struct HeatsStartView: View {
                 // Title
                 HStack {
                     Spacer()
-                    Text("Run Heat \(derby.nextHeat)").font(.system(size: 22)).bold()
+                    Text("Run Heat \(derby.heat)").font(.system(size: 22)).bold()
                     Spacer()
                 }
                 Spacer().frame(height:30)
@@ -94,7 +94,7 @@ struct HeatsStartView: View {
                 }
                 Spacer().frame(width: 40)
                 Button(action: {
-                    derby.startHeat(derby.nextHeat, derby.trackCars)
+                    derby.startHeat(derby.heat, derby.trackCars)
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Start")

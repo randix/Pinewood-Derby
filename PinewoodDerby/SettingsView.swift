@@ -85,6 +85,7 @@ struct SettingsView: View {
                     }
                     Spacer().frame(width: 20)
                     Button(action: {
+                        derby.connected = true
                         derby.simulationRunning = false
                         derby.readFilesFromServer()
                     }) {
@@ -93,6 +94,7 @@ struct SettingsView: View {
                             .frame(width:70)
                         //.background(.yellow)
                     }
+                    .disabled(derby.readingConfig)
                     Spacer()
                 }
                 if !derby.connected {
@@ -263,7 +265,7 @@ struct SettingsView: View {
             tracksSelector = derby.trackCount - 2
         })
         .onDisappear(perform: {
-            derby.saveSettings()
+            derby.saveDerby()
         })
     }
 }
