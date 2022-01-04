@@ -23,7 +23,7 @@ struct Times: View {
                 Text(timeForCar(derby.heats[heat].tracks[track], track))
                     .font(.system(size: 12))
                 Text(placeForCar(derby.heats[heat].tracks[track], track))
-                    .font(.system(size: 12))
+                    .font(.system(size: 14))
             }
         }
         .frame(width: 43)
@@ -54,10 +54,6 @@ struct HeatsView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     @ObservedObject var derby = Derby.shared
-    
-//    @State var alertShow = false
-//    @State var alertTitle = ""
-//    @State var alertMessage = ""
     
     @State var showSpecialModal = false
     @State var showStartModal = false
@@ -94,27 +90,39 @@ struct HeatsView: View {
             
             // MARK: Header
             HStack(spacing: 1) {
-                Spacer().frame(width:90)
-                
-                Text("T1").bold().frame(width: 43).font(.system(size: 18))
+                Spacer().frame(width:70)
+                Spacer()
+                Text("T1").bold().frame(width: 44).font(.system(size: 18))
                     //.background(.yellow)
-                Text("T2").bold().frame(width: 43).font(.system(size: 18))
+                Text("T2").bold().frame(width: 44).font(.system(size: 18))
                     //.background(.yellow)
                 if derby.trackCount > 2 {
-                    Text("T3").bold().frame(width: 43).font(.system(size: 18))
+                    Text("T3").bold().frame(width: 44).font(.system(size: 18))
                         //.background(.yellow)
-                    if derby.trackCount > 3 {
-                        Text("T4").bold().frame(width: 43).font(.system(size: 18))
-                            //.background(.yellow)
-                        if derby.trackCount > 4 {
-                            Text("T5").bold().frame(width: 43).font(.system(size: 18))
-                            //.background(.yellow)
-                            if derby.trackCount > 5 {
-                                Text("T6").bold().frame(width: 43).font(.system(size: 18))
-                                //.background(.yellow)
-                            }
-                        }
-                    }
+                } else {
+                    Text("").frame(width: 44)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 3 {
+                    Text("T4").bold().frame(width: 44).font(.system(size: 18))
+                        //.background(.yellow)
+                } else {
+                    Text("").frame(width: 44)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 4 {
+                    Text("T5").bold().frame(width: 44).font(.system(size: 18))
+                    //.background(.yellow)
+                } else {
+                    Text("").frame(width: 44)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 5 {
+                    Text("T6").bold().frame(width: 44).font(.system(size: 18))
+                    //.background(.yellow)
+                } else {
+                    Text("").frame(width: 44)
+                       // .background(.yellow)
                 }
                 Spacer()
             }
@@ -123,25 +131,40 @@ struct HeatsView: View {
             List {
                 ForEach(derby.heats) { heat in
                     HStack(alignment: .top, spacing: 1) {
+                        Spacer()
                         Text(String(heat.heat))
                             .frame(width:25, alignment:.center)
                             //.background(.yellow)
                         Text(heat.group)
                             .frame(width:42, alignment:.center)
-                            //.background(.yellow)
+                        //.background(.yellow)
+                        
                         Times(heat: heat.heat-1, track: 0)
+                            //.background(.yellow)
                         Times(heat: heat.heat-1, track: 1)
                         if derby.trackCount > 2 {
                             Times(heat: heat.heat-1, track: 2)
-                            if derby.trackCount > 3 {
-                                Times(heat: heat.heat-1, track: 3)
-                                if derby.trackCount > 4 {
-                                    Times(heat: heat.heat-1, track: 4)
-                                    if derby.trackCount > 5 {
-                                        Times(heat: heat.heat-1, track: 5)
-                                    }
-                                }
-                            }
+                        } else {
+                            Text("").frame(width: 44)
+                                //.background(.yellow)
+                        }
+                        if derby.trackCount > 3 {
+                            Times(heat: heat.heat-1, track: 3)
+                        } else {
+                            Text("").frame(width: 44)
+                                //.background(.yellow)
+                        }
+                        if derby.trackCount > 4 {
+                            Times(heat: heat.heat-1, track: 4)
+                        } else {
+                            Text("").frame(width: 44)
+                                //.background(.yellow)
+                        }
+                        if derby.trackCount > 5 {
+                            Times(heat: heat.heat-1, track: 5)
+                        } else {
+                            Text("").frame(width: 44)
+                                //.background(.yellow)
                         }
                         Spacer()
                     }

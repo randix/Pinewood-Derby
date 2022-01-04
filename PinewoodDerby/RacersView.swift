@@ -21,7 +21,7 @@ struct RacersView: View {
     var body: some View {
         VStack {
             
-            // Title row - with Rankings and Add buttons
+            // MARK: Title row - with Rankings and Add buttons
             HStack {
                 Spacer().frame(width:35)
                 if derby.isMaster {
@@ -61,9 +61,12 @@ struct RacersView: View {
             }
             Spacer().frame(height:10)
             
-            // Header row buttons for sorting ----------------------------------------
+            // MARK: Header row buttons for sorting ----------------------------------------
             HStack(spacing: 2) {
-                Spacer().frame(width:30)
+                if !derby.iPad {
+                    Spacer().frame(width: 30)
+                }
+                Spacer()
                 Button(action: {
                     derby.racers.sort { $0.carNumber < $1.carNumber }
                     derby.saveDerby()
@@ -104,18 +107,14 @@ struct RacersView: View {
                 Spacer()
             }
             
-            // Derby racers --------------------------------------------
+            // MARK: Derby racers --------------------------------------------
             List (derby.racers) { entry in
                 VStack(alignment:.leading) {
                     HStack(spacing: 2) {
-                        Text(String(format: "%2d", entry.carNumber))
+                        Spacer()
+                        Text("\(car2digit(entry.carNumber)) \(entry.carName)")
                             .font(.system(size:16))
-                            .frame(width: 24, alignment: .center)
-                            //.background(.yellow)
-                        Text(entry.carName)
-                            .font(.system(size:16))
-                            .lineLimit(1).minimumScaleFactor(0.4)
-                            .frame(width: 75, alignment: .leading)
+                            .frame(width: 105, alignment: .leading)
                             //.background(.yellow)
                         Text(entry.firstName + " " + entry.lastName)
                             .font(.system(size:16))
@@ -168,5 +167,9 @@ struct RacersView: View {
                 Spacer().frame(height: 10)
             }
         }
+    }
+    
+    func car2digit(_ carNumber: Int) -> String {
+        return String(format: "%02d", carNumber)
     }
 }
