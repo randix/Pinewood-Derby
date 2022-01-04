@@ -51,10 +51,12 @@ struct TimesView: View {
             Spacer().frame(height:10)
             
             // MARK: Headings -------------------------------------
-            HStack(spacing: 3) {
-                Spacer().frame(width:30)
-                
-                Text("Car").bold().frame(width: 30, alignment: .leading).font(.system(size: 18))
+            HStack(spacing: 1) {
+                Spacer()
+                if !derby.iPad {
+                    Spacer().frame(width: 20)
+                }
+                Text("Car").bold().frame(width: 32, alignment: .center).font(.system(size: 18))
                 //.background(.yellow)
                 Text("T1").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                 //.background(.yellow)
@@ -62,51 +64,76 @@ struct TimesView: View {
                 //.background(.yellow)
                 if derby.trackCount > 2 {
                     Text("T3").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
-                    //.background(.yellow)
-                    if derby.trackCount > 3 {
-                        Text("T4").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
                         //.background(.yellow)
-                        if derby.trackCount > 4 {
-                            Text("T5").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
-                            //.background(.yellow)
-                            if derby.trackCount > 5 {
-                                Text("T6").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
-                                //.background(.yellow)
-                            }
-                        }
-                    }
+                } else {
+                    Text("").frame(width: 48)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 3 {
+                    Text("T4").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
+                        //.background(.yellow)
+                } else {
+                    Text("").frame(width: 48)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 4 {
+                    Text("T5").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
+                        //.background(.yellow)
+                } else {
+                    Text("").frame(width: 48)
+                        //.background(.yellow)
+                }
+                if derby.trackCount > 5 {
+                    Text("T6").bold().frame(width: 48, alignment: .center).font(.system(size: 18))
+                        //.background(.yellow)
+                } else {
+                    Text("").frame(width: 48)
+                        //.background(.yellow)
                 }
                 Spacer()
             }
             HStack(spacing: 3) {
+                Spacer()
                 Spacer().frame(width:230)
                 Text("Points").bold().frame(width: 70).font(.system(size: 16))
-                //.background(.yellow)
+                    //.background(.yellow)
                 Text("Average").bold().frame(width: 70).font(.system(size: 16))
-                //.background(.yellow)
+                    //.background(.yellow)
                 Spacer()
             }
             
-            // MARK: ---------------------------------------------------
+            // MARK: Times ---------------------------------------------------
             List(derby.racers.sorted { $0.carNumber < $1.carNumber } ) { entry in
                 HStack(alignment: .top, spacing: 1) {
-                    
+                    Spacer()
                     Text(String(entry.carNumber))
-                        .frame(width:25)
-                    //.background(.yellow)
+                        .frame(width:32, alignment: .center)
+                        //.background(.yellow)
                     PlaceView(time: entry.times[0], place: entry.places[0], ignore: entry.ignores[0])
                     PlaceView(time: entry.times[1], place: entry.places[1], ignore: entry.ignores[1])
                     if derby.trackCount > 2 {
                         PlaceView(time: entry.times[2], place: entry.places[2], ignore: entry.ignores[2])
-                        if derby.trackCount > 3 {
-                            PlaceView(time: entry.times[3], place: entry.places[3], ignore: entry.ignores[3])
-                            if derby.trackCount > 4 {
-                                PlaceView(time: entry.times[4], place: entry.places[4], ignore: entry.ignores[4])
-                                if derby.trackCount > 5 {
-                                    PlaceView(time: entry.times[5], place: entry.places[5], ignore: entry.ignores[5])
-                                }
-                            }
-                        }
+                    } else {
+                        Text("").frame(width: 50)
+                            //.background(.yellow)
+                    }
+                    if derby.trackCount > 3 {
+                        PlaceView(time: entry.times[3], place: entry.places[3], ignore: entry.ignores[3])
+                    } else {
+                        Text("").frame(width: 50)
+                            //.background(.yellow)
+                    }
+                    if derby.trackCount > 4 {
+                        PlaceView(time: entry.times[4], place: entry.places[4], ignore: entry.ignores[4])
+                    } else {
+                        Text("").frame(width: 50)
+                            //.background(.yellow)
+                    }
+                    if derby.trackCount > 5 {
+                        PlaceView(time: entry.times[5], place: entry.places[5], ignore: entry.ignores[5])
+                    } else {
+                        Text("").frame(width: 50)
+                            //.background(.yellow)
                     }
                     Spacer()
                 }
@@ -123,7 +150,8 @@ struct TimesView: View {
                 }
                 
                 HStack(spacing: 3) {
-                    Spacer().frame(width:190)
+                    Spacer()
+                    Spacer().frame(width:200)
                     Text(entry.points == 0 ? "-" : String(format: "%d", entry.points))
                         .frame(width:70, alignment:.center).font(.system(size: 14))
                     Text(entry.average == 0.0 ? "-" : String(format: "%0.4f", entry.average))
