@@ -18,27 +18,28 @@ struct SingleView: View {
     
     var body: some View {
         VStack(spacing: 2) {
-            HStack(spacing:3) {
-                Spacer().frame(width:10)
+            HStack(spacing:2) {
                 Text(place(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                //.background(.yellow)
+                    //.background(.yellow)
                 Text(carForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                //.background(.yellow)
+                    //.background(.yellow)
                 Text(carNameForPlace(group, place)).font(.system(size: 16)).frame(width:100, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
-                //.background(.yellow)
+                    //.background(.yellow)
                 Spacer()
             }
-            HStack(spacing:3) {
-                Spacer().frame(width:43)
-                Text(nameForPlace(group, place)).font(.system(size: 16)).frame(width:115, height: 18, alignment: .leading)
+            HStack(spacing:2) {
+                Spacer().frame(width:41)
+                Text(nameForPlace(group, place)).font(.system(size: 16)).frame(width:120, height: 18, alignment: .leading)
                     .lineLimit(1).minimumScaleFactor(0.4)
-                //.background(.yellow)
+                    //.background(.yellow)
                 Text(ageForPlace(group, place)).font(.system(size: 16)).frame(width:25, height: 18)
-                //.background(.yellow)
+                    //.background(.yellow)
                 Spacer()
             }
         }
+        .frame(width:180)
+        //.background(.blue)
     }
     
     func getEntry(_ group: String, _ place: Int) -> RacerEntry? {
@@ -122,6 +123,8 @@ struct ResultsView: View {
     
     var body: some View {
         VStack {
+            
+            // MARK: Title
             HStack {
                 Spacer()
                 Text("Results").font(.system(size: 20)).bold()
@@ -129,61 +132,75 @@ struct ResultsView: View {
             }
             Spacer().frame(height:10)
             
+            // MARK: first group fastest
             if derby.groups.count == 2 {
                 // for exactly 2 groups
                 Group {
                     HStack {
-                        Spacer().frame(width:10)
-                        Text("\(derby.groups[0].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
                         Spacer()
-                        Text("\(derby.groups[0].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
-                        Spacer().frame(width:10)
+                        Text("\(derby.groups[0].group) fastest".capitalized).bold().font(.system(size: 17))
+                            .frame(width:180)
+                            //.background(.yellow)
+                        Spacer().frame(width: 20)
+                        Text("\(derby.groups[0].group) slowest".capitalized).bold().font(.system(size: 17))
+                            .frame(width:180)
+                            //.background(.yellow)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[0].group, place: 1)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[0].group, place: -1)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[0].group, place: 2)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[0].group, place: -2)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[0].group, place: 3)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[0].group, place: -3)
+                        Spacer()
                     }
                 }
                 Spacer().frame(height:15)
                 
                 Group {
                     HStack {
-                        Spacer().frame(width:10)
-                        Text("\(derby.groups[1].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
                         Spacer()
+                        Text("\(derby.groups[1].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
+                            //.background(.yellow)
+                        Spacer().frame(width: 20)
                         Text("\(derby.groups[1].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
-                        
-                        Spacer().frame(width:10)
+                            //.background(.yellow)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[1].group, place: 1)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[1].group, place: -1)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[1].group, place: 2)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[1].group, place: -2)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[1].group, place: 3)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[1].group, place: -3)
+                        Spacer()
                     }
                 }
                 Spacer().frame(height:15)
@@ -204,29 +221,34 @@ struct ResultsView: View {
                 Spacer().frame(height:10)
                 Group {
                     HStack {
-                        Spacer().frame(width:10)
-                        Text("\(derby.groups[groupSelector].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
                         Spacer()
+                        Text("\(derby.groups[groupSelector].group) fastest".capitalized).bold().font(.system(size: 17)).frame(width:170)
+                            //.background(.yellow)
+                        Spacer().frame(width: 20)
                         Text("\(derby.groups[groupSelector].group) slowest".capitalized).bold().font(.system(size: 17)).frame(width:170)
-                        //.background(.yellow)
-                        
-                        Spacer().frame(width:10)
+                            //.background(.yellow)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[groupSelector].group, place: 1)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[groupSelector].group, place: -1)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[groupSelector].group, place: 2)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[groupSelector].group, place: -2)
+                        Spacer()
                     }
-                    //Spacer().frame(height:5)
                     HStack {
+                        Spacer()
                         SingleView(group: derby.groups[groupSelector].group, place: 3)
+                        Spacer().frame(width: 20)
                         SingleView(group: derby.groups[groupSelector].group, place: -3)
+                        Spacer()
                     }
                 }
                 Spacer().frame(height:45)
@@ -234,34 +256,40 @@ struct ResultsView: View {
             
             Group {
                 HStack {
-                    Spacer().frame(width:10)
+                    Spacer()
                     Text("overall fastest".capitalized)
                         .bold().font(.system(size: 17)).frame(width:170)
-                    //.background(.yellow)
-                    Spacer()
+                        //.background(.yellow)
+                    Spacer().frame(width: 20)
                     Text("overall slowest".capitalized)
                         .bold().font(.system(size: 17)).frame(width:170)
-                    //.background(.yellow)
-                    
-                    Spacer().frame(width:10)
+                        //.background(.yellow)
+                    Spacer()
                 }
-                //Spacer().frame(height:5)
                 HStack {
+                    Spacer()
                     SingleView(group: derby.overall, place: 1)
+                    Spacer().frame(width: 20)
                     SingleView(group: derby.overall, place: -1)
+                    Spacer()
                 }
-                //Spacer().frame(height:5)
                 HStack {
+                    Spacer()
                     SingleView(group: derby.overall, place: 2)
+                    Spacer().frame(width: 20)
                     SingleView(group: derby.overall, place: -2)
+                    Spacer()
                 }
                 //Spacer().frame(height:5)
                 HStack {
+                    Spacer()
                     SingleView(group: derby.overall, place: 3)
+                    Spacer().frame(width: 20)
                     SingleView(group: derby.overall, place: -3)
+                    Spacer()
                 }
             }
-            //Spacer().frame(height:15)
+            Spacer().frame(height:15)
             
             Spacer()
         }

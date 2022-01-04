@@ -15,7 +15,7 @@ struct RankingsView: View {
     var body: some View {
         VStack {
             
-            // Title row - with Rankings and Add buttons
+            // MARK: Title row - with Rankings and Add buttons
             HStack {
                 Spacer()
                 Text("Rankings").font(.system(size: 20)).bold()
@@ -25,15 +25,18 @@ struct RankingsView: View {
             }
             Spacer().frame(height:10)
             
-            // Header row buttons for sorting ----------------------------------------
+            // MARK: Header row buttons for sorting ----------------------------------------
             HStack(spacing: 2) {
-                Spacer().frame(width:30)
+                Spacer()
+                if !derby.iPad {
+                    Spacer().frame(width: 30)
+                }
                 Button(action: {
                     derby.racers.sort { $0.group < $1.group }
                     derby.saveDerby()
                 }) {
                     Text("Group").bold()
-                        .frame(width: 44, alignment: .leading)
+                        .frame(width: 46, alignment: .leading)
                         .font(.system(size: 15))
                         //.background(.yellow)
                 }
@@ -78,13 +81,14 @@ struct RankingsView: View {
                 Spacer()
             }
             
-            // Derby racers --------------------------------------------
+            // MARK: Derby racers --------------------------------------------
             List (derby.racers) { entry in
                 VStack(alignment:.leading) {
                     HStack(spacing: 2) {
+                        Spacer()
                         Text(entry.group)
                             .font(.system(size:16))
-                            .frame(width: 44, alignment: .center)
+                            .frame(width: 46, alignment: .center)
                             //.background(.yellow)
                         Text(entry.rankGroup == 0 ? "-" : String(entry.rankGroup))
                             .font(.system(size:16))
@@ -103,7 +107,6 @@ struct RankingsView: View {
                             .frame(width: 150, alignment: .leading)
                             .lineLimit(1).minimumScaleFactor(0.4)
                             //.background(.yellow)
-                        
                         Spacer()
                     }
                 }
