@@ -38,24 +38,25 @@ struct RacerAddView: View {
     @State var showGroupModal = false
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack {
             Spacer().frame(height: 20)
             
             // chevron down
             HStack {
-                Spacer().frame(minWidth: 0)
+                //Spacer()
                 Image(systemName: "chevron.compact.down").resizable().frame(width: 35, height: 12).opacity(0.3)
-                Spacer().frame(minWidth: 0)
+                //Spacer()
             }
             Spacer().frame(height: 20)
             
             // Title
             HStack {
-                Spacer()
+                //Spacer()
                 Text("Racer Entry").font(.system(size: 20)).bold()
-                Spacer()
+                //Spacer()
             }
             Spacer().frame(height:40)
+            
             
             Group {
                 HStack {

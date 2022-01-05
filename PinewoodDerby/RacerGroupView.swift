@@ -51,6 +51,9 @@ struct RacerGroupView: View {
                     .font(.system(size: 18))
                 TextField("group", text: $newGroup)
                     .font(.system(size: 18))
+                    .frame(width:150)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal, 0).lineLimit(1).minimumScaleFactor(0.4)
                 Spacer().frame(width: 40)
                 Button(action: {
                     if newGroup == "" { return }
@@ -95,40 +98,42 @@ struct RacerGroupView: View {
             Spacer().frame(height:20)
             
             List(groups) { group in
-                Text(group.group)
-                    .font(.system(size: 16))
-                    .swipeActions {
-                        
-                        Button {
-                            editId = group.id
-                            newGroup = group.group
-                        } label: {
-                            Label("Edit", systemImage: "square.and.pencil")
-                        }
-                        .tint(.teal)
-                        
-                        Button(action: {
-                            var oldName: String = ""
-                            for i in 0..<groups.count {
-                                if groups[i].id == group.id {
-                                    oldName = group.group
-                                    groups.remove(at: i)
-                                    break
-                                }
-                            }
-                            for r in derby.racers {
-                                if r.group == oldName {
-                                    r.group = ""
-                                }
-                            }
-                            updateGroups()
-                        }) {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .tint(.red)
+                VStack {
+                    Text(group.group)
+                        .font(.system(size: 16))
+                }
+                .swipeActions {
+                    
+                    Button {
+                        editId = group.id
+                        newGroup = group.group
+                    } label: {
+                        Label("Edit", systemImage: "square.and.pencil")
                     }
+                    .tint(.teal)
+                    
+                    Button(action: {
+                        var oldName: String = ""
+                        for i in 0..<groups.count {
+                            if groups[i].id == group.id {
+                                oldName = group.group
+                                groups.remove(at: i)
+                                break
+                            }
+                        }
+                        for r in derby.racers {
+                            if r.group == oldName {
+                                r.group = ""
+                            }
+                        }
+                        updateGroups()
+                    }) {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    .tint(.red)
+                }
             }
-            .frame(width: 250)
+            .frame(width: 200)
             
             Group {
                 Spacer().frame(height:20)
@@ -142,7 +147,7 @@ struct RacerGroupView: View {
                         .bold()
                 }
             }
-            
+            Spacer().frame(height: 50)
             Spacer()
         }
         .alert(isPresented: self.$alertShow) {

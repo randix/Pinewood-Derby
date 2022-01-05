@@ -66,11 +66,11 @@ Hardware set-up:
 
 - Start the RPi
   
-  - Assure that the RPi is connected to the local WiFi. (The RPi makes no use of any available internet connection.)
+  - Assure that the RPi is connected to the local WiFi. The RPi makes no use of any available internet connection.
   
   - Open two windows on the RPi, using the Terminal program.
   
-  - Install the Python programs, **PDServer.py** and **timer.py**. (See detail below in Appendix: Timer Server Software Installation).
+  - Install the Python programs, **PDServer.py** and **timer.py**. See detail below in *Appendix: Timer Server Software Installation*.
   
   - Edit the file *PIN.txt* and enter a four digit PIN to be used by the administrator during the race.
   
@@ -81,3 +81,32 @@ Hardware set-up:
     `./timer.py`
 
 - Start **Pinewood-Derby** on the iPhone or iPad
+  
+  - Tap on Settings in the upper right corner.
+  
+  - Enter the PIN that was set in the file *PIN.txt* on the RPi.
+  
+  - You may now set the Title and the Event. 
+  
+  - Ascertain that the number of tracks set is correct.
+  
+  - Swipe down on the Settings page from the top, or tap the Dismiss button.
+
+- Select the Racers tab and enter all racers, car numbers, car names, and ages.
+  
+  - Swipe left on a racer entry to delete or edit the entry.
+  
+  - Tap on the Add button to enter a new racer.
+  
+  - The Groups list may be edited with the Groups button.
+
+- When the racers are all correctly entered, tap on the Settings again.
+
+
+
+Ascertain that the app is connected to the RPi server, the Connected flag must be a green checkmark. If it is a red X, see the fine print, and solve the connection problem.  
+
+This is the connection to the RPi timer, and must work correctly to get the times from the timer.
+
+To Start the race, tap on the Racing: Start button. 
+This will take you to the Heats tab, where the individual heats may be started.
