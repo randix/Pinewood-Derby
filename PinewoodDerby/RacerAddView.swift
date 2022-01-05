@@ -55,7 +55,7 @@ struct RacerAddView: View {
                 Text("Racer Entry").font(.system(size: 20)).bold()
                 Spacer()
             }
-            Spacer().frame(height:30)
+            Spacer().frame(height:40)
             
             Group {
                 HStack {

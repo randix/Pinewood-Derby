@@ -15,7 +15,7 @@ struct RacerGroupView: View {
     @ObservedObject var derby = Derby.shared
     
     @Binding var groups: [GroupEntry]
-  
+    
     @State var editId: UUID?
     @State var newGroup = ""
     
@@ -41,25 +41,17 @@ struct RacerGroupView: View {
                     Text("Groups").font(.system(size: 20)).bold()
                     Spacer()
                 }
-                Spacer().frame(height:20)
+                Spacer().frame(height:40)
             }
-            
-            Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Dismiss")
-                    .font(.system(size: 16))
-                    .bold()
-            }
-            Spacer().frame(height:20)
             
             HStack {
-                Spacer().frame(width:50)
+                Spacer()
                 
-                Text("New group:")
+                Text("Add group:")
                     .font(.system(size: 18))
                 TextField("group", text: $newGroup)
                     .font(.system(size: 18))
+                Spacer().frame(width: 60)
                 Button(action: {
                     if newGroup == "" { return }
                     alertTitle = "Group Already Exists"
@@ -94,11 +86,11 @@ struct RacerGroupView: View {
                     editId = nil
                     updateGroups()
                 }) {
-                    Text(editId == nil ? "New" : "Save")
+                    Text(editId == nil ? "Add" : "Save")
                         .font(.system(size: 18))
                         .bold()
                 }
-                Spacer().frame(width:50)
+                Spacer()
             }
             Spacer().frame(height:20)
             
@@ -106,7 +98,7 @@ struct RacerGroupView: View {
                 Text(group.group)
                     .font(.system(size: 16))
                     .swipeActions {
-                      
+                        
                         Button {
                             editId = group.id
                             newGroup = group.group
@@ -129,7 +121,6 @@ struct RacerGroupView: View {
                                     r.group = ""
                                 }
                             }
-                            derby.saveDerby()
                             updateGroups()
                         }) {
                             Label("Delete", systemImage: "trash")
@@ -138,7 +129,20 @@ struct RacerGroupView: View {
                     }
             }
             .frame(width: 250)
-                                
+            
+            Group {
+                Spacer().frame(height:20)
+                Text("Swipe left on group to edit.")
+                Spacer().frame(height:30)
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Dismiss")
+                        .font(.system(size: 16))
+                        .bold()
+                }
+            }
+            
             Spacer()
         }
         .alert(isPresented: self.$alertShow) {

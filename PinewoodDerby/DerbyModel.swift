@@ -460,6 +460,7 @@ extension Derby {
             try FileManager.default.removeItem(atPath: nameUrl.path)
             log("remove \(Filenames.pinName)")
             masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
+            isMaster = false
             objectWillChange.send()
         } catch {
             log("error: \(error.localizedDescription)")
