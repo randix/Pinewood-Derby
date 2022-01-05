@@ -51,7 +51,7 @@ struct RacerGroupView: View {
                     .font(.system(size: 18))
                 TextField("group", text: $newGroup)
                     .font(.system(size: 18))
-                Spacer().frame(width: 60)
+                Spacer().frame(width: 40)
                 Button(action: {
                     if newGroup == "" { return }
                     alertTitle = "Group Already Exists"
@@ -132,7 +132,7 @@ struct RacerGroupView: View {
             
             Group {
                 Spacer().frame(height:20)
-                Text("Swipe left on group to edit.")
+                Text("Swipe left on group name to edit.")
                 Spacer().frame(height:30)
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

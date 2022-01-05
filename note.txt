@@ -1,7 +1,5 @@
 issues
-  observer devices should auto-update
   pin change
-  clean up iPad display
   resume automatically!
   
 Server:
