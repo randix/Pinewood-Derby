@@ -106,9 +106,14 @@ def main():
     cars = []
 
   if not doSimulate:
-    if not parse.initSerial():
-      print("ERROR: CANNOT OPEN SERIAL PORT TO TRACK TIMER.")
-      sys.exit(1)
+    while True:
+      print()
+      if not parse.initSerial():
+        print("CANNOT OPEN SERIAL PORT TO TRACK TIMER.")
+        print("Connect the Timer with serial cable and USB.\n")
+        time.sleep(5)
+      else:
+        break
 
   while True:
     heat, trackCars = getNextHeat()

@@ -5,9 +5,6 @@ issues
 Server:
   server: add cert for https
 
-document
-include manual into release
-
 RESTView:
   change to https
 
