@@ -14,45 +14,53 @@ import time
 import random
 import sys
 
-nextheat = "nextheat.csv"
+heatfile = "heat.csv"
 timeslog = "timeslog.csv"
 times    = "times.csv"
 
+timesVersion = 'A'
+uuid = ""
 cars = []       # [car number, firstSim, [track time]]
 trackCars = []  # [heat, car number, track time, ...]
 
-def getNextHeat():
+def getHeat():
   """
-  Open and read the nextheat file.
+  Open and read the heatfile.
   For simulation set up the 'cars' array.
   """ 
+  global uuid
   while True:
-    time.sleep(0.2)
+    time.sleep(0.5)
     try:
-      f = open(nextheat, 'r')
+      f = open(heatfile, 'r')
       filedata = f.read()
       f.close()
-      os.remove(nextheat)
-      data = filedata.split(',')
-      for i in range(len(data)):
-        data[i] = data[i].strip()
-      print("data", data)
-      heat = data[0]
-      trackCars = []
-      for i in range(1, len(data)):
-        trackCars.append(data[i])
-        found = False
-        for j in range(len(cars)):
-          if cars[j][0] == data[i]:
-            found = True
-            break
-        if not found:
-          cars.append([data[i], 0, [0,0,0,0,0,0]])
-      print("trackCars", trackCars)
-      print("cars", cars)
-      return heat, trackCars
     except:
       continue
+    os.remove(heatfile)
+
+    data = filedata.split(',')
+    for i in range(len(data)):
+      data[i] = data[i].strip()
+    print("data", data)
+    if data[0] != timesVersion:
+      print("Fatal: version mismatch: expected:", timesVersion, " got: ", data[0])
+      sys.exit(1)
+    uuid = data[1]
+    heat = data[2]
+    trackCars = []
+    for i in range(3, len(data)):
+      trackCars.append(data[i])
+      found = False
+      for j in range(len(cars)):
+        if cars[j][0] == data[i]:
+          found = True
+          break
+      if not found:
+        cars.append([data[i], 0, [0,0,0,0,0,0]])
+    print("trackCars", trackCars)
+    print("cars", cars)
+    return heat, trackCars
 
 def simulate(trackCars):
   result = []
@@ -78,8 +86,8 @@ def simulate(trackCars):
   return result
 
 def output(heat, trackCars, result):
-  print('output:', heat, result)
-  out = heat
+  print('output:', timesVersion, uuid, heat, result)
+  out = "%s,%s,%s" % (timesVersion, uuid, heat)
   for i in range(len(trackCars)):
     if trackCars[i] == "0":
       out += ',0,0,0'
@@ -96,9 +104,12 @@ def output(heat, trackCars, result):
   f.write(out)
   f.close
   os.rename(times+".tmp", times)
+  print()
 
 def main():
   global cars
+
+  #sys.stdout = open('timer.log', 'w')
 
   doSimulate = False
   if len(sys.argv) > 1:
@@ -116,7 +127,7 @@ def main():
         break
 
   while True:
-    heat, trackCars = getNextHeat()
+    heat, trackCars = getHeat()
     if doSimulate:
       result = simulate(trackCars)
     else:

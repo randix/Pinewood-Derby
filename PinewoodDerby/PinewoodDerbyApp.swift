@@ -56,7 +56,7 @@ struct PinewoodDerbyApp: App {
                 log("error: \(error.localizedDescription)")
             }
         }
-        f = "PDServer"
+        f = "PDTimer"
         fileUrl = Bundle.main.url(forResource:f, withExtension: "tar")!
         destUrl = docsDir.appendingPathComponent(f + ".tar")
         if !FileManager.default.fileExists(atPath: destUrl.path) {

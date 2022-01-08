@@ -116,13 +116,12 @@ class Derby: ObservableObject {
     @Published var tabSelection = Tab.racers.rawValue
     
     @Published var simulationRunning = false
-    var simTimesCount = 0
     
     var timesTimer: Timer?
     let timesTimerInterval = 1.0
     var heat = 0
     var trackCars = [Int]()
-    var seenTimes = 0
+    var uuid = ""
     let timesVersion = "A"
     
     let backgroundQueue = DispatchQueue(label: "background")
@@ -168,12 +167,6 @@ class Derby: ObservableObject {
             entry.rankOverall = 0
         }
         calculateRankings()
-        
-        saveDerby()
-        
-        deleteFileFromServer(Filenames.timesName)   // async
-        removeFile(Filenames.timesName)
-        seenTimes = 0
         objectWillChange.send()
     }
     
@@ -189,7 +182,8 @@ class Derby: ObservableObject {
     // generate heat.csv
     func startHeat(_ heat: Int, _ cars: [Int]) {
         
-        var heatData = "\(heat)"
+        uuid = UUID().uuidString
+        var heatData = "\(timesVersion),\(uuid),\(heat)"
         for i in 0..<trackCount {
             heatData += ",\(cars[i])"
         }
@@ -230,15 +224,18 @@ class Derby: ObservableObject {
             let line = try String(contentsOf: heatURL)
             log("heat: \(line)")
             let values = line.split(separator: ",", omittingEmptySubsequences: false)
-            if values.count < trackCount + 1 {
-                log("invalid heats data")
+            if values.count < trackCount + 3 {
+                log("invalid heat data")
                 return
             }
-            let heat = Int(values[0])!
-            let cCnt = values.count - 1
+            print(values)
+            // ignore timesVersion
+            let uuid = values[1]
+            let heat = Int(values[2])!
+            let cCnt = values.count - 3
             var cars: [Int] = [Int](repeating: 0, count: cCnt)
             for i in 0..<cCnt {
-                cars[i] = Int(values[i+1].trimmingCharacters(in: .whitespacesAndNewlines))!
+                cars[i] = Int(values[i+3].trimmingCharacters(in: .whitespacesAndNewlines))!
             }
             
             // add places
@@ -263,8 +260,7 @@ class Derby: ObservableObject {
             }
             data.sort { $0.track < $1.track }
             
-            simTimesCount += 1
-            var timesData = "\(timesVersion),\(simTimesCount),\(heat)"
+            var timesData = "\(timesVersion),\(uuid),\(heat)"
             for i in 0..<self.trackCount {
                 timesData += String(format: ",%d,%d,%0.4f", data[i].car, data[i].place, data[i].time)
             }
@@ -461,6 +457,7 @@ extension Derby {
             log("remove \(Filenames.pinName)")
             masterPin = data.trimmingCharacters(in: .whitespacesAndNewlines)
             isMaster = false
+            pin = ""
             objectWillChange.send()
         } catch {
             log("error: \(error.localizedDescription)")
@@ -691,11 +688,12 @@ extension Derby {
             return
         }
         
-        guard let timeCnt = Int((values[1])), timeCnt > self.seenTimes else {
+        // only evaluate a file once
+        if uuid != values[1] {
             // quietly
             return
         }
-        self.seenTimes = timeCnt
+        uuid = ""
         
         guard let heat = Int(values[2]), heat <= self.heats.count else  {
             log("readTimes: invalid heat: \(String(describing: rawData))")
@@ -739,8 +737,6 @@ extension Derby {
         self.heats[heat-1].hasRun = true
         
         self.calculateRankings()
-        self.saveDerby()
-        
         self.objectWillChange.send()
         
     }
@@ -788,6 +784,7 @@ extension Derby {
 
 extension Derby {
     
+    // currently unused
     func deleteFileFromServer(_ name: String) {
         log("\(#function) \(name)")
         if !connected {

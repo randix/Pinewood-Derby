@@ -4,6 +4,7 @@ import io
 import http.server
 import os
 import socketserver
+#import sys
 
 PORT = 8484
 
@@ -53,6 +54,9 @@ class SimpleHttpRequestHandler(http.server.BaseHTTPRequestHandler):
     self.end_headers()
 
 #---------------------------------------
+
+#sys.stdout = open('PDTimer.log', 'w')
+#sys.stderr = open('PDTimer.loge', 'w')
 
 httpd = http.server.HTTPServer(('', PORT), SimpleHttpRequestHandler)
 httpd.serve_forever()
