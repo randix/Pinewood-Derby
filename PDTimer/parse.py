@@ -4,15 +4,13 @@
 #
 # Rand Dow 28-Dec-2021
 #
-# Copyright (C) Randall Dow. All rights reserved.
+# Copyright (C) Randix LLC. All rights reserved.
 #
-#
-# reads from the serial port and parse the data from the
+# This reads from the serial port and parses the data from the
 # microwizard.com Fast Track Model K2
 #
 # output the raw data to the file "raw.out"
 # output the parsed data to "times.csv"
-#
 
 import os
 import serial
@@ -20,6 +18,7 @@ import time
 
 ser = None
 serialPort = '/dev/tty.usbserial-110'	# macOS 12.1
+serialPort = '/dev/ttyUSB0'		# linux RPi
 
 raw = None	# file descriptor
 rawOut = 'raw.out'
@@ -65,6 +64,7 @@ def parseTrack(track):
   return place, timeVal
   
 def parseSerial(trackCars):
+  #print(trackCars)
   line = ''
   c = ''
   ready = False
@@ -80,11 +80,11 @@ def parseSerial(trackCars):
         ready = True
         break
      
-  print('Parse...', line)
+  #print('Parse...', line)
   tracks = line.split()
   line = ''
   c = ''
-  print(tracks, len(tracks))
+  #print(tracks, len(tracks))
 
   result = []
   for i in range(len(trackCars)):
@@ -99,4 +99,5 @@ def parseSerial(trackCars):
 if __name__ == '__main__':
 
   if initSerial():
-    parseSerial(["42", "32", "12", "1"])
+     while True:
+       parseSerial(["42", "32", "12", "1"])

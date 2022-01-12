@@ -39,10 +39,11 @@ def getHeat():
       continue
     os.remove(heatfile)
 
+    print(filedata, end='')
     data = filedata.split(',')
     for i in range(len(data)):
       data[i] = data[i].strip()
-    print("data", data)
+    #print("data", data)
     if data[0] != timesVersion:
       print("Fatal: version mismatch: expected:", timesVersion, " got: ", data[0])
       sys.exit(1)
@@ -58,8 +59,8 @@ def getHeat():
           break
       if not found:
         cars.append([data[i], 0, [0,0,0,0,0,0]])
-    print("trackCars", trackCars)
-    print("cars", cars)
+    #print("trackCars", trackCars)
+    #print("cars", cars)
     return heat, trackCars
 
 def simulate(trackCars):
@@ -86,7 +87,7 @@ def simulate(trackCars):
   return result
 
 def output(heat, trackCars, result):
-  print('output:', timesVersion, uuid, heat, result)
+  #print('output:', timesVersion, uuid, heat, result)
   out = "%s,%s,%s" % (timesVersion, uuid, heat)
   for i in range(len(trackCars)):
     if trackCars[i] == "0":
