@@ -71,7 +71,9 @@ struct Filenames {
     static let pinName = "PIN.txt"
     static let derbyName = "derby.txt"
     
-    static let timeslogName = "timeslog.csv"    // maintained separately on server and local
+    static let timeslogName = "timeslog.csv"
+    static let servtimeslogName = "servtimeslog.csv"
+    static let rawName = "raw.log"
     // for each heat:
     static let heatName = "heat.csv"
     static let timesName = "times.csv"
@@ -655,17 +657,23 @@ extension Derby {
     func startReadTimes() {
         log(#function)
         connected = true
+        var count = 0
         timesTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(timesTimerInterval), repeats: true) { timer in
             if self.simulationRunning {
                 self.readTimes()
             } else {
                 self.readFileFromServer(Filenames.timesName)
+                count += 1
+                if count >= 30 {
+                    self.readFileFromServer(Filenames.servtimeslogName)
+                    self.readFileFromServer(Filenames.rawName)
+                    count = 0
+                }
             }
         }
     }
     
     func readTimes() {
-        //log(#function)
         let timesUrl = docDir.appendingPathComponent(Filenames.timesName)
         let timeslogUrl = docDir.appendingPathComponent(Filenames.timeslogName)
         

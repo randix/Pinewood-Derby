@@ -222,6 +222,7 @@ struct TimesEditView: View {
         if let index = derby.racers.firstIndex(where: { $0.id == id}) {
             derby.racers[index].ignores = ignores
         }
+        derby.calculateRankings()
         derby.saveDerby()
         derby.objectWillChange.send()
         return true

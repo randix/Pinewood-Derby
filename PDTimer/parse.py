@@ -9,7 +9,7 @@
 # This reads from the serial port and parses the data from the
 # microwizard.com Fast Track Model K2
 #
-# output the raw data to the file "raw.out"
+# output the raw data to the file "raw.log"
 # output the parsed data to "times.csv"
 
 import os
@@ -21,7 +21,7 @@ serialPort = '/dev/tty.usbserial-110'	# macOS 12.1
 serialPort = '/dev/ttyUSB0'		# linux RPi
 
 raw = None	# file descriptor
-rawOut = 'raw.out'
+rawLog = 'raw.log'
 
 # display character, and get to disk
 def display(c):
@@ -41,7 +41,7 @@ def initSerial():
                         parity=serial.PARITY_NONE,
                         stopbits=serial.STOPBITS_ONE,
                         bytesize=serial.EIGHTBITS)
-    raw = open(rawOut, 'a')
+    raw = open(rawLog, 'a')
     return True
   except:
     print('No serial port!')
@@ -49,11 +49,11 @@ def initSerial():
 
 def parseTrack(track):
   timeVal = float(track.split('=')[1][:6])
-  if len(track) > 8:
+  if len(track) > 8:	# we have a time and place
     place = track[8]
   else:
-    place = ' '
-  if place == '!':
+    place = '0'		# no place
+  if place   == '!':
     place = '1'
   elif place == '"':
     place = '2'

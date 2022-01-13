@@ -15,7 +15,7 @@ import random
 import sys
 
 heatfile = "heat.csv"
-timeslog = "timeslog.csv"
+timeslog = "servtimeslog.csv"
 times    = "times.csv"
 
 timesVersion = 'A'

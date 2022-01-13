@@ -1,6 +1,9 @@
 issues
-  pin change
-  resume automatically!
+  resume by default (must enter pin)
+  
+  (fixed?)crash with not all tracks
+  search for server, or: at least cache it.
+  (fixed?)averages when not included time - recalculate after ignoring or unignoring.
   
 Server:
   server: add cert for https
