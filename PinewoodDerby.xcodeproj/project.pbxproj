@@ -25,9 +25,9 @@
 		A4E0B1C127075982008E3880 /* DerbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C027075982008E3880 /* DerbyModel.swift */; };
 		A4E0B1C3270759FC008E3880 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E0B1C2270759FC008E3880 /* Logger.swift */; };
 		A4F8A4AB277F6AD200CA367B /* HeatsStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */; };
-		A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */; };
 		A4F8A4B3278299F300CA367B /* derby.txt in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4B2278299F300CA367B /* derby.txt */; };
 		A4F8A4DF278A073100CA367B /* PDTimer.tar in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4DE278A073100CA367B /* PDTimer.tar */; };
+		A4F8A4E127947DCB00CA367B /* Pinewood Derby Manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = A4F8A4E027947DCB00CA367B /* Pinewood Derby Manual.pdf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,9 +52,9 @@
 		A4E0B1C4270AAE83008E3880 /* note.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = note.txt; sourceTree = "<group>"; };
 		A4E696BA272AEC3C00623DA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A4F8A4AA277F6AD200CA367B /* HeatsStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatsStartView.swift; sourceTree = "<group>"; };
-		A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Pinewood Derby.pdf"; sourceTree = "<group>"; };
 		A4F8A4B2278299F300CA367B /* derby.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = derby.txt; sourceTree = "<group>"; };
 		A4F8A4DE278A073100CA367B /* PDTimer.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; name = PDTimer.tar; path = PDTimer/PDTimer.tar; sourceTree = "<group>"; };
+		A4F8A4E027947DCB00CA367B /* Pinewood Derby Manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Pinewood Derby Manual.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,11 +71,11 @@
 		A4E0B198270564C8008E3880 = {
 			isa = PBXGroup;
 			children = (
-				A4F8A4DE278A073100CA367B /* PDTimer.tar */,
-				A4F8A4B2278299F300CA367B /* derby.txt */,
-				A4F8A4AC277F7B5D00CA367B /* Pinewood Derby.pdf */,
-				A45108C827664AF5005E6897 /* README.md */,
 				A4E0B1C4270AAE83008E3880 /* note.txt */,
+				A45108C827664AF5005E6897 /* README.md */,
+				A4F8A4E027947DCB00CA367B /* Pinewood Derby Manual.pdf */,
+				A4F8A4B2278299F300CA367B /* derby.txt */,
+				A4F8A4DE278A073100CA367B /* PDTimer.tar */,
 				A4E0B1A3270564C8008E3880 /* PinewoodDerby */,
 				A4E0B1A2270564C8008E3880 /* Products */,
 			);
@@ -181,11 +181,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4F8A4E127947DCB00CA367B /* Pinewood Derby Manual.pdf in Resources */,
 				A4E0B1AC270564C9008E3880 /* Preview Assets.xcassets in Resources */,
 				A4F8A4B3278299F300CA367B /* derby.txt in Resources */,
 				A45108C927664AF5005E6897 /* README.md in Resources */,
 				A4F8A4DF278A073100CA367B /* PDTimer.tar in Resources */,
-				A4F8A4AD277F7B5D00CA367B /* Pinewood Derby.pdf in Resources */,
 				A4E0B1A9270564C9008E3880 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,7 +341,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;
@@ -376,7 +376,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"PinewoodDerby/Preview Content\"";
 				DEVELOPMENT_TEAM = J27945M9KG;
 				ENABLE_PREVIEWS = YES;

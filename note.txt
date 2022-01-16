@@ -1,6 +1,4 @@
 issues
-  search for server
-  resume by default (must enter pin)
   use https
   
 Server:

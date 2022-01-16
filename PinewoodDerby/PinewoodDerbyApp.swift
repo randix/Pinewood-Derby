@@ -11,6 +11,7 @@ import SwiftUI
 struct PinewoodDerbyApp: App {
     
     let derby = Derby.shared
+    let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
    
     init() {
         let dictionary = Bundle.main.infoDictionary!
@@ -23,53 +24,25 @@ struct PinewoodDerbyApp: App {
         log("screen \(UIScreen.main.bounds.width) \(UIScreen.main.bounds.height)")
         
         // install sample files and documentation
-        let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        var f = "derby"
-        var fileUrl = Bundle.main.url(forResource:f, withExtension: "txt")!
-        var destUrl = docsDir.appendingPathComponent(f + ".txt")
+        copyBundleToDocs("derby", ".txt")
+        copyBundleToDocs("Pinewood Derby Manual", ".pdf")
+        copyBundleToDocs("README", ".md")
+        copyBundleToDocs("PDTimer", ".tar")
+    }
+    
+    func copyBundleToDocs(_ name: String, _ ext: String) {
+        let fileUrl = Bundle.main.url(forResource:name, withExtension: ext)!
+        let destUrl = docsDir.appendingPathComponent(name + ext)
         if !FileManager.default.fileExists(atPath: destUrl.path) {
             do {
                 try FileManager.default.copyItem(at: fileUrl, to: destUrl)
-                log("Copied \(f)")
-            } catch {
-                log("error: \(error.localizedDescription)")
-            }
-        }
-        f = "Pinewood Derby"
-        fileUrl = Bundle.main.url(forResource:f, withExtension: "pdf")!
-        destUrl = docsDir.appendingPathComponent(f + ".pdf")
-        if !FileManager.default.fileExists(atPath: destUrl.path) {
-            do {
-                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
-                log("Copied \(f).pdf")
-            } catch {
-                log("error: \(error.localizedDescription)")
-            }
-        }
-        fileUrl = Bundle.main.url(forResource:"README", withExtension: "md")!
-        destUrl = docsDir.appendingPathComponent(f + ".md")
-        if !FileManager.default.fileExists(atPath: destUrl.path) {
-            do {
-                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
-                log("Copied \(f).pdf")
-            } catch {
-                log("error: \(error.localizedDescription)")
-            }
-        }
-        f = "PDTimer"
-        fileUrl = Bundle.main.url(forResource:f, withExtension: "tar")!
-        destUrl = docsDir.appendingPathComponent(f + ".tar")
-        if !FileManager.default.fileExists(atPath: destUrl.path) {
-            do {
-                try FileManager.default.copyItem(at: fileUrl, to: destUrl)
-                log("Copied \(f).tar")
+                log("Copied \(name)\(ext)")
             } catch {
                 log("error: \(error.localizedDescription)")
             }
         }
     }
    
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
