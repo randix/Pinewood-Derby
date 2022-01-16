@@ -1,15 +1,10 @@
 issues
+  search for server
   resume by default (must enter pin)
-  
-  (fixed?)crash with not all tracks
-  search for server, or: at least cache it.
-  (fixed?)averages when not included time - recalculate after ignoring or unignoring.
+  use https
   
 Server:
   server: add cert for https
-
-RESTView:
-  change to https
 
 TestFlight:
     add background photo

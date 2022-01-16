@@ -86,6 +86,7 @@ class Derby: ObservableObject {
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
     // TODO: Apple requires https
+    let timerUrl          = "http://raspberrypi.local:8484"
     @Published var timer = "http://raspberrypi.local:8484/"
     @Published var connected = true
     
@@ -500,34 +501,40 @@ extension Derby {
                 continue
             }
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
+            case "url":
+                timer = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
             case "title":
                 title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                if title == "" {
-                    title = "Pinewood Derby"
-                }
-                log("title=\(title)")
             case "event":
                 event = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                if title == "" {
-                    title = "Event"
-                }
-                log("event=\(event)")
             case "tracks":
                 let tracks = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                trackCount = 2
                 if let t = Int(tracks) {
                     trackCount = t
                 }
-                if trackCount < 2 {
-                    trackCount = 2
-                }
-                if trackCount > Derby.maxTracks {
-                    trackCount = Derby.maxTracks
-                }
-                log("tracks=\(String(trackCount))")
             default:
                 log("incorrect format: \(config)")
             }
+            
+            if timer == "" {
+                timer = timerUrl
+            }
+            log("url=\(timer)")
+            if title == "" {
+                title = "Pinewood Derby"
+            }
+            log("title=\(title)")
+            if title == "" {
+                title = "Event"
+            }
+            log("event=\(event)")
+            if trackCount < 2 {
+                trackCount = 2
+            }
+            if trackCount > Derby.maxTracks {
+                trackCount = Derby.maxTracks
+            }
+            log("tracks=\(String(trackCount))")
         }
         
         // groups
@@ -610,6 +617,7 @@ extension Derby {
         
         // settings
         var list = [String]()
+        list.append("url=\(timer.trimmingCharacters(in: .whitespaces))")
         list.append("title=\(title.trimmingCharacters(in: .whitespaces))")
         list.append("event=\(event.trimmingCharacters(in: .whitespaces))")
         list.append("tracks=\(String(trackCount))")
