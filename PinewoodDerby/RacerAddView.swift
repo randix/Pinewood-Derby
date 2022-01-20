@@ -237,77 +237,77 @@ struct RacerAddView: View {
     }
     
     func updateDerby() -> Bool {
-        if let number = Int(carNumber) {
-            if number < 1 || number > 99 {
-                alertTitle = "Car Number Out Of Range"
-                alertMessage = "Car number must be between 1 and 99."
-                alertButton = "OK"
-                alertShow = true
-                return false
-            }
-            if let ageInt = Int(age) {
-                if ageInt < 1 || ageInt > 99 {
-                    alertTitle = "Age Out Of Range"
-                    alertMessage = "Age must be between 1 and 99."
-                    alertButton = "OK"
-                    alertShow = true
-                    return false
-                }
-                // check that the number has not been changed to overlap another entry
-                let racersNumberCheck = derby.racers.filter { number == $0.carNumber }
-                if racersNumberCheck.count == 1 && racersNumberCheck[0].id != id {
-                    // another id has the same carNumber
-                    alertTitle = "Duplicate Car Number"
-                    alertMessage = "Duplicate car number, you cannot have two cars with the same number."
-                    alertButton = "OK"
-                    alertShow = true
-                    return false
-                }
-                if carName == "" {
-                    carName = "--"
-                }
-                if firstName == "" || lastName == "" {
-                    alertTitle = "Missing Name"
-                    alertMessage = "Please enter both a first and a last name."
-                    alertButton = "OK"
-                    alertShow = true
-                    return false
-                }
-                if group == "" {
-                    alertTitle = "Group Not Selected"
-                    alertMessage = "Please select a group."
-                    alertButton = "OK"
-                    alertShow = true
-                    return false
-                }
-                // find the entry in the array....
-                if let index = derby.racers.firstIndex(where: { $0.id == id}) {
-                    derby.racers[index].carNumber = number
-                    derby.racers[index].carName = carName
-                    derby.racers[index].firstName = firstName
-                    derby.racers[index].lastName = lastName
-                    derby.racers[index].age = ageInt
-                    derby.racers[index].group = group
-                } else {
-                    let d = RacerEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: ageInt, group: group)
-                    derby.racers.append(d)
-                }
-                derby.saveDerby()
-                derby.objectWillChange.send()
-                return true
-            } else {
-                alertTitle = "Age Missing"
-                alertMessage = "Please enter the age."
-                alertButton = "OK"
-                alertShow = true
-                return false
-            }
-        } else {
+        // check car number
+        carNumber = carNumber.trimmingCharacters(in: .whitespaces)
+        guard let number = Int(carNumber)  else {
             alertTitle = "Car Number Missing"
             alertMessage = "Please enter the car number."
             alertButton = "OK"
             alertShow = true
             return false
         }
+        if number < 1 || number > 99 {
+            alertTitle = "Car Number Out Of Range"
+            alertMessage = "Car number must be between 1 and 99."
+            alertButton = "OK"
+            alertShow = true
+            return false
+        }
+        // check that the number has not been changed to overlap another entry
+        let racersNumberCheck = derby.racers.filter { number == $0.carNumber }
+        if racersNumberCheck.count == 1 && racersNumberCheck[0].id != id {
+            // another id has the same carNumber
+            alertTitle = "Duplicate Car Number"
+            alertMessage = "Duplicate car number, you cannot have two cars with the same number."
+            alertButton = "OK"
+            alertShow = true
+            return false
+        }
+        
+        age = age.trimmingCharacters(in: .whitespaces)
+        if age == "" {
+            age = "-"
+        }
+        
+        carName = carName.trimmingCharacters(in: .whitespaces)
+        if carName == "" {
+            carName = "--"
+        }
+        
+        firstName = firstName.trimmingCharacters(in: .whitespaces)
+        lastName = lastName.trimmingCharacters(in: .whitespaces)
+        if firstName == "" || lastName == "" {
+            alertTitle = "Missing Name"
+            alertMessage = "Please enter both a first and a last name."
+            alertButton = "OK"
+            alertShow = true
+            return false
+        }
+        
+        group = group.trimmingCharacters(in: .whitespaces)
+        if group == "" {
+            alertTitle = "Group Not Selected"
+            alertMessage = "Please select a group."
+            alertButton = "OK"
+            alertShow = true
+            return false
+        }
+        
+        // find the entry in the array....
+        if let index = derby.racers.firstIndex(where: { $0.id == id}) {
+            derby.racers[index].carNumber = number
+            derby.racers[index].carName = carName
+            derby.racers[index].firstName = firstName
+            derby.racers[index].lastName = lastName
+            derby.racers[index].age = age
+            derby.racers[index].group = group
+        } else {
+            let d = RacerEntry(number: number, carName: carName, firstName: firstName, lastName: lastName, age: age, group: group)
+            derby.racers.append(d)
+        }
+        derby.saveDerby()
+        derby.objectWillChange.send()
+        return true
+        
     }
 }

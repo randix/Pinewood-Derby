@@ -10,7 +10,7 @@ import SwiftUI
 import Network
 
 class RacerEntry: Identifiable {
-    init(number: Int, carName: String, firstName: String, lastName: String, age: Int, group: String) {
+    init(number: Int, carName: String, firstName: String, lastName: String, age: String, group: String) {
         self.carNumber = number
         self.carName = carName
         self.firstName = firstName
@@ -24,7 +24,7 @@ class RacerEntry: Identifiable {
     var carName: String
     var firstName: String
     var lastName: String
-    var age: Int
+    var age: String
     var group: String
     
     var times = [Double](repeating: 0.0, count: Derby.maxTracks)  // the times for each track
@@ -591,7 +591,7 @@ extension Derby {
                                carName: String(values[1]),
                                firstName: String(values[2]),
                                lastName: String(values[3]),
-                               age: Int(values[4])!,
+                               age: String(values[4]),
                                group: String(values[5]))
             // add in times and places
             if values.count >= (racerDetails + trackCount * 3) {

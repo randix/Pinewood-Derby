@@ -17,7 +17,7 @@ import serial
 import time
 
 ser = None
-serialPort = '/dev/tty.usbserial-110'	# macOS 12.1
+#serialPort = '/dev/tty.usbserial-110'	# macOS 12.1
 serialPort = '/dev/ttyUSB0'		# linux RPi
 
 raw = None	# file descriptor
