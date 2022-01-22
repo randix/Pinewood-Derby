@@ -110,6 +110,7 @@ class Derby: ObservableObject {
     @Published var pin: String = ""
     
     @Published var readingConfig = false
+    var readDerbyFromServer = false
     
     let overall = "overall"
     
@@ -477,6 +478,7 @@ extension Derby {
         } catch {
             log("error: \(error.localizedDescription)")
             readingConfig = false
+            readDerbyFromServer = false
             objectWillChange.send()
             return
         }
@@ -502,7 +504,11 @@ extension Derby {
             }
             switch keyValue[0].trimmingCharacters(in: .whitespacesAndNewlines) {
             case "url":
-                timer = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                if readDerbyFromServer {
+                    readDerbyFromServer = false
+                } else {
+                    timer = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                }
             case "title":
                 title = keyValue[1].trimmingCharacters(in: .whitespacesAndNewlines)
             case "event":
@@ -606,6 +612,7 @@ extension Derby {
         }
         
         readingConfig = false
+        readDerbyFromServer = false
         calculateRankings()
         objectWillChange.send()
     }
@@ -903,6 +910,7 @@ extension Derby {
     
     func readFilesFromServer() {
         readingConfig = true
+        readDerbyFromServer = true
         readFileFromServer(Filenames.pinName)
         objectWillChange.send()
     }
