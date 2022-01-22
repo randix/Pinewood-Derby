@@ -1,0 +1,22 @@
+Python HTTP Servers
+
+python3 -m http.server
+
+If you need a fast https server to host a payload then here’s a quick script to get you moving!
+
+First we need to generate a certificate:
+
+openssl req -new -x509 -keyout localhost.pem -out localhost.pem -days 365 -nodes
+Now complete the certificate info (remember this isn’t signed by a CA so it will error and prompt on browsers)
+
+Now we can launch a python HTTPS server with the following python script (remeber to change the IP and prot to suit):
+
+ import http.server, ssl
+
+server_address = (‘10.10.14.3’, 443)
+httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
+httpd.socket = ssl.wrap_socket(httpd.socket,
+server_side=True,
+certfile=’localhost.pem’,
+ssl_version=ssl.PROTOCOL_TLSv1_3)
+httpd.serve_forever()
