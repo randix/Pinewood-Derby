@@ -6,7 +6,7 @@ Copyright © 2022 Randix LLC. All rights reserved.
 
 ### Introduction
 
-This app will set up the data and run the operation of a Pinewood Derby / Grand Prix electronic timer for a race. The software consists of the iOS App, available on the Apple AppStore, and a Python based timer interface. The Python software can be found in the application directory.
+This app will set up the data and run the operation of a Pinewood Derby / Grand Prix electronic timer for a race. The software consists of the iOS App, available on the Apple AppStore, and a portable timer interface. The timer software can be found in the application directory.
 
 The complete system consists of:
 
@@ -18,7 +18,7 @@ The complete system consists of:
 
 ##### iOS Pinewood-Derby App
 
-The iOS **Pinewood-Derby** App, available in the Apple AppStore, has two modes, a administrator mode and an observer mode.
+The iOS **Pinewood-Derby** App, available in the Apple AppStore, has two modes, an administrator mode and an observer mode.
 
 The observer mode allows:
 
@@ -43,13 +43,13 @@ The administrator mode allows full control of the race data, including
 
 ##### Computer (e.g., RaspberryPi) Timer Connection
 
-This assumes in this section that the computer used is a Raspberry Pi, RPi. Pretty much any computer may be used to attach to the timer and send the data to the iPhones and/or iPads. This document will address setting up on the RPi, which extends to most Linux computers, an Apple Mac computer (MacBook, etc.), and a Microsoft Windows computer.
+This assumes in this section that the computer used is a Raspberry Pi, RPi. Almost any up-to-date computer may be used to attach to the timer and send the data to the iPhones and/or iPads. This document will address setting up on the RPi, which extends to most Linux computers, an Apple Mac computer (MacBook, etc.), and a Microsoft Windows computer.
 
-The RPi and the iPhones and iPads must be connected to the local WiFi in order to communicate. 
+The RPi and the iPhones and iPads must be connected to the local WiFi in order to communicate. You may also provide your own WiFi Access Point Router to enable the connectivity.
 
 ### Technical Detail
 
-The timer computer is started and connected to the local WiFi. This will be discussed below in Installation. the file PIN.txt is edited to create a PIN for the iOS application. This ensures that only the race administrator can have access to the administration mode.  Then the programs (applications) ***PDServer.py*** and ***timer.py*** are started on the timer computer.
+The timer computer is started and connected to the local WiFi. This will be discussed below in Installation. the file PIN.txt is edited to create a PIN for the iOS application. This ensures that only the race administrator can have access to the administration mode.  Then the programs (applications) ***PDServer.py*** and ***timer.py*** are started on the timer computer, this is simplified with a ***./t.sh*** program.
 
 The timer computer is connected physically via serial cable to the timer and makes the timing data available over WiFi, the iPads and iPhones communicate with the timer comuter to fetch data, as well as the administrator informs the timer computer of which cars are racing in a given heat.
 
@@ -64,30 +64,32 @@ Hardware set-up:
 - Connect the serial cable from the track to the RS232 to USB converter cable and plug that into the timer computer.
 
 - Start the timer computer
-  
-  - Assure that the timer computer is connected to the local WiFi. The timer computer makes no use of any available internet connection.
+
+- Assure that the timer computer is connected to the local WiFi. The timer computer makes no use of any available internet connection.
+
+- Install the **PDTimer.tar** Python programs. See detail below in *Appendix: Timer Computer Software Installation*.
+
+- Edit the file *PIN.txt* and enter a four digit PIN to be used by the administrator during the race, select a secret pin, known only to the administrator.
+  E.g.: `echo 4567 > PIN.txt`
+
+- On a Raspberry Pi, other Linux computer or a Mac computer, start the software:
+  `./t.sh`
+
+- On a Windows timer computer, assuming Python3 has been installed, see below in *Appendix: Timer Server Software Installation*.
   
   - Open two windows on the timer computer, using the Terminal program.
   
-  - Install the **PDTimer.tar** Python programs. See detail below in *Appendix: Timer Computer Software Installation*.
+  - In one window start the **PDServer.py** with the command
+    `Python3 PDserver.py`
   
-  - Edit the file *PIN.txt* and enter a four digit PIN to be used by the administrator during the race, select a secret pin, known only to the administrator.
-    E.g.: `echo 4567 > PIN.txt`
-  
-  - On a Raspberry Pi, other Linux computer or a Mac computer, start the software:
-    `./t.sh`
-  
-  - On a Windows timer computer, assuming Python3 has been installed, see below in *Appendix: Timer Server Software Installation*.
-    
-    - In one window start the **PDServer.py** with the command
-      `Python3 PDserver.py`
-    
-    - In the other window start the **timer.py** with the command
-      `Python3 timer.py`
+  - In the other window start the **timer.py** with the command
+    `Python3 timer.py`
 
 - Start **Pinewood-Derby** on the iPhone or iPad
   
   - Tap on Settings in the upper right corner.
+  
+  - Ascertain that the app is connected to the timer computer, the Connected flat must be a gree checkmark. If it is a red X, see the fine print and solve the connection problem. This is the connection to the timer, and must work correctly to get the times from the timer.
   
   - Enter the PIN that was set in the file *PIN.txt* on the RPi.
   
@@ -107,12 +109,7 @@ Hardware set-up:
 
 - When the racers are all correctly entered, tap on the Settings again.
 
-Ascertain that the app is connected to the RPi server, the Connected flag must be a green checkmark. If it is a red X, see the fine print, and solve the connection problem.  
-
-This is the connection to the RPi timer, and must work correctly to get the times from the timer.
-
 To Start the race, tap on the Racing: Start button. 
-This will take you to the Heats tab, where the individual heats may be started.
 
 ### Running the Race Heats
 
@@ -197,7 +194,7 @@ The files may also be found at:
 
  [GitHub - randix/Pinewood-Derby: Time and Score a Pinewood Derby race.](https://github.com/randix/Pinewood-Derby)
 
-This file will be transfered to the Timer computer (preferably a RaspberryPi). There are many ways to do this. This will describe the process for Raspberry Pi, or a Mac computer.  This can also be done on a MS Windows computer, but the details here will be somewhat sketchy.
+This file will be transfered to the Timer computer. There are many ways to do this. This will describe the process for Raspberry Pi, or a Mac computer.  This can also be done on a MS Windows computer, but the details here will be somewhat sketchy.
 
 ###### 1. Copy PDServer.tar to the Timer Computer
 
@@ -208,29 +205,22 @@ In general, you will find an app on the Apple AppStore that can transfer a file 
 
 ###### 2. Install PDServer.tar on the Timer Computer
 
-Log in to the Timer computer. Issue the following commands:
+Log in to the Timer computer. Issue the following commands (choose your own PIN):
 
 ```
 mkdir PDServer
 mv PDServer.tar PDServer
 cd PDServer
 tar xf PDServer
-```
-
-###### 3. Create the PIN.txt File and Run the PDServer on the Timer Computer
-
-In the terminal window from above:
-
-```
-./timer.py
-```
-
-Open a second terminal window and issue these commands, selecting a desired PIN in the place of "1234":
-
-```
-cd PDServer
 echo 1234 > PIN.txt
-./PDServer.py
+```
+
+###### 3. Create the PIN.txt File and Run the program on the Timer Computer
+
+In the terminal from above:
+
+```
+./t.sh
 ```
 
 ---
