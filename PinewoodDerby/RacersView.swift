@@ -72,7 +72,7 @@ struct RacersView: View {
                     derby.saveDerby()
                 }) {
                     Text(" # Car").bold()
-                        .frame(width: 105, alignment: .leading)
+                        .frame(width: 150, alignment: .leading)
                         .font(.system(size: 16))
                         //.background(.yellow)
                 }
@@ -114,7 +114,7 @@ struct RacersView: View {
                         Spacer()
                         Text("\(car2digit(entry.carNumber)) \(entry.carName)")
                             .font(.system(size:16))
-                            .frame(width: 105, alignment: .leading)
+                            .frame(width: 150, alignment: .leading)
                             .lineLimit(1).minimumScaleFactor(0.4)
                             //.background(.yellow)
                         Text(entry.firstName + " " + entry.lastName)

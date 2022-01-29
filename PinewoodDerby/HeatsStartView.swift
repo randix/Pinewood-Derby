@@ -14,6 +14,8 @@ struct TrackView: View {
     let track: Int
     let car: Int
     
+    let derby = Derby.shared
+    
     var body: some View {
         VStack {
         HStack(spacing: 1) {
@@ -25,16 +27,49 @@ struct TrackView: View {
                 Text("-")
                     .font(.system(size: 24))
                     .frame(width:35)
-                    //.background(.yellow)
+                    .background(.yellow)
+                Text("").frame(width:150)
+                Text("").frame(width:145)
+                Text("").frame(width:34)
             } else {
                 Text("\(car)")
                     .font(.system(size: 24))
                     .frame(width:35)
                     //.background(.yellow)
+                Text(getCarName(car))
+                    .font(.system(size: 20))
+                    .frame(width:115, alignment: .leading)
+                    .lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.yellow)
+                Text(getName(car))
+                    .font(.system(size: 20))
+                    .frame(width:145, alignment: .leading)
+                    .lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.yellow)
+                Text(getAge(car))
+                    .font(.system(size: 20))
+                    .frame(width:34)
+                    .lineLimit(1).minimumScaleFactor(0.4)
+                    //.background(.yellow)
             }
         }
             Spacer().frame(height: 10)
         }
+    }
+    
+    func getCarName(_ carNumber: Int) -> String {
+        let entry = derby.racers.filter { $0.carNumber == carNumber }[0]
+        return entry.carName
+    }
+    
+    func getName(_ carNumber: Int) -> String {
+        let entry = derby.racers.filter { $0.carNumber == carNumber }[0]
+        return entry.firstName + " " + entry.lastName
+    }
+    
+    func getAge(_ carNumber: Int) -> String {
+        let entry = derby.racers.filter { $0.carNumber == carNumber }[0]
+        return entry.age
     }
 }
 
