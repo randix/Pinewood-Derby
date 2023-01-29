@@ -1,0 +1,117 @@
+url=http://localhost:8484/
+title=Grand Prix
+event=AWANA 2023
+tracks=4
++++
+girls
+boys
++++
+1,girls,95,4,15,64,true
+2,boys,21,89,70,26,true
+3,girls,16,9,63,52,true
+4,boys,88,84,40,92,true
+5,girls,44,54,94,43,true
+6,boys,91,82,23,20,true
+7,girls,1,14,78,53,true
+8,boys,71,32,42,22,true
+9,girls,10,56,13,3,true
+10,boys,28,25,31,86,true
+11,girls,50,62,61,85,true
+12,boys,65,69,27,83,true
+13,girls,12,58,57,76,true
+14,boys,89,70,26,81,true
+15,girls,4,15,64,17,true
+16,boys,84,40,92,21,true
+17,girls,9,63,52,95,true
+18,boys,82,23,20,88,true
+19,girls,54,94,43,16,true
+20,boys,32,42,22,91,true
+21,girls,14,78,53,44,true
+22,boys,25,31,86,71,true
+23,girls,56,13,3,1,true
+24,boys,69,27,83,28,true
+25,girls,62,61,85,10,true
+26,boys,70,26,81,65,true
+27,girls,58,57,76,50,true
+28,boys,40,92,21,89,true
+29,girls,15,64,17,12,true
+30,boys,23,20,88,84,true
+31,girls,63,52,95,4,true
+32,boys,42,22,91,82,true
+33,girls,94,43,16,9,true
+34,boys,31,86,71,32,true
+35,girls,78,53,44,54,true
+36,boys,27,83,28,25,true
+37,girls,13,3,1,14,true
+38,boys,26,81,65,69,true
+39,girls,61,85,10,56,true
+40,boys,92,21,89,70,true
+41,girls,57,76,50,62,true
+42,boys,20,88,84,40,true
+43,girls,64,17,12,58,true
+44,boys,22,91,82,23,true
+45,girls,52,95,4,15,true
+46,boys,86,71,32,42,true
+47,girls,43,16,9,63,true
+48,boys,83,28,25,31,true
+49,girls,53,44,54,94,true
+50,boys,81,65,69,27,true
+51,girls,3,1,14,78,true
+52,girls,85,10,56,13,true
+53,girls,76,50,62,61,true
+54,girls,17,12,58,57,true
++++
+92,Rainbow Boost,Malcom,DiCarlo,-,boys,4.1691,1,0,4.1726,1,0,4.2124,1,0,4.2142,1,0
+84,Creeper,Waylon,Marino,-,boys,4.2532,3,0,4.2666,2,0,4.2428,1,0,4.2778,2,0
+28,Green Polk Dat,Bo,Brown,-,boys,4.3489,1,0,4.2423,1,0,4.2674,1,0,4.2566,1,0
+40,Curveball,Max,Brown,-,boys,4.2611,2,0,4.2482,2,0,4.3235,4,0,4.2938,2,0
+91,Speed Force,Xavier,Steinbach,-,boys,4.3261,1,0,4.2607,1,0,4.3315,1,0,0.0000,0,0
+88,,Jack,Johnson,-,boys,4.3059,3,0,4.3059,3,0,4.2999,3,0,4.3761,2,0
+23,Red Machine,Hudson,Keller,-,boys,4.2706,1,0,4.2908,1,0,4.3699,2,0,4.4327,3,0
+81,The SS Banana,Liam,Bergerson,-,boys,4.3014,1,0,4.3553,2,0,4.3994,2,0,4.4311,1,0
+22,--,Ethan,Hunt,-,boys,4.2687,2,0,4.6118,3,0,4.3254,1,0,4.3481,1,0
+69,Straight Shooter,Leif,Ensz,-,boys,4.4060,2,0,4.4830,1,0,4.4169,2,0,4.3990,3,0
+26,The Eagle,Samuel,Calef,-,boys,4.2112,1,0,4.1977,1,0,0.0000,0,0,4.9769,3,0
+32,--,Jackson,Dotson,-,boys,4.5014,2,0,4.4354,2,0,4.4597,1,0,4.5411,1,0
+89,Rainbow Man,Luke,Johnson,-,boys,4.4788,3,0,4.5279,1,0,4.5865,2,0,4.4596,3,0
+65,Super Sonic Shark,Will,Bassham,-,boys,4.5457,2,0,4.5091,3,0,4.5496,4,0,4.5153,3,0
+82,Leaping Lizard,Jayce,Cooksey,-,boys,4.5665,3,0,4.4792,3,0,4.5336,4,0,4.5859,2,0
+70,The ’T’ Mobile,Teagan,Scheirman,-,boys,4.6232,4,0,4.4433,2,0,4.5640,2,0,4.6143,3,0
+27,The Clone Wars,Boaz,Domes,-,boys,4.5461,3,0,4.5697,3,0,4.6629,3,0,4.5540,4,0
+83,—,Malachi,Cooksey,-,boys,4.5702,2,0,4.5149,2,0,4.6908,4,0,4.6815,4,0
+25,Peterbilt,Samual,Howard,-,boys,4.7051,2,0,4.6304,1,0,4.7173,4,0,4.5522,4,0
+20,The Claw,Gavin,Glasscock,-,boys,4.7060,4,0,4.5742,4,0,4.5986,4,0,4.7897,4,0
+86,—,Levi,Smith,-,boys,4.7369,3,0,4.6002,2,0,4.6950,1,0,4.6650,3,0
+71,—,Noah,Howard,-,boys,4.6486,4,0,4.6927,2,0,4.6383,3,0,4.7483,3,0
+31,Razer Crest,Ian,Cundiff,-,boys,4.9955,4,0,4.9297,4,0,4.6165,2,0,4.6686,3,0
+42,Rocking Out,Joshua,Foster,-,boys,4.9582,4,0,5.0591,3,0,4.6189,3,0,4.7814,4,0
+21,The Mice Heist,Ethan,Bergerson,-,boys,4.2438,1,0,4.6409,4,0,5.3204,4,0,5.7075,4,0
+14,The Winner,Bella,DiCarlo,-,girls,4.2330,1,0,4.2379,1,0,4.2188,1,0,4.2634,1,0
+54,—,Scarlett,Brown,-,girls,4.3135,2,0,4.2832,1,0,4.3000,1,0,4.2549,1,0
+56,God’s Promise,Paisley,Brown,-,girls,4.2679,2,0,4.3062,2,0,4.3416,1,0,4.2966,1,0
+1,The Axoloth's Wrath,Elaina,Bergerson,-,girls,4.3277,2,0,4.2745,3,0,4.3143,2,0,4.3394,3,0
+63,Kevin,Emery,Fuller,-,girls,4.2478,1,0,4.3269,1,0,4.4406,2,0,4.2958,1,0
+16,Stargazer,Libby,Rand,-,girls,4.4016,1,0,4.3313,3,0,4.3288,1,0,4.3109,1,0
+43,Wood Tree,Tabitha,Domes,-,girls,4.3272,2,0,4.4141,2,0,4.3754,3,0,4.3278,2,0
+17,The Storm Breaker,Daphne,Toma,-,girls,4.3720,1,0,4.4106,1,0,4.3766,1,0,4.3033,1,0
+44,Pool Table,Mercy,Harris,-,girls,4.3317,3,0,4.4338,3,0,4.4997,4,0,4.4707,3,0
+3,2023 Rocks,Arianna,McFarland,-,girls,4.2198,2,0,5.0494,4,0,4.2279,1,0,4.2793,1,0
+53,—,Naomi,Caleb,-,girls,4.3871,2,0,4.4382,2,0,4.4380,2,0,4.5366,3,0
+50,Flower Power,Julianna,Foster,-,girls,4.4324,1,0,4.4118,1,0,4.5021,1,0,4.4594,1,0
+78,School Bus,Sofia,McFarland,-,girls,4.4633,3,0,4.4718,4,0,4.5524,4,0,4.4378,4,0
+95,Blueberry The Movie,Evelyn,Peters,-,girls,4.5226,1,0,4.4509,1,0,4.4661,2,0,4.5271,3,0
+9,Henrietta,Linnea,Elsworth,-,girls,4.4646,2,0,4.5036,3,0,4.5629,4,0,4.5242,3,0
+57,Aqua Diamond,Evie,Ensz,-,girls,4.5501,2,0,4.5038,2,0,4.6499,2,0,4.5824,2,0
+61,Bolt,Thyle,Dunham,-,girls,4.4988,2,0,4.5741,1,0,4.6109,3,0,4.6135,2,0
+13,The Cat Car,Hariette,Shim,-,girls,4.6919,3,0,4.6036,4,0,4.4882,3,0,4.5354,3,0
+85,Mariena,Sarah,Marino,-,girls,4.4748,2,0,4.6285,3,0,4.6802,3,0,4.5388,2,0
+10,Freedom Fighter,Maddi,Fuller,-,girls,4.6022,4,0,4.5986,4,0,4.6772,4,0,4.5828,2,0
+12,Rocky,Annabelle,Peters,-,girls,4.5942,1,0,4.6245,3,0,4.7560,3,0,4.6104,2,0
+76,—,Harper,Dotson,-,girls,4.6151,3,0,4.5608,3,0,4.6680,3,0,4.8224,3,0
+4,Karma Best Coffee,Sami,Jantz,-,girls,4.7595,2,0,4.4721,1,0,4.6983,3,0,4.8059,4,0
+52,Cat Park,Maira,Robertson,-,girls,4.6801,2,0,4.7205,3,0,4.7134,4,0,4.6416,4,0
+62,Jessie,Lilia,Ellsworth,-,girls,4.7406,4,0,4.7241,4,0,4.6501,4,0,4.7078,4,0
+64,The Yellow Pencil,Lois,Domes,-,girls,4.6239,2,0,4.7842,3,0,4.8746,4,0,5.0355,4,0
+94,Snow Flake,Emme,Peters,-,girls,4.8359,4,0,4.8679,4,0,4.8732,4,0,4.8119,4,0
+15,--,Audry,Howard,-,girls,4.8677,4,0,4.8744,3,0,4.7776,2,0,4.9296,4,0
+58,—,Linnea,Rand,-,girls,0.0000,0,0,0.0000,0,0,5.1156,4,0,5.1362,4,0

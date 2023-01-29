@@ -86,8 +86,8 @@ class Derby: ObservableObject {
     let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
     // TODO: Apple requires https
-    let timerUrl          = "http://raspberrypi.local:8484"
-    @Published var timer = "http://raspberrypi.local:8484/"
+    let timerUrl          = "http://localhost:8484"
+    @Published var timer = "http://localhost:8484/"
     @Published var connected = true
     
     var appName = ""

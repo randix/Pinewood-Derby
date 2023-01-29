@@ -14,6 +14,7 @@ struct PinewoodDerbyApp: App {
     let docsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
    
     init() {
+        print(docsDir)
         let dictionary = Bundle.main.infoDictionary!
         derby.appName = dictionary["CFBundleName"] as! String
         let version = dictionary["CFBundleShortVersionString"] as! String

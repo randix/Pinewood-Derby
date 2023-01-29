@@ -62,7 +62,7 @@ struct SettingsView: View {
                         .font(.system(size: 18))
                     //.frame(width:50, alignment: .trailing)
                     //.background(.yellow)
-                    TextField("http://raspberypi.local:8484/", text: $derby.timer)
+                    TextField("http://localhost:8484/", text: $derby.timer)
                         .font(.system(size: 18))
                         .frame(width:300)
                         .textFieldStyle(.roundedBorder)

@@ -1,8 +1,32 @@
+redesign:
+only master connects to server (multiple masters?)
+RPi:
+  send timer bytes directly to TCP
+  simulate, using raw.log
+PinewoodDerby:
+  larger fonts!!!
+  Heats:
+    show all (heat #)
+       Heat: x  Start  Rerun  (alert box, with cancel, or start/rerun)
+             Place <x> Lane x  car # carname: <name> racer: <racer> <age> <group>
+                       Lane X
+                       Lane X
+                       Lane <x>
+             ...
+
+Client/Server:
+PDServer
+  write derby.txt on all updates - to server
+  write raw.log
+  write times.log
+  write log-<date>.log
+  
+
 issues
-  use https
+  use https ?
   
 Server:
-  server: add cert for https
+  server: add cert for https ?
 
 TestFlight:
     add background photo
